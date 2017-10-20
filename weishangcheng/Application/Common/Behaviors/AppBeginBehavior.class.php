@@ -3,7 +3,7 @@ namespace Common\Behaviors;
 
 class AppBeginBehavior{
     //行为执行入口
-    public function run(){
+    public function run(){die('123456');
         /*
         echo print_r($_GET).'<br>';
         echo '__MODULE__: '.__MODULE__.'<br>';
