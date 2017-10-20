@@ -12,7 +12,7 @@
 
 // 开启调试模式 建议开发阶段开启 部署阶段注释或者设为false
 define('APP_DEBUG', true);
-die "123";
+die('123');
 // 通用设置PATH_INFO，如果保证PHP能正常获取到
 if (PHP_SAPI == 'cli') {
     $_SERVER['DOCUMENT_ROOT'] = __DIR__;
