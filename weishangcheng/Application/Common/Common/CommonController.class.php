@@ -325,7 +325,7 @@ class CommonController extends Controller
         }else if(is_numeric($user['id'])){
             return $user;
         }
-        
+
         // 计算回跳地址
         if(!$data['url']){
             $data['redirect'] = $this->getLoginRedirect();

@@ -10,10 +10,10 @@ return array(
 //        'seller'          => 'Seller',
 //        '.*'              => 'H5'
 //    )
-     'seller.xingyebao.cn' => 'Admin',
-    'pay.xingyebao.cn'    => 'Pay',
-    'service.xingyebao.cn'=> 'Service',
-    'weishang.xingyebao.cn'    => array(
+     'seller.xingyebao.com' => 'Admin',
+    'pay.xingyebao.com'    => 'Pay',
+    'service.xingyebao.com'=> 'Service',
+    'weishang.xingyebao.com'    => array(
         'seller'          => 'Seller',
         '.*'              => 'H5'
 )
