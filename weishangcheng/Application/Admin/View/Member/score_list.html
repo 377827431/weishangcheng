@@ -1,0 +1,31 @@
+<div id="scoreModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myscoreModalLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="myscoreModalLabel">积分记录</h3>
+	</div>
+	<div class="modal-body" style="padding:0">
+		<table class="table" data-url="__MODULE__/api/getMemberScore?mid={$_GET['mid']}" data-height="300">
+			<thead>
+				<th data-field="score" data-width="70" data-align="center">分值</th>
+				<th data-field="create_time" data-width="130" data-align="center">积分时间</th>
+				<th data-field="reason">积分原因</th>
+			</thead>
+		</table>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+	</div>
+	<script type="text/javascript">
+	(function() {
+		var $modal = $('#scoreModal')
+			,$table = $modal.find('table');
+		$table.gridView();
+		
+		$modal.modal();
+		$modal.on('hidden', function(){
+			$modal.remove();
+			return false;
+		});
+	})(); 
+	</script>
+</div>

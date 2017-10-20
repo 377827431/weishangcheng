@@ -1,0 +1,228 @@
+<style>
+.toolbar .btn-list{float:none;}
+.toolbar .btn-list>.btn-group+.btn-group{float:right}
+</style>
+<toolbar id="toolbar" class="toolbar">
+	<form id="order_search" class="form-horizontal">
+		<div class="filter-groups">
+			<div class="control-group">
+				<label class="control-label">微信公众号</label>
+				<div class="controls">
+					<select name="appid">
+					<option value="">请选择</option>
+					<foreach name="appid" key="m" item="item">
+						<option value="{$m}">{$item['name']}</option>
+					</foreach>
+					</select>
+				</div>
+			</div>
+            <div class="control-group">
+                <label class="control-label">代理姓名</label>
+                <div class="controls">
+                    <input type="text" name="name">
+                </div>
+            </div>
+			<div class="control-group">
+				<label class="control-label">微信昵称</label>
+				<div class="controls">
+					<input type="text" name="nickname">
+				</div>
+			</div>
+		</div>
+		<div class="filter-groups">
+			<div class="control-group">
+				<label class="control-label">代理级别</label>
+				<div class="controls">
+					<select name="levels" >
+						<option value="">请选择</option>
+						<foreach name="levels" item="vo" key="k">
+							<option value="{$k}">{$vo['title']}</option>
+						</foreach>
+					</select>
+				</div>
+			</div>
+            <div class="control-group">
+                <label class="control-label">代理ID</label>
+                <div class="controls">
+                    <input type="text" name="mid" value="{$mid}">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">代理手机号</label>
+                <div class="controls">
+                    <input type="text" name="mobile" data-rule-mobile="true">
+                </div>
+            </div>
+		</div>
+		<div class="filter-groups">
+            <div class="control-group">
+                <label class="control-label">关注</label>
+                <div class="controls">
+                    <select name="subscribe">
+                        <option value="all">请选择</option>
+                        <option value="1">已关注</option>
+                        <option value="0">未关注</option>
+                    </select>
+                </div>
+            </div>
+			<div class="control-group">
+				<label class="control-label">省份</label>
+				<div class="controls">
+					<select name="province_id" id="province_id" data-city="#city_id" data-selected="">
+						<option value="">请选择</option>
+					</select>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">城市</label>
+				<div class="controls">
+					<select name="city_id" id="city_id" data-county="#county_id" data-selected=""><option value="">请选择</option></select>
+				</div>
+			</div>
+   		</div>
+	</form>
+</toolbar>
+
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-url="__URL__" data-toolbar="#toolbar"  data-page-list="[1, 10, 25, 50, All]">
+    <thead>
+		<tr>
+			<th data-width="40" data-checkbox="true"></th>
+			<th data-field="id" data-width="80">ID</th>
+            <th data-field="nickname">微信昵称</th>
+			<th data-field="mobile" data-width="110">手机号</th>
+			<th data-field="balance" data-align="center">余额</th>
+			<th data-field="title" data-align="center" data-width="100">代理级别</th>
+			<th data-field="sex" data-formatter="fomat_status" data-width="50">性别</th>
+			<th data-field="created" data-width="130">加入时间</th>
+			<th data-field="city">城市</th>
+			<th data-field="remark">备注</th>
+			<th data-formatter="formatter_action" data-align="center">操作</th>
+		</tr>
+	</thead>
+</table>
+
+
+<script type="text/javascript">
+//格式化数据
+function fomat_status(status, row, index){
+	if(status == '1'){
+		return '男';
+	}else if(status == '2'){
+		return '女';
+	}
+	else{
+		return '保密';
+	}
+}
+
+function formatter_action(val, row, index){
+    var id = row.id;
+    var html = '<p>' +
+        '    <a href="javascript:;" class="js-remark">备注</a>' +
+        '</p>'
+    return html;
+}
+
+$('#table').on('click','.js-remark', function(){
+    var id = $(this).parents('tr').attr('data-uniqueid');
+    $.get('__URL__/member_remark?id='+id, function(html){
+        var $html = $(html);
+        $html.appendTo('body');
+    });
+    return false;
+});
+
+
+$(function(){
+	$('#table').on('balance_list',function(e, gridview ,params){
+		if(gridview.currentRow == null){
+			alertMsg('请先选择会员！', 'warning');
+			return false;
+		}
+		$.get('__URL__/balance_list?mid=' + gridview.currentRow.id, function(html){
+			$('body').append(html);
+		});
+		return false;
+	}).on('change_level',function(e, gridview ,params){
+		var rows = $('#table').bootstrapTable('getSelections'); // 当前页被选中项(getAllSelections 所有分页被选中项)
+		if(rows.length == 0){ 
+			alertMsg('请先勾选要修改等级的会员', 'warning');
+			return false; 
+		}
+		var ids = [];
+		for(i=0;i<rows.length;i++){
+			ids.push(rows[i]['id']);
+		}
+		params.url = '__URL__/change_level?id=' + ids;
+	}).on('employee',function(e, gridview ,params){
+		var rows = $('#table').bootstrapTable('getSelections'); // 当前页被选中项(getAllSelections 所有分页被选中项)
+		if(rows.length == 0){ 
+			alertMsg('请先勾选要修改的会员', 'warning');
+			return false; 
+		}
+		var ids = [];
+		for(i=0;i<rows.length;i++){
+			ids.push(rows[i]['id']);
+		}
+		params.url = '__URL__/employee?id=' + ids;
+	}).on('black',function(e, gridview ,params){
+		var rows = $('#table').bootstrapTable('getSelections'); // 当前页被选中项(getAllSelections 所有分页被选中项)
+		if(rows.length == 0){ 
+			alertMsg('请先勾选黑名单会员', 'warning');
+			return false; 
+		}
+		var ids = [];
+		for(i=0;i<rows.length;i++){
+			ids.push(rows[i]['id']);
+		}
+		params.url = '/black/add?mid=' + ids;
+	}).on('order_list',function(e, gridview ,params){
+		if(gridview.currentRow == null){
+			alertMsg('请先选择会员！');
+			return false;
+		}
+		params.url = '/mall/order?buyer_id=' + gridview.currentRow.id;
+	}).on('reissue_score',function(e, gridview ,params){
+		var row = gridview.currentRow; // 当前页被选中项(getAllSelections 所有分页被选中项)
+		if(!row){ 
+			alertMsg('请点击选择要补发积分的会员', 'warning');
+			return false; 
+		}
+		params.url += '?id=' + row.id;
+	}).on('show_cm',function(e, gridview ,params){
+		if(gridview.currentRow == null){
+			alertMsg('请先选择会员！', 'warning');
+			return false;
+		}
+		
+		params.url = '__URL__/show_cm?mid=' + gridview.currentRow.id;
+	}).on('member_out',function(e, gridview ,params){
+		var row = gridview.currentRow;
+		if(!row){ 
+			alertMsg('请点中会员', 'warning');
+			return false; 
+		}
+		
+		params.url = '__URL__/member_out?mid=' + row.id;
+	}).on('message',function(e, gridview ,params){
+		var rows = $('#table').bootstrapTable('getSelections'); // 当前页被选中项(getAllSelections 所有分页被选中项)
+		if(rows.length == 0){ 
+			alertMsg('请先勾选会员', 'warning');
+			return false; 
+		}
+		var ids = [];
+		for(i=0;i<rows.length;i++){
+			ids.push(rows[i]['id']);
+		}
+		params.url += '?id=' + ids;
+	});
+});
+</script>
+<script src="/js/address.js"></script>
+<script type="text/javascript">
+	Address.bind("#province_id");
+</script>
+<style>
+.pagination-detail{display:none;}
+</style>
