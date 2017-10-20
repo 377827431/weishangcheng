@@ -59,7 +59,7 @@ return  array(
 //    'DB_NAME'               =>  'weishangchengline2',          // 数据库名
     'DB_NAME'               =>  'weishang_zhuan',          // 数据库名
     'DB_USER'               =>  'root',      // 用户名
-    'DB_PWD'                =>  'Jy5040309884',          // 密码
+    'DB_PWD'                =>  '123',          // 密码
     'DB_PORT'               =>  '3306',        // 端口
     'DB_PREFIX'             =>  '',    // 数据库表前缀
     'DB_PARAMS'          	=>  array(\PDO::ATTR_EMULATE_PREPARES => false,  \PDO::ATTR_ORACLE_NULLS => \PDO::NULL_TO_STRING ), // 数据库连接参数    

@@ -26,11 +26,11 @@ $c->alipayrsaPublicKey = 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwMMk7pDSmL
 $request = new ZhimaCreditAntifraudVerifyRequest();
 $re = "{
         'mobile': '15004678169',
-        'name': '纪阳',
+        'name': 'jy',
         'product_code': 'w1010100000000002859',
         'transaction_id': '567',
         'cert_type': 'IDENTITY_CARD',
-        'cert_no': '230107198501271810',
+        'cert_no': '323332233232',
         }";
 $request->setBizContent($re);
 $response= $c->execute($request);
