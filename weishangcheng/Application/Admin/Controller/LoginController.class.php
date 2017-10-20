@@ -15,7 +15,6 @@ class LoginController extends Controller
      * 登录页面
      */
     public function index(){
-        die('369');
         layout(false);
         $user = null;
         $redirect = !empty($_GET['redirect']) ? $_GET['redirect'] : "/shop";
@@ -26,6 +25,7 @@ class LoginController extends Controller
             }
             
             $this->assign('enabledCaptcha', $this->enabledCaptcha);
+            die('444333');
             $this->display();
         }
         
