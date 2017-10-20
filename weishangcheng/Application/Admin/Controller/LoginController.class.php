@@ -25,7 +25,6 @@ class LoginController extends Controller
             }
             
             $this->assign('enabledCaptcha', $this->enabledCaptcha);
-            die('444333');
             $this->display();
         }
         
