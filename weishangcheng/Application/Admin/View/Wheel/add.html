@@ -1,0 +1,601 @@
+<literal>
+<link rel="stylesheet" href="/wheel/wheel.css">
+<style>
+.game-prize ul{margin:0}
+.app-design.without-add-region .app-preview{border-bottom-width:1px;padding-bottom:100px;border-radius:18px}
+.app-design .app-preview{position:relative;float:left;width:350px;border:1px solid #e5e5e5;border-bottom-width:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;background:#fff;border-radius:18px 18px 0 0}
+.app-design .app-preview .app-header{height:70px;background:url("__CDN__/img/iphone_head.png") no-repeat center center}
+.app-design.without-add-region .app-preview .app-entry{padding-bottom:0}
+.app-design .app-preview .app-entry{width:320px;margin:0 auto;padding-bottom:11px;min-height:200px;border:1px solid #c5c5c5;background:#f9f9f9}
+.app-design .app-preview .app-config .app-field{cursor:pointer;background-color:transparent}
+.app-design .app-preview .app-field{position:relative;cursor:move;-webkit-user-select:none}
+.app-design .app-preview .app-config .app-field h1{margin:0;padding:18px 60px 0 60px;height:46px;line-height:46px;font-size:16px;color:#fff;font-weight:bold;text-align:center;background:url("__CDN__/img/weixin_titlebar.png") no-repeat}
+.game-backstage .snapshot-wrap{width:320px;min-height:300px}
+.apps-wheel-wrap{width:100%;height:100%;background-color:#7f2789;padding:0 0 30px}
+.app-design.without-add-region .app-preview:after{position:absolute;content:'';bottom:20px;left:145px;width:60px;height:60px;border:1px solid #ddd;border-radius:30px}
+.game-backstage .filed-block{position:relative;float:left;width:590px;min-height:50px;margin-top:70px;margin-left:15px;padding:20px 15px 0 15px;background:#fff;border-radius:5px;border:1px solid #CCC}
+.game-backstage .form-actions{float:left;width:590px;margin-left:15px;padding:15px;border-radius:5px}
+.game-backstage .filed-block::after,.game-backstage .filed-block:before{content:"";width:0px;height:0px;border-style:solid;border-width:10px 10px 10px 0;border-color:transparent #CCC transparent transparent;position:absolute;left:-10px;top:15px}
+.game-backstage .filed-block::after{border-right-color:#fff;margin-left:1px}
+.game-backstage .filed-block .control-label{width:110px}
+.game-backstage .filed-block .controls{margin-left:120px}
+.game-backstage .intro{font-size:12px;color:#999}
+.game-backstage input[type="text"].input-smallest,.game-backstage input[type="number"].input-smallest{margin-right:5px;width:55px;text-align:center}
+.game-backstage hr{border-color:#DDD;margin:10px 0;border-bottom:none}
+.game-backstage .separate-line-wrap .separate-line{margin-top:-16px}
+.game-backstage .filed-block .separate-line-wrap .separate-line p{background-color:#fff}
+.game-backstage .separate-line-wrap .separate-line p{line-height:1em;width:100px;font-size:12px;margin:0 auto;text-align:center;background-color:#fff;color:#999}
+.game-backstage .separate-line-wrap.first-line{margin-top:10px}
+.game-backstage .separate-line-wrap{margin:15px 0 15px;padding:1px 0}
+.game-backstage .prizes-wrap{position:relative;border:1px solid #ccc;margin-top:10px}
+.game-backstage .prizes-wrap .prize-tab-item{float:left;text-align:center;font-size:14px;width:95.5px;padding:10px;border:1px solid #ccc;border-left-color:transparent;border-top-color:transparent;cursor:pointer}
+.game-backstage .prizes-wrap .prize-tab-item.selected{background:#fff;border-bottom-color:transparent}
+.game-backstage .prizes-wrap .prize-tab-item:last-child{width:95px;border-right-color:transparent}
+.game-backstage .prizes-wrap .prize-content{padding:20px;background:#fff}
+.game-backstage .prizes-wrap .prize-tab-item.has-set::before{position:relative;left:-5px;content:'√';font-family:sans-serif;color:green}
+.game-backstage .prizes-wrap .image-wrap .image-display{float:right;margin-right:10px;background-size:contain;background-repeat:no-repeat;background-position:center;width:60px;height:60px}
+.game-backstage .filed-block .controls.sink{padding-top:10px}
+.game-backstage .input-append input[readonly]{background-color:#fff}
+.apps-game{width:320px;margin:0 auto;min-height:100%}
+.apps-wheel .wheel .wheel-block{cursor:pointer}
+</style>
+</literal>
+<div class="process">
+	<div class="process-bar">
+        <ul id="js_nav">
+            <li class="size3 selected" data-target="#"><span>创建活动</span></li>
+            <li class="size3 next" data-target="#"><span>用户参与设置</span></li>
+            <li class="size3 last nnext" data-target="#"><span>奖品设置</span></li>
+        </ul>
+    </div>
+    <form class="form-horizontal game-backstage js-form" data-validate="true">
+	    <div class="process-cnt">
+	    	<div class="app-design without-add-region">
+		        <div class="app-preview">
+		            <div class="app-header"></div>
+		            <div class="app-entry">
+		                <div class="app-config">
+		                    <div class="app-field"><h1>幸运大抽奖</h1></div>
+		                </div>
+		                <div class="snapshot-wrap">
+		                	<div class="apps-game">
+				                <div class="apps-wheel-wrap">
+								    <div class="apps-wheel">
+								        <div class="logo"></div>
+								        <div class="wheel-wrap">
+								            <ul class="wheel">
+								                <li class="wheel-row-wrap">
+								                    <ul class="wheel-row">
+								                        <li class="wheel-block prize-again" data-index="0">
+								                            <div class="wheel-icon"></div>
+								                        </li>
+								                        <li class="wheel-block prize-again" data-index="1">
+								                            <div class="wheel-icon"></div>
+								                        </li>
+								                        <li class="wheel-block prize-again" data-index="2">
+								                            <div class="wheel-icon"></div>
+								                        </li>
+								                        <li class="wheel-block prize-again" data-index="3">
+								                            <div class="wheel-icon"></div>
+								                        </li>
+								                    </ul>
+								                </li>
+								                <li class="wheel-row-wrap">
+								                    <ul class="wheel-row wheel-sep-row">
+								                        <li class="wheel-block prize-again" data-index="11">
+								                            <div class="wheel-icon"></div>
+								                        </li>
+								                        <li class="wheel-block prize-again" data-index="4">
+								                            <div class="wheel-icon"></div>
+								                        </li>
+								                    </ul>
+								                </li>
+								                <li class="wheel-row-wrap">
+								                    <ul class="wheel-row wheel-sep-row">
+								                        <li class="wheel-block prize-again" data-index="10">
+								                            <div class="wheel-icon"></div>
+								                        </li>
+								                        <li class="wheel-block prize-again" data-index="5">
+								                            <div class="wheel-icon"></div>
+								                        </li>
+								                    </ul>
+								                </li>
+								                <li class="wheel-row-wrap">
+								                    <ul class="wheel-row">
+								                        <li class="wheel-block prize-again" data-index="9">
+								                            <div class="wheel-icon"></div>
+								                        </li>
+								                        <li class="wheel-block prize-again" data-index="8">
+								                            <div class="wheel-icon"></div>
+								                        </li>
+								                        <li class="wheel-block prize-again" data-index="7">
+								                            <div class="wheel-icon"></div>
+								                        </li>
+								                        <li class="wheel-block prize-again" data-index="6">
+								                            <div class="wheel-icon"></div>
+								                        </li>
+								                    </ul>
+								                </li>
+								            </ul>
+								            <div class="middle-button-area">
+								                <div class="middle-button js-start-btn"></div>
+								            </div>
+								        </div>
+								        <div class="info-area">
+								            <div class="view-prize">查看奖品</div>
+								            <ul class="activity-info">
+								                <li>1.活动有效时间：
+								                    <div class="activity-info-content"><span id="activeStartTime" data-name="start_time">0000-00-00 00:00:00</span> 至 <span id="activeEndTime" data-name="end_time">0000-00-00 00:00:00</span></div>
+								                </li>
+								                <li>2.活动说明：
+							                        <div id="activeNotice" class="activity-info-content" data-name="notice"></div>
+							                    </li>
+							                    <li>3.发行方：
+							                        <div class="activity-info-content" data-name="team_name">{$data.team_name}</div>
+							                    </li>
+								            </ul>
+								        </div>
+								    </div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		
+	    	<div class="process-cnt-item show">
+				<fieldset class="filed-block">
+			        <div class="control-group">
+			            <label class="control-label required">活动名称</label>
+			            <div class="controls">
+			                <input type="text" name="title" placeholder="填写活动名称" required="required" value="" maxlength="50" style="width:400px">
+			            </div>
+			        </div>
+			        <div class="control-group">
+			            <label class="control-label required">开始时间</label>
+			            <div class="controls">
+			                <label id="startDate" class="input-append date" data-format="yyyy-MM-dd hh:mm:ss" data-start-date="{:date('Y-m-d')} 00:00:00">
+			                    <input class="input-medium" type="text" name="start_time" value="" required="required" readonly=""><span class="add-on"><i class="icon-calendar"></i></span>
+			                </label>
+			            </div>
+			        </div>
+			        <div class="control-group">
+			            <label class="control-label required">结束时间</label>
+			            <div class="controls">
+			                <label id="endDate" class="input-append date" data-format="yyyy-MM-dd hh:mm:ss" data-start-date="{:date('Y-m-d')} 00:00:00">
+			                    <input class="input-medium" type="text" name="end_time" value="" required="required" readonly=""><span class="add-on"><i class="icon-calendar"></i></span>
+			                </label>
+			                <span class="intro">活动时间不能超过1年</span>
+			            </div>
+			        </div>
+			        <div class="control-group">
+			            <label class="control-label required">活动说明</label>
+			            <div class="controls">
+			                <textarea id="notice" type="text" name="notice"required="required" maxlength="300" style="width: 400px; margin: 0px; height: 124px;"></textarea>
+			            </div>
+			        </div>
+			    </fieldset>
+			    <div class="form-actions">
+				  <button type="button" class="btn btn-primary js-next" data-index="1">下一步</button>
+				</div>
+			</div>
+			<div class="process-cnt-item">
+				<fieldset class="filed-block">
+			        <div class="control-group">
+			            <label class="control-label">参与条件</label>
+			            <div class="controls levellist-wrap">
+			            	<div>
+					            <select class="input-medium js-selects" name="subscribe">
+						        	<option value="0">不限</option>
+						            <option value="1">仅关注用户</option>
+								</select>
+							</div>
+						</div>
+					</div>
+			        <div class="control-group">
+			            <label class="control-label">消耗积分</label>
+			            <div class="controls">
+			                <input class="input-medium js-input-number" name="cost_point" type="number" placeholder="为0时不消耗积分" value="" max="100000" min="0">
+			                <span class="intro">用户每次参与需要消耗积分</span>
+			            </div>
+			        </div>
+			        <div class="control-group">
+			            <label class="control-label">参与送积分</label>
+			            <div class="controls">
+			                <input class="input-medium js-input-number" name="give_point" type="number" placeholder="填写积分数" value="" max="100000" min="0">
+			                <label class="checkbox inline">
+			                    <input name="give_point_failed" type="checkbox">仅送给未中奖的用户
+			                </label>
+			            </div>
+			        </div>
+			        <div class="control-group">
+			            <label class="control-label">赠品中奖次数</label>
+			            <div class="controls">
+			                <input class="input-medium js-input-number" name="gift_times" type="number" placeholder="为0不限制" value="" max="100000" min="0">
+			            </div>
+			        </div>
+			        <div class="control-group">
+			            <label class="control-label required">参与次数</label>
+			            <div class="controls">
+			            	<p style="height:30px;line-height:30px;">
+				                <label class="checkbox inline" style="padding-top: 0;">
+				                    <input type="checkbox" name="every_limit" {$data['every_limit']['checked'] ? ' checked=""' : ''}>一人
+				                </label>
+				                <input type="number" name="every_times" style="width:40px;text-align:center;" value="{$data['every_limit']['value']}" min="1"> 次
+			                </p>
+			                <p style="height:30px;line-height:30px;">
+				                <label class="checkbox inline" style="padding-top: 0;">
+				                    <input type="checkbox" name="day_limit" {$data['day_limit']['checked'] ? ' checked=""' : ''}>一天
+				                </label>
+				                <input type="number" name="day_times" style="width:40px;text-align:center;" value="{$data['day_limit']['value']}" min="1"> 次
+			                </p>
+			                <p style="height:30px;line-height:30px;">
+				                <label class="checkbox inline" style="padding-top: 0;">
+				                    <input type="checkbox" name="month_limit" {$data['month_limit']['checked'] ? ' checked=""' : ''}>每月
+				                </label>
+				                <input type="number" name="month_times" style="width:40px;text-align:center;" value="{$data['month_limit']['value']}" min="1"> 次
+			                </p>
+			            </div>
+			        </div>
+			    </fieldset>
+			    <div class="form-actions">
+				  <button type="button" class="btn js-next" data-index="0">上一步</button>
+				  <button type="button" class="btn btn-primary js-next" data-index="2">下一步</button>
+				</div>
+			</div>
+			<div class="process-cnt-item">
+			    <fieldset class="filed-block">
+			        <div class="separate-line-wrap first-line">
+			            <hr>
+			            <div class="separate-line">
+			                <p class="text-center">中奖概率</p>
+			            </div>
+			        </div>
+			        <div class="control-group" style="padding-left: 142px;margin-bottom:0">
+			            <label class="control-label">中奖率</label>
+			            <div class="controls">
+			                <input type="number" class="input-smallest js-input-number" name="probability" value="" max="100" min="0" required="required">%
+			                <a class="help-icon" target="_blank" href="https://bbs.youzan.com/forum.php?mod=viewthread&amp;tid=26850&amp;extra=page%3D1"></a>
+			            </div>
+			        </div>
+			        <div class="separate-line-wrap">
+			            <hr>
+			            <div class="separate-line">
+			                <p class="text-center">设置奖品</p>
+			            </div>
+			        </div>
+			        <p style="color: #666; padding-left: 55px;">等级设置的奖品数量越多，则该等级中奖率越高。<br>例如：设置一等奖 10个，二等奖20个，则中二等奖概率高于一等奖</p>
+			        <div class="prizes-wrap js-isolate">
+			        	<div class="game-prize">
+			        		<ul class="prize-list clearfix">
+						        <li class="prize-tab-item selected" data-index="0">奖品一</li>
+						        <li class="prize-tab-item" data-index="1">奖品二</li>
+						        <li class="prize-tab-item" data-index="2">奖品三</li>
+						        <li class="prize-tab-item" data-index="3">奖品四</li>
+						        <li class="prize-tab-item" data-index="4">奖品五</li>
+							</ul>
+							<div class="prize-content" id="prizeContent">
+								
+							</div>
+						</div>
+					</div>
+			        <div class="separate-line-wrap">
+			            <hr>
+			            <div class="separate-line">
+			                <p class="text-center">中奖结果说明</p>
+			            </div>
+			        </div>
+			        <div class="control-group">
+			            <label class="control-label">未中奖说明</label>
+			            <div class="controls">
+			                <textarea class="js-change-content js-no-valid" name="failed" placeholder="哎呀，真可惜擦身而过!" maxlength="24" style="width:400px"></textarea>
+			            </div>
+			        </div>
+			    </fieldset>
+			    <div class="form-actions">
+				  <button type="button" class="btn js-next" data-index="1">上一步</button>
+				  <button type="submit" class="btn btn-primary">保存</button>
+				</div>
+		    </div>
+	    </div>
+    </form>
+</div>
+<script>
+var giveawayList = {$giveawayList};
+var editor, setImg;
+$(function(){
+	editor = UE.getEditor('editor',{isShow: false});
+	editor.addListener('beforeInsertImage', function (t, list) {
+		setImg(list[0].src);
+    });
+});
+var wheel = {
+		prize: {
+			"1": {type: 1, num: '', val: '', image_url: '', index: []},
+			"2": {type: 1, num: '', val: '', image_url: '', index: []},
+			"3": {type: 1, num: '', val: '', image_url: '', index: []},
+			"4": {type: 1, num: '', val: '', image_url: '', index: []},
+			"5": {type: 1, num: '', val: '', image_url: '', index: []}
+			}
+		};
+
+</script>
+<literal>
+<script>
+$('#startDate').on('changeDate', function(ev){
+	var date = $(this).children('input').val();
+	$('#activeStartTime').html(date);
+	return false;
+});
+$('#endDate').on('changeDate', function(ev){
+	var date = $(this).children('input').val();
+	$('#activeEndTime').html(date);
+	return false;
+});
+$('#notice').on('change', function(){
+	var notice = this.value.replace(/\r\n/g,"<br>");
+	notice = notice.replace(/\n/g,"<br>")  
+	$('#activeNotice').html(notice);
+	return false;
+});
+
+var currentLevel;
+function showPrizeContent(data){
+	for(var i in data){
+		wheel.prize[currentLevel][i] = data[i];
+	}
+	var html = '';
+	html += '<div class="control-group">';
+	html += '    <label class="control-label">选择奖品</label>';
+	html += '    <div class="controls">';
+	html += '        <label class="radio inline">';
+	html += '            <input type="radio" class="js-gift-type" name="type" value="1"'+(data.type == 1 ? ' checked=""' : '')+'>赠送积分';
+	html += '        </label>';
+	html += '        <!-- ';
+	html += '        <label class="radio inline">';
+	html += '            <input type="radio" class="js-gift-type" name="type" value="2"'+(data.type == 2 ? ' checked=""' : '')+'>送优惠';
+	html += '        </label>';
+	html += '        -->';
+	html += '        <label class="radio inline">';
+	html += '            <input type="radio" class="js-gift-type" name="type" value="3"'+(data.type == 3 ? ' checked=""' : '')+'>赠品';
+	html += '        </label>';
+	html += '    </div>';
+	html += '</div>';
+	if(data.type == 1){
+		html += '<div class="control-group">';
+		html += '    <label class="control-label">赠送积分</label>';
+		html += '    <div class="controls">';
+		html += '        <input type="number" class="input-medium js-val js-input-number" value="'+data.val+'" placeholder="请填写积分数" name="val" max="100000" min="1">';
+		html += '        <p class="help-block error-message" id="js-val-error">还没有填写积分数</p>';
+		html += '    </div>';
+		html += '</div>';
+	}else if(data.type == 3){
+		html += '<div class="control-group">';
+		html += '    <label class="control-label">赠品</label>';
+		html += '    <div class="controls">';
+		html += '       <select name="val" class="js-val">';
+		html += '        	<option value="">未选择</option>';
+		for(var i=0; i<giveawayList.length; i++){
+			html += '       <option value="'+giveawayList[i].id+'"'+(giveawayList[i].id == data.val ? ' selected=""' : '')+' data-img="'+giveawayList[i].pic_url+'">'+giveawayList[i].title+' '+giveawayList[i].spec+'</option>';
+		}
+		html += '        </select>';
+		html += '        <p class="help-block error-message" id="js-val-error">请选择赠品</p>';
+		html += '    </div>';
+		html += '</div>';
+	}
+	html += '<div class="control-group">';
+	html += '    <label class="control-label">奖品数量</label>';
+	html += '    <div class="controls">';
+	html += '        <input type="number" class="input-medium js-input-number input-num" value="'+data.num+'" name="num" data-default="0" min="0">个';
+	html += '        <div class="help-block">奖品数量为0时不中此奖项</div>';
+	html += '        <p class="help-block error-message" id="js-num-error">还没有填写奖品数量</p>';
+	html += '    </div>';
+	html += '</div>';
+	html += '<hr>';
+	html += '<div class="control-group">';
+	html += '    <div class="control-label no-label">';
+	html += '        <div class="image-wrap">';
+	var background = data.image_url == '' ? '' : 'background-image: url('+data.image_url+');';
+	html += '       	<div class="image-display" style="'+background+'"></div>';
+	html += '            <input type="hidden" name="image_url" value="'+data.image_url+'">';
+	html += '        </div>';
+	html += '    </div>';
+	html += '    <div class="controls sink">';
+	html += '        <button class="btn btn-default js-upload-image" data-target="image_url" type="button">上传奖品图片</button>&nbsp;&nbsp;';
+	html += '       <button class="btn btn-default js-clear-prize-image" type="button">清空</button>';
+	html += '        <div class="help-block">仅支持 jpg、png、 尺寸48*48 不超过1M</div>';
+	html += '    </div>';
+	html += '</div>';
+	
+	$('#prizeContent').html(html);
+}
+
+var $wheelBlocks = $('.wheel .wheel-block');
+setImg = function(src){
+	var $img = $('#prizeContent .image-wrap').children();
+	$img.eq(0).css('background', src == '' ? '' : 'url('+src+')');
+	$img.eq(1).val(src);
+	var data = wheel.prize[currentLevel];
+	data.image_url = src;
+	var position = data.index;
+	
+	if(position.length == 0){
+		return;
+	}
+	var p = -1;
+	$wheelBlocks.each(function(i, item){
+		p = $wheelBlocks.eq(i).data('index');
+		if(position.indexOf(p) > -1){
+			var $icon = $wheelBlocks.eq(i).find('.wheel-icon');
+			if(src == ''){
+				$icon.removeClass('point-icon custom-icon')
+				.css("background-image", '');
+				if(data.num != '' && data.val != ''){
+					$wheelBlocks.eq(i).addClass('prize' + currentLevel);
+				}else{
+					$wheelBlocks.eq(i).removeClass('prize' + currentLevel);
+				}
+			}else{
+				$icon.removeClass('point-icon')
+				.addClass('custom-icon')
+				.css("background-image", 'url('+src+')');
+			}
+		}
+	});
+}
+
+//一等奖、二等奖...改变
+var $prizeTabItem = $('.prize-tab-item'); 
+$prizeTabItem.on('click', function(){
+	if(currentLevel >= 0){
+		var $editing = $prizeTabItem.eq(currentLevel - 1);
+		if(wheel.prize[currentLevel].val != '' && wheel.prize[currentLevel].num != ''){
+			$editing.addClass('has-set');
+		}else{
+			$editing.removeClass('has-set');
+			
+			var $error;
+			if(wheel.prize[currentLevel].val == '' && wheel.prize[currentLevel].num != ''){
+				$error = $('#js-val-error');
+			}else if(wheel.prize[currentLevel].val != '' && wheel.prize[currentLevel].num == ''){
+				$error = $('#js-num-error');
+			}
+			
+			if($error != null){
+				$error.parents('.control-group:first').addClass('error');
+				return false;
+			}
+		}
+	}
+	
+	var $this = $(this);
+	$this.addClass('selected').siblings().removeClass('selected');
+	currentLevel = $this.data('index') + 1;
+	var data = wheel.prize[currentLevel];
+	showPrizeContent(data);
+	return false;
+}).eq(0).trigger('click');
+
+// 奖品类型
+$('#prizeContent').on('change', '.js-gift-type', function(){
+	wheel.prize[currentLevel].type = this.value || 1;
+	wheel.prize[currentLevel].val = '';
+	showPrizeContent(wheel.prize[currentLevel]);
+	return false;
+})
+// 清空图片
+.on('click', '.js-clear-prize-image', function(){
+	setImg('');
+	return false;
+})
+// 上传奖品图片
+.on('click', '.js-upload-image', function(){
+	editor.getDialog("insertimage").open();
+}).on('blur', '.js-input-number', function(){
+	this.value = parseInt(this.value);
+	wheel.prize[currentLevel][this.name] = this.value;
+	$(this).parents('.control-group:first').removeClass('error');
+	return false;
+}).on('change', '.js-val', function(){
+	wheel.prize[currentLevel][this.name] = this.value;
+	var $this = $(this);
+	$this.parents('.control-group:first').removeClass('error');
+	
+	if(wheel.prize[currentLevel].type == 3){
+		var img = this.value == '' ? '' : $this.find(':selected').data('img');
+		setImg(img);
+	}
+	return false;
+});
+
+// 分布奖品位置
+$('.wheel .wheel-icon').on('click', function(){
+	var data = wheel.prize[currentLevel];
+	var background = data.image_url ? 'url('+data.image_url+')' : '';
+	
+	var $this = $(this),
+		$parent = $this.parent(),
+		index = $parent.data('index');
+	
+	var ii = -1;
+	for(var i in wheel.prize){
+		ii = wheel.prize[i].index.indexOf(index);
+		if(ii > -1){
+			wheel.prize[i].index.splice(ii, 1);
+		}
+	}
+	
+	$this.css('background-image', '');
+	$this.removeClass('point-icon');
+	$parent.removeClass('prize1 prize2 prize3 prize4 prize5');
+	
+	if($this.hasClass('custom-icon')){
+		$this.removeClass('custom-icon');
+	}else{
+		data.index.push(index);
+		if(data.type == 1 && data.image_url == ''){
+			$this.addClass('point-icon');
+			$this.addClass('custom-icon');
+		}else if(data.image_url != ''){
+			$this.css('background-image', background);
+			$this.addClass('custom-icon');
+		}else{
+			$parent.addClass('prize' + currentLevel);
+		}
+	}
+	return false;
+});
+
+$('.js-form').on('valid', function(e, data){
+	for(var i in wheel.prize){
+		if(wheel.prize[i].val == '' && wheel.prize[i].num == ''){
+			wheel.prize[i].index = [];
+			wheel.prize[i].image_url = '';
+		}else if(wheel.prize[i].val != '' && wheel.prize[i].num != '' && wheel.prize[i].index.length == 0){
+			alertMsg('请在左侧奖品区域选择“奖品'+i+'”的中奖区域');
+			return false;
+		}
+	}
+	delete data.type;
+	delete data.val;
+	delete data.num;
+	delete data.image_url;
+
+	for(var i in data){
+		wheel[i] = data[i];
+	}
+	
+	if(!wheel.day_limit)
+		wheel.day_times = 0;
+	if(!wheel.every_limit)
+		wheel.every_times = 0;
+	if(!wheel.month_limit)
+		wheel.month_times = 0;
+	delete wheel.day_limit;
+	delete wheel.every_limit;
+	delete wheel.month_limit;
+	
+	wheel.give_point_failed = data.give_point_failed ? 1 : 0;
+	
+	var $submit = $('.js-form').find(':submit');
+	$submit.attr('disabled', 'disabled').toggleClass('btn-primary');
+	
+	$.ajax({
+		url: '__ACTION__',
+		type: 'post',
+		dataType: 'json',
+		data: wheel,
+		success: function(){
+			window.history.back();
+		},
+		error: function(){
+			$submit.removeAttr('disabled').toggleClass('btn-primary');
+		}
+	});
+	return false;
+});
+</script>
+<script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="/ueditor/ueditor.all.min.js"></script>
+<div style="display: none;" id="editor" class="edui-default"></div>
+</literal>

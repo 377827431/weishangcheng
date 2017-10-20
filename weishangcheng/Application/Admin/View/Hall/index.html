@@ -1,0 +1,40 @@
+<div id="toolbar" class="toolbar">
+	<form class="form-horizontal">
+		<div class="control-group">
+			<label class="control-label" style="width: 120px;">扫码时间</label>
+			<div class="controls" style="margin-left:125px;">
+				<div class="input-append date" data-format="yyyy-MM-dd">
+					<input type="text" name="start_time" value="" style="width: 130px;" readonly>
+					<span class="add-on"><i class="icon-th"></i></span>
+				</div>
+				至
+				<div class="input-append date" data-format="yyyy-MM-dd">
+					<input type="text" name="end_time" value="" style="width: 130px;" readonly>
+					<span class="add-on"><i class="icon-th"></i></span>
+				</div>
+				<button type="button" data-name="search" class="btn btn-default" data-event-type="default" data-event-value="" data-target=""><i class="icon-search"></i> 搜索</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" data-side-pagination="client" class="table table-hover" data-url="__ACTION__" data-toolbar="#toolbar">
+    <thead>
+		<tr>
+			<th data-width="100" data-field="h_name" data-formatter="format_sort">营业厅--->营业所</th>
+			<th data-width="150" data-field="user_count">新关注人数</th>
+			<th data-width="200" data-field="count">扫码次数</th>
+		</tr>
+	</thead>
+</table>
+
+<script type="text/javascript">
+
+//格式化数据
+function format_sort(h_name, row, index) {
+	return h_name+'--->'+row.name;
+}
+
+</script>
+<script type="text/javascript" src="/js/jstree.min.js"></script>

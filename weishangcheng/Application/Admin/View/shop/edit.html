@@ -1,0 +1,108 @@
+<form method="post" action="__ACTION__" data-validate="true" data-continue="true" data-submit="ajax" class="form-horizontal">
+  <input type="hidden" name="id" value="{$data.id}">
+  <div class="form-group">
+	  <div class="form-item">
+		  <div class="control-group">
+		    <label class="control-label must">店铺名称</label>
+		    <div class="controls">
+		      <input class="required" type="text" name="shop[name]" maxlength="15" value="{$data.name}" placeholder="最多15个字符"{$data['type'] == 2 ? ' disabled="disabled"' : ''}>
+		    </div>
+		  </div>
+	  	  
+	  	  <div class="control-group">
+		    <label class="control-label must">客服电话</label>
+		    <div class="controls">
+		      <input type="text" name="shop[service_hotline]" required="required" value="{$data.service_hotline}" maxlength="13" placeholder="400在线客服">
+		    </div>
+	  	  </div>
+	  	  <div class="control-group">
+		  	<label class="control-label must">省份</label>
+		    <div class="controls">
+			    <select name="info[province_id]" id="province_id" class="required" data-city="#city_id" data-selected="{$data.province_id}">
+					<option value="">请选择</option>
+				</select>
+		    </div>
+		  </div>
+		  
+		  <div class="control-group">
+		    <label class="control-label must">市区</label>
+		    <div class="controls">
+		        <select name="info[city_id]" id="city_id"  class="required" data-county="#county_id" data-selected="{$data.city_id}" style="width:120px"><option value="">请选择</option></select>
+		        <select name="info[county_id]" id="county_id" data-selected="{$data.county_id}" style="width:100px"><option value="">请选择</option></select>
+		    </div>
+	  	  </div>
+		  
+		  <div class="control-group">
+		    <label class="control-label must">详细地址</label>
+		    <div class="controls">
+		       <input type="text" name="info[address]" placeholder="最多120个字符" maxlength="120" class="required" value="{$data.address}">
+		    </div>
+	  	  </div>
+	  </div>
+	  
+	  <div class="form-item">
+		  <div class="control-group">
+		  	<label class="control-label">店铺 Logo</label>
+		  	<div class="controls">
+				<input class="hide" type="text" name="shop[logo]" readonly="readonly" data-msg-required="请上传logo">
+				<img id="shop_logo" src="{$data.logo}" class="img-polaroid btn-up" alt="logo" style="width: 64px; height: 64px;">
+			</div>
+		  </div>
+		  <div class="control-group">
+		    <label class="control-label">负责人姓名</label>
+		    <div class="controls">
+		      <input type="text" name="info[contacts]" maxlength="8" value="{$data.contacts}" placeholder="最多8个字符">
+		    </div>
+		  </div>
+		  <div class="control-group" title="同时接收微信公众号关键消息提醒">
+		    <label class="control-label must">负责人手机</label>
+		    <div class="controls">
+		      <input type="text" name="info[mobile]" class="mobile" maxlength="11" value="{$data.mobile}" placeholder="在商城个人中心绑定的手机号" required="required">
+		    </div>
+		  </div>
+		  <div class="control-group">
+		    <label class="control-label">QQ客服</label>
+		    <div class="controls">
+		      <input type="text" name="info[qq]" maxlength="15" value="{$data.qq}" placeholder="QQ号码">
+		    </div>
+		  </div>
+	  </div>
+  </div>
+ 	<div class="form-group">
+ 		<div class="form-item">
+			<div class="control-group">
+			    <label class="control-label">店铺简介</label>
+			    <div class="controls">
+			      <textarea rows="5" style="width:704px;" name="info[desc]" maxlength="300" placeholder="最多300个字符">{$data.desc}</textarea>
+			    </div>
+		    </div>
+ 		</div>
+	</div>
+	<div class="form-actions">
+	  <button type="submit" class="btn btn-primary">保存</button>
+	  <button type="button" class="btn">取消</button>
+	</div>
+</form>
+<script src="/js/address.js"></script>
+<script type="text/javascript">
+Address.bind("#province_id");
+</script>
+<script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="/ueditor/ueditor.all.min.js"></script>
+<div style="display: none;" id="editor" class="edui-default"></div>
+<script>
+$(function(){
+	var editor = UE.getEditor('editor',{isShow: false})
+	$('#shop_logo').on('click', function(){
+		var $img = $(this);
+		var $input_url = $img.prev();
+		editor.removeListener('beforeInsertImage');
+		editor.addListener('beforeInsertImage', function (t, list) {
+			$input_url.val(list[0]['src']);
+			$img.attr('src', list[0]['src']);
+        });
+		
+		editor.getDialog("insertimage").open();
+	});
+});
+</script>

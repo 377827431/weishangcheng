@@ -1,0 +1,67 @@
+ <toolbar id="toolbar" class="toolbar">
+	<form id="level_search" class="form-horizontal">
+		<div class="clearfix">
+			<div class="filter-groups">
+				<if condition="$access eq true">
+					<div class="control-group">
+						<label class="control-label">操作人</label>
+						<div class="controls">
+							<select name="user_id" id="sel_users" style="width:213px;">
+							  <option value="">全部</option>
+				              <foreach name="users" item="item">
+								<option value="{$item.id}">{$item.nick}-{$item.username}</option>
+							  </foreach>
+							</select>
+						</div>
+					</div>
+				</if>
+				<div class="filter-groups">
+					<div class="control-group">
+						<label class="control-label">商品名称</label>
+						<div class="controls">
+							<input type="text" name="title">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="pull-left">
+				<div class="control-group">
+					<label class="control-label" style="width: 120px;">操作时间</label>
+					<div class="controls" style="margin-left:125px;">
+						<div class="input-append date" data-format="yyyy-MM-dd hh:mm:ss">
+							<input type="text" name="start_date" value="{$search.start_date}"style="width: 130px;">
+							<span class="add-on"><i class="icon-th"></i></span>
+						</div>
+						至
+						<div class="input-append date" data-format="yyyy-MM-dd hh:mm:ss">
+							<input type="text" name="end_date" value="{$search.end_date}" style="width: 130px;">
+							<span class="add-on"><i class="icon-th"></i></span>
+						</div>
+					</div>
+				</div>
+			</div>
+	 	</div>
+	</form>
+</toolbar>
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-url="__URL__" data-toolbar="#toolbar"  data-page-list="[1, 10, 25, 50, All]">
+    <thead>
+		<tr>
+			<th data-width="40" data-checkbox="true"></th>
+			<th data-width="100" data-field="nick">操作人</th>
+			<th data-width="100" data-field="username">操作账号</th>
+			<th data-width="200" data-field="title">商品名称</th>
+			<th data-width="150" data-field="created">操作时间</th>
+			<th data-field="question">反馈信息</th>
+		</tr>
+	</thead>
+</table>
+
+<script type="text/javascript" src="/js/select2.min.js"></script>
+<link rel="stylesheet" href="/css/select2.min.css">
+
+<script type="text/javascript">
+//多选
+$("#sel_users").select2();
+$("#sel_goods").select2();
+</script>

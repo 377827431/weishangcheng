@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="实名认证" />
+    <style>
+        .content-body{box-sizing:border-box;width:100%;padding-left:4%;padding-right:4%;}
+        .p_title{font-size:14px;font-family:"微软雅黑";line-height:30px;}
+        .p_info{font-size:12px;font-family:"微软雅黑";line-height:20px;}
+        .bordered_input{width:100%;height:35px;border-radius:6px;border:1px solid #acacac;outline:none;}
+        .button_yellow{color:white;background-color: #da8f3e;line-height:42px;border-radius:6px;font-size:16px;font-family:"微软雅黑";text-align:center;}
+        .atention_icon{width:16px;height:16px;display:inline-block;background: url("__CDN__/img/seller/gantan.png") no-repeat;background-size:100% 100%;}
+        .update_img_ul{position:relative;}
+        .update_img_ul li:nth-child(1){display:block;}
+        .update_img_ul li:nth-child(2){display:none;}
+        .update_img_ul.already_update li:nth-child(1){display:none;}
+        .update_img_ul.already_update li:nth-child(2){display:block;}
+        .update_img_ul li:nth-child(3){position:absolute;width:100%;height:100%;top:0px;opacity:0;z-index:1000;}
+        /*.loading_mask{position:fixed;width: 100%;height: 100%;background-color: rgba(0,0,0,0.8);z-index:9999;}*/
+        .loading_svg{width:120px;height:120px;margin:120px auto 0px;background:url("__CDN__/img/seller/loading_yellow.svg") no-repeat;background-size:cover;}
+        /*覆盖弹窗样式*/
+        .loading-wrapper .mask {
+            background: rgba(0,0,0,0.8);
+            opacity: 1;
+        }
+        .loading-wrapper .inner {
+            width: 120px;
+            height: 120px;
+            top: 42%;
+            opacity: 1;
+            margin-left: -60px;
+            margin-top: -117px;
+            background:url("__CDN__/img/seller/loading_yellow.svg") no-repeat;background-size:cover;
+        }
+        .loading-wrapper .loading-dot span{display:none;}
+        .loading-wrapper .text{width:100%;left:0px;margin-left:0px;font-size:14px;font-family:"微软雅黑";}
+    </style>
+</head>
+<body style="background-color:#f4f4f4;width:100%;">
+    <div class="container">
+        <div class="content ">
+            <div class="content-body">
+                <!-- <div id="toast-66" class="toast-view"><div class="toast-bg"></div><div class="ext-tips">请填写身份验证信息</div></div>
+                <div id="toast-66" class="toast-view"><div class="toast-bg"></div><div class="ext-tips">请填写身份验证信息</div></div> -->
+                <p class="p_title" style="color:#303030;margin-top:18px;">您尚未进行实名认证，目前无法使用提现功能 请先提交认证信息。</p>
+                <ul>
+                    <li><input style="margin-top:14px;font-size:14px;text-indent:1em;" class="bordered_input true_name" type="text" placeholder="真实姓名"></li>
+                    <li><input style="margin-top:14px;font-size:14px;text-indent:1em;" class="bordered_input id_card" type="text" placeholder="身份证号码"></li>
+                </ul>
+                <p class="p_title" style="color:#303030;margin-top:20px;margin-bottom:20px;">上传手持身份证照片</p>
+                <ul class="update_img_ul"><!-- already_update 已上传 -->
+                    <li>
+                        <img src="__CDN__/img/seller/certification_demo.jpg" style="width:80%;">
+                    </li>
+                    <li>
+                        <img  class="dist_img" src="" style="width:80%;display:block;margin:0 auto;">
+                    </li>
+                    <li>
+                        <input class="update_img" style="width: 100%;height: 100%;" type="file">
+                    </li>
+                </ul>
+                <div class="button_yellow submit_certification" style="cursor:pointer;margin-top:24px;margin-bottom:24px;">提交审核</div>
+                <div style="width: 100%;position:relative;">
+                    <span class="atention_icon" style="position:absolute;left:0px;top:2px;"></span>
+                    <p class="p_info" style="padding-left:20px;">1 请手持本人身份证拍摄，参考右侧事例照片，身份证号码必须清晰识别，大小不得超过2M。</p>
+                    <p class="p_info" style="padding-left:20px;margin-top:14px;">2 预计3个工作日内完成人工审核。</p>
+                <div>
+            </div>
+        </div>
+    </div>
+    <script>
+        require(['jquery','lrz'],function($){
+            //点击上传图片
+            $(".update_img").on('change',function(){
+                // $(".loading_mask").show();
+                //成功
+                $("update_img_ul").toggleClass("already_update",true);
+                oFile = $(this).get(0).files[0];
+                imgSize = oFile.size;
+                lrz(oFile).then(function(rst){
+                    fd = new FormData();
+                    fd.append("upfile",rst.base64);
+                    $.ajax({
+                        url: "__CDN__/ueditor?action=uploadscrawl",
+                        type: "POST",
+                        processData: false,
+                        contentType: false,
+                        post_msg:"upload_img",
+                        data: fd,
+                        success: function(d) {
+                            var dd = JSON.parse(d);
+                            if (dd.state == 'SUCCESS'){
+                                $(".dist_img").attr("src",dd.url);
+                                $("ul.update_img_ul").toggleClass("already_update",true);
+                                // $(".loading_mask").hide();
+                            }
+                        }
+                    });
+                })
+            })
+            //提交审核
+            $(".submit_certification").click(function(){
+                var true_name = $("input.true_name").val();
+                var id_card = $("input.id_card").val();
+                var regIdCard=/^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/;
+                var regName = /^[\u4E00-\u9FA5]{2,10}(?:·[\u4E00-\u9FA5]{2,10})*$/;
+                var img_src = $("img.dist_img").attr("src");
+                if(true_name == ""){
+                    toast.show("请填写真实姓名");
+                    return false;
+                }
+                if(id_card == ""){
+                    toast.show("请填写身份验证信息");
+                    return false;
+                }
+                if(!regName.test(true_name)){
+                    toast.show("姓名非法");
+                    return false;
+                }
+                if(!regIdCard.test(id_card)){
+                    toast.show("身份证号码非法");
+                    return false;
+                }
+                if(!$("ul.update_img_ul").hasClass("already_update")){
+                    toast.show("请传入手持身份证图片");
+                    return false;
+                }
+
+                $.ajax({
+                    url: "/seller/certification/update_auth",
+                    data: {true_name: true_name, card_num: id_card, card_img:img_src},
+                    type: 'post',
+                    success: function(data){
+                        window.location.replace("/seller/certification");
+                    }
+                });
+
+            })
+        })
+    </script>
+</body>
+</html>

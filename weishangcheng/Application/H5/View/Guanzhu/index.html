@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <title>{:C('WEBSITE_NAME')}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="red" name="apple-mobile-web-app-status-bar-style">
+    <meta name="format-detection" content="telphone=no">
+	<title>关注我们</title>
+	<style>
+	body{padding:0;margin:0;background-color:#fbecb5;font-family:PingFangSC-Regular,Helvetica,"Droid Sans",Arial,sans-serif;font-size: 12px;}
+	.qrcode{position:relative;overflow:hidden;padding-bottom:69.1666%;background:url(/img/mall/goods_watch_bg.png) no-repeat;background-size:100% 100%;}
+	.qrcode .content{position:absolute;padding-top: 15%;width:100%;height:100%;text-align: center;}
+	.qrcode .qrimg{width: 40%;}
+	.notice{padding:20px;text-align:center;font-weight:bold;color:#f60;font-size:16px;}
+	.goods-info{margin: 0 30px 30px 30px;padding: 10px 20px;background-color: #fff;}
+	.goods-info .goods-title{text-align: center;}
+	.goods-info .pic_url{}
+	.goods-info .pic_url img{width:100%}
+	</style>
+</head>
+<body>
+	<div class="qrcode">
+		<div class="content">
+			<img class="qrimg" src="{$qrimage}">
+		</div>
+	</div>
+	<div class="notice">
+		<div>长按二维码关注我们</div>
+		<div>非关注用户禁止访问</div>
+	</div>
+	<notempty name="goods">
+	<div class="goods-info">
+		<h3 class="goods-title">{$goods.title}</h3>
+		<div class="pic_url">
+			<img src="{$goods.pic_url}">
+		</div>
+	</div>
+	</notempty>
+</body>
+</html>

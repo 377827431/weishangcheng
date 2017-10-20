@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<include file="_layout/mall.head.html" />
+	<link rel="stylesheet" href="/css/mobile.editor.css">
+</head>
+<body class="body-fixed-bottom">
+	<div class="container">
+		<div class="content">
+			<div class="content-body">
+				<div id="customContent" class="mobile-editor">{$detail}</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+require(['editor'], function(){
+	$('#customContent').editor({
+		css: '__CDN__/css/mall.css',
+		cards: {$cards},
+		save: function(html){
+			$.ajax({
+				url: '__ACTION__',
+				type: 'post',
+				data: {content: html},
+				dataType: 'json',
+				success: function(){
+					toast.show('已保存');
+				}
+			});
+		}
+	});
+});
+</script>
+<script type="text/plain">
+var ctl = document.getElementById('customContent');
+require(['jquery', '/js/mobile.editor.js'], function(){
+	var editory = ME.getEditor('#customContent');
+	var selectHandler = {code: [16, 37, 38, 39, 40], doing: false, node: null, index: 0, core: null, add: false, core_index:0, is_up: false};
+	$(ctl).on('focus', function(e){
+		selection = window.getSelection?window.getSelection():document.selection;
+		resetSelectRange();
+	}).on('blur', function(e){
+		resetSelectRange();
+		setFocus();
+		return false;
+	}).on('keydown', function(e){
+		if(ctl.childElementCount == 0){
+			var p = document.createElement('p');
+			p.innerHTML = '&#8203;';
+			ctl.insertAdjacentElement("afterBegin", p);
+			p.focus();
+		}
+		
+		if(e.keyCode == 16){
+			selectHandler.doing = !selectHandler.doing
+			if(selectHandler.doing){
+				var range = document.createRange();
+				range.setStart(selection.anchorNode, selection.anchorOffset);
+				range.setEnd(selection.anchorNode, selection.anchorOffset);
+				selection.removeAllRanges();
+				selection.addRange(range);
+				selectRange = range;
+
+				selectHandler.core = selection.anchorNode;
+				selectHandler.node = selection.anchorNode;
+				selectHandler.index = selection.anchorOffset;
+				selectHandler.add = true;
+				selectHandler.core_index = selection.anchorOffset;
+			}
+		}else if(selectHandler.doing && e.keyCode == 38){ // 向上选择
+			var prev_node = selectHandler.is_up ? selection.anchorNode : selection.focusNode, element = prev_node, prev = null;
+			if(element.nodeName != 'P'){
+				element = element.parentElement;
+				if(element.nodeName != 'P'){
+					element = element.parentElement;
+				}
+			}
+			
+			prev = element.previousSibling;
+			if(element.nodeName != 'P' || !prev){
+				return false;
+			}
+			
+			var nodes = prev.childNodes, length = 0;
+			for(var i=0; i<nodes.length; i++){
+				node = nodes[i];
+				var text = node.nodeValue;
+				length += text.length;
+				if(length >= selectHandler.index || i+1 == nodes.length){
+					if(prev_node == selectHandler.core){
+						selectHandler.is_up = true;
+					}
+
+					if(length > selectHandler.index){
+						length = selectHandler.index
+					}
+					
+					if(selectHandler.is_up){
+						selectRange.setStart(node, length);
+					}else{
+						selectRange.setEnd(node, length);
+					}
+					selection.removeAllRanges();
+					selection.addRange(selectRange);
+					
+					selectHandler.node = node;
+					selectHandler.index = length;
+					
+					return false;
+				}
+			}
+		}else if(selectHandler.doing && e.keyCode == 40){ // 向下选择
+			var prev_node = selectHandler.is_up ? selection.anchorNode : selection.focusNode, element = prev_node, next = null;
+			if(element.nodeName != 'P'){
+				element = element.parentElement;
+				if(element.nodeName != 'P'){
+					element = element.parentElement;
+				}
+			}
+			
+			next = element.nextSibling;
+			if(element.nodeName != 'P' || !next){
+				return false;
+			}
+			
+			var nodes = next.childNodes, length = 0;
+			for(var i=0; i<nodes.length; i++){
+				node = nodes[i];
+				var text = node.nodeValue;
+				length += text.length;
+				if(length >= selectHandler.index || i+1 == nodes.length){
+					if(prev_node == selectHandler.core){
+						selectHandler.is_up = false;
+					}
+
+					if(length > selectHandler.index){
+						length = selectHandler.index
+					}
+					
+					if(selectHandler.is_up){
+						selectRange.setStart(node, length);
+					}else{
+						selectRange.setEnd(node, length);
+					}
+					selection.removeAllRanges();
+					selection.addRange(selectRange);
+					
+					selectHandler.node = node;
+					selectHandler.index = length;
+					return false;
+				}
+			}
+		}else if(selectHandler.code.indexOf(e.keyCode) == -1){
+			selectHandler.doing = false
+		}
+	}).on('keyup', function(e){
+		if(selectHandler.doing){
+			if(e.keyCode == 39){ // 向右选择
+				var node = selectHandler.node, length = selectHandler.index + 1;
+				if(length > node.nodeValue.length){
+					node = node.parentElement.nextSibling;
+					if(node){
+						if(node.nodeName != '#text'){
+							node = node.childNodes[0];
+						}
+						length = node.nodeValue == '' ? 0 : 1;
+					}
+				}
+				
+				if(node){
+					if(node == selectHandler.core && length > selectHandler.core_index){
+						selectHandler.add = true;
+					}
+					
+					if(selectHandler.add){
+						selectRange.setEnd(node, length);
+					}else{
+						selectRange.setStart(node, length);
+					}
+					selection.removeAllRanges();
+					selection.addRange(selectRange);
+
+					selectHandler.node = node;
+					selectHandler.index = length;
+				}
+			}else if(e.keyCode == 37){ // 向左选择
+				var node = selectHandler.node, length = selectHandler.index - 1;
+				if(length < 0){
+					node = node.parentElement.previousSibling;
+					if(node){
+						if(node.nodeName != '#text'){
+							node = node.childNodes[node.childNodes.length - 1];
+						}
+						length = node.nodeValue == '' ? 0 : node.nodeValue.length;
+					}
+				}
+				
+				if(node){
+					if(node == selectHandler.core && length < selectHandler.core_index){
+						selectHandler.add = false;
+					}
+					
+					if(selectHandler.add){
+						selectRange.setEnd(node, length);
+					}else{
+						selectRange.setStart(node, length);
+					}
+					selection.removeAllRanges();
+					selection.addRange(selectRange);
+
+					selectHandler.node = node;
+					selectHandler.index = length;
+				}
+			}
+		}
+		return false
+	});
+	
+	function resetSelectRange(){
+		selectRange = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+	}
+	
+	function hideToolbarContent(){
+		$('#toolbar .toolbar-content').removeClass('active');
+	}
+	
+	function setFocus(){
+		if(selection.rangeCount > 0){
+			selection.removeAllRanges();
+selection.addRange(selectRange.cloneRange());
+			if(ctl.childElementCount == 0){
+				var p = document.createElement('p');
+				p.innerHTML = '&#8203;';
+				ctl.insertAdjacentElement("afterBegin", p);
+				p.focus();
+				
+				var range = document.createRange();
+				range.setStart(p, 0);
+				range.setEnd(p, 1);
+				resetSelectRange();
+				selection.addRange(range);
+			}else{
+				selection.addRange(selectRange.cloneRange());
+			}
+		}
+	}
+	
+	$('#toolbar').on('click', '.toolbar-icon', function(){
+		var $this = $(this);
+		if($this.hasClass('icon-image')){
+			return;
+		}if($this.hasClass('icon-bold')){
+			var weight = null;
+			setStyle(function(){
+				if(weight == null){
+					weight = this.style.fontWeight;
+					weight = weight == '' ? 'bold' : '';
+				}
+				this.style.fontWeight = weight;
+			});
+			return;
+		}
+		
+		hideToolbarContent();
+		$this.next().toggleClass('active');
+		return false;
+	}).on('click', '.font-size', function(){
+		var size = this.style.fontSize;
+		setStyle(function(){
+			this.style.fontSize = size
+		});
+		return false;
+	}).on('click', '.font-color', function(){
+		var color = this.style.backgroundColor;
+		setStyle(function(){
+			this.style.color = color
+		});
+		return false;
+	});
+	
+	function setStyle(callback){
+		try{
+			var startNode = selection.anchorNode.nodeName == 'P' ? selection.anchorNode.childNodes[0] : selection.anchorNode,
+				endNode   = selection.focusNode,
+				ednElement= endNode.parentElement,
+				element   = startNode.parentElement,
+				list      = [],
+				node      = null,
+				doing     = true;
+			
+			/*
+			if(startNode == endNode){
+				if(selection.focusOffset == selection.anchorOffset || (startNode.nodeName == 'P' && startNode.innerHTML == '') ||
+				  (startNode.nodeName == '#text' && ednElement.nodeName == 'P' && startNode.innerHTML == '')){
+					var element = null;
+					if(ednElement.nodeName != 'P' && ednElement.nodeName == '#text' && ednElement.innerHTML == ''){
+						element = ednElement;
+					}else{
+						element = document.createElement('span');
+						element.innerHTML = '&#8203;';
+						
+						if(startNode.nodeName == 'P'){
+							startNode.parentNode.insertBefore(element, startNode);
+						}else if(ednElement.nodeName != 'P' && ednElement.nodeName != '#text'){
+							element.setAttribute('style', ednElement.getAttribute('style'));
+							ednElement.parentNode.appendChild(element, ednElement);
+						}else{
+							startNode.parentNode.appendChild(element, startNode);
+						}
+					}
+					
+					callback.apply(element);
+					element.focus();
+
+					selection.removeAllRanges();
+					var range = document.createRange();
+					range.setStart(element, 0);
+					range.setEnd(element, 1);
+					selection.addRange(range);
+					return;
+				}
+			}
+			*/
+			do{
+				var nodeList = start = null;
+				if(element.nodeName == '#text'){
+					nodeList = [element];
+					start = 0;
+				}else{
+					nodeList = element.childNodes;
+					start = Array.prototype.indexOf.call(nodeList, startNode);
+					if(start == -1){
+						start = 0;
+					}
+				}
+				
+				for(var i=start; i<nodeList.length; i++){
+					var node = nodeList[i];
+					if(node.nodeName == '#text'){
+						list.push({node: node, start: node == startNode ? selection.anchorOffset : 0, end: node == endNode ? selection.extentOffset : node.nodeValue.length});
+					}else{
+						list.push({node: node, end: node == ednElement ? selection.focusOffset : 0});
+					}
+					
+					if(node == endNode || node == ednElement){
+						doing = false;
+						break;
+					}
+				}
+				
+				if(doing){
+					if(element.nextSibling){
+						element = element.nextSibling;
+					}else if(element.parentElement && element.parentElement.nodeName == 'P' && element.parentElement.nextSibling){
+						element = element.parentElement.nextSibling
+					}else{
+						doing = false;
+					}
+				}
+			}while(doing);
+			
+			// 重新标记选中
+			if(selection.rangeCount > 0) selection.removeAllRanges();
+			var range = document.createRange();
+			
+			for(var i=0; i<list.length; i++){
+				var length = 1, row = list[i], node = row.node, start = row.start, end = row.end, text = '', element = null, doElement = null;
+				if(node.nodeName == '#text'){
+					text = node.nodeValue;
+					
+					// 选中的是整个元素
+					if(node.parentElement.nodeName != 'P'){
+						element = node.parentElement;
+						if(start == 0 && end == text.length){
+							callback.apply(element);
+						}else{
+							if(start > 0){
+								element.innerHTML = element.innerHTML.substring(0, start);
+							}
+							
+							var middle = element.cloneNode();
+							callback.apply(middle);
+							middle.innerHTML = start == end ? '&#8203;' : text.substring(start, end);
+							document.title = 297;
+							element.parentNode.appendChild(middle, element);
+							
+							if(end < text.length){
+								var after = element.cloneNode();
+								after.innerHTML = text.substring(end);
+								document.title = 303;
+								middle.parentNode.appendChild(after, middle);
+							}
+							
+							if(start == 0){
+								element.remove();
+							}
+							element = middle;
+						}
+					}else{
+						// 保留开头
+						if(start > 0){
+							node.nodeValue = text.substring(0, start);
+						}
+						
+						// 创建中间
+						element = document.createElement('span');
+						callback.apply(element);
+						element.innerHTML = start == end ? '&#8203;' : text.substring(start, end);
+						document.title = 322;
+						node.parentNode.insertBefore(element, node.nextElementSibling);
+
+						// 保留结尾
+						if(end != text.length){
+							element.insertAdjacentHTML("afterEnd", text.substring(end));
+						}
+						
+						// 移除空元素
+						if(start == 0){
+							node.remove();
+						}
+					}
+				}else{
+					element = node;
+					if(end){
+						var text = element.innerHTML, ele = element.cloneNode();
+						ele.innerHTML = text.substring(end);
+						document.title = 340;
+						element.parentNode.appendChild(ele, element.nextElementSibling);
+						
+						element.innerHTML = text.substring(0, end);
+						callback.apply(element);
+					}else{
+						callback.apply(element);
+					}
+				}
+
+				if(element.nodeName != 'P'){
+					var prev = element.previousElementSibling, style = element.getAttribute('style');
+					var style1 = style ? style.replace(/(\s|,|:)/g, '', '').split(';').sort().join('') : '';
+					if(prev && prev.nodeName != 'P'){
+						style = prev.getAttribute('style');
+						var style2 = style ? style.replace(/(\s|,|:)/g, '', '').split(';').sort().join('') : '';
+						if(style2 == style1){
+							element.innerHTML = prev.innerHTML + element.innerHTML;
+							prev.remove();
+						}
+					}
+					
+					if(!style1){
+						var parent = element.parentElement, html = element.innerHTML;
+						if(parent.childNodes.length == 1){
+							parent.innerHTML = html;
+							element = parent.childNodes[0];
+						}
+					}
+				}
+				
+				if(i == 0){
+					range.setStart(element, 0);
+				}if(i+1 == list.length){
+					if(element.nodeName == '#text'){
+						length = element.nodeValue.length;
+					}else if(element.innerHTML == ''){
+						length = 0;
+					}
+					range.setEnd(element, length);
+				}
+			}
+
+			selection.removeAllRanges();
+			selection.addRange(range);
+			resetSelectRange();
+		}catch(e){
+			alert(e);			
+		}
+	}
+});
+</script>
+</html>

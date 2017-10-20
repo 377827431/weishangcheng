@@ -1,0 +1,58 @@
+<toolbar id="toolbar">
+	<form class="search-box">
+		<select name="type">
+			<option value="">所有用途</option>
+			<foreach name="types" key="id" item="item">
+				<option value="{$id}">{$item}</option>
+			</foreach>
+		</select>
+		<input type="text" name="weixin" placeholder="微信号">
+		<button type="button" data-name="search" class="btn btn-default" data-event-type="default">
+			<i class="icon-search"></i>
+		</button>
+	</form>
+</toolbar>
+
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-url="__URL__" data-toolbar="#toolbar" data-side-pagination="client">
+    <thead>
+		<tr>
+			<th data-width="40" data-checkbox="true"></th>
+			<th data-width="150" data-field="nickname">客服昵称</th>
+			<th data-width="150" data-field="weixin" data-formatter="formatter_weixin">微信号</th>
+			<th data-width="100" data-field="qq">QQ号</th>
+			<th data-width="90" data-field="enabled" data-align="center" data-formatter="formatter_enabled">启用</th>
+			<th data-field="type_str" data-width="90">用途</th>
+			<th data-width="100"  data-field="work">上班时间</th>
+			<th data-field="keyword">接入关键字</th>
+			<th data-width="40" data-field="times">接待次数</th>
+			<th data-width="40" data-field="avg_score">评分</th>
+		</tr>
+	</thead>
+</table>
+<script type="text/javascript">
+	//微信二维码
+	function formatter_weixin(wx_code, row, index){
+		if(!row.qrcode){
+			return row.weixin;
+		}
+		return '<a href="'+row.qrcode+'" target="_blank">'+row.weixin+'</a>';
+	}
+	
+	function formatter_type(type, row, index){
+		if(type == 1){
+			return '吸粉专区';
+		}else if(type == 2){
+			return '小视频';
+		}else{
+			return '联系客服';
+		}
+	}
+	
+	function formatter_enabled(val, row, index){
+		if(val != 1){
+			return '<span class="label label-warning">否</span>';
+		}
+		return '是';
+	}
+</script>

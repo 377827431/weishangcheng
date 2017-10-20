@@ -1,0 +1,167 @@
+<form method="post" action="__ACTION__?id={$data.id}" data-validate="true" data-continue="true" data-submit="ajax" class="form-horizontal edit-form">
+  <div class="form-group">
+	  <div class="form-item">
+		  <div class="control-group">
+		    <label class="control-label">公司名称</label>
+		    <div class="controls">
+		      <input type="text" name="name" maxlength="32" value="{$data.name}" placeholder="最多32个字符">
+		    </div>
+		  </div>
+		  <div class="control-group">
+		    <label class="control-label must">联系人</label>
+		    <div class="controls">
+		      <input class="required" type="text" name="nick" maxlength="32" value="{$data.nick}" placeholder="最多32个字符">
+		    </div>
+		  </div>
+	  	  <div class="control-group">
+		    <label class="control-label must">联系电话</label>
+		    <div class="controls">
+		      <input class="required" type="text" name="mobile" maxlength="11" value="{$data.mobile}" placeholder="最多11个字符">
+		    </div>
+		  </div>
+		  <div class="control-group">
+		    <label class="control-label must">email</label>
+		    <div class="controls">
+		      <input class="required" type="text" name="email" maxlength="50" value="{$data.email}" placeholder="最多50个字符">
+		    </div>
+		  </div>
+		  <div class="control-group" style="width:1000px;">
+		    <label class="control-label">公司规模</label>
+			<div class="controls js_is_virtual">
+				<label class="radio inline">
+					<input type="radio" name="company" value="1" checked="checked">10人以内
+				</label>
+				<label class="radio inline">
+					<input type="radio" {$data['company'] == 2 ?'checked="checked"':''} name="company" value="2">10-50人
+				</label>
+				<label class="radio inline">
+					<input type="radio" {$data['company'] == 3 ?'checked="checked"':''} name="company" value="3">50-200人
+				</label>
+				<label class="radio inline">
+					<input type="radio" {$data['company'] == 4 ?'checked="checked"':''} name="company" value="4">200人以上
+				</label>
+			</div>
+		  </div>
+		  <div class="control-group" style="width:1000px;">
+		    <label class="control-label">年营业额</label>
+			<div class="controls js_is_virtual">
+				<label class="radio inline">
+					<input type="radio" name="turnover" value="1" checked="checked">120万以下
+				</label>
+				<label class="radio inline">
+					<input type="radio" {$data['turnover'] == 2 ?'checked="checked"':''} name="turnover" value="2">120-500万
+				</label>
+				<label class="radio inline">
+					<input type="radio" {$data['turnover'] == 3 ?'checked="checked"':''} name="turnover" value="3">500-1000万
+				</label>
+				<label class="radio inline">
+					<input type="radio" {$data['turnover'] == 4 ?'checked="checked"':''} name="turnover" value="4">1000万以上
+				</label>
+			</div>
+		  </div>
+		  <div class="control-group">
+		    <label class="control-label must">公司地址</label>
+		    <div class="controls">
+		      <input class="required" style="width:704px;" type="text" name="address" maxlength="180" value="{$data.address}" placeholder="最多180个字符">
+		    </div>
+		  </div>
+	  </div>
+	  
+	  <div class="form-item">
+	  	  <div class="control-group">
+		    <label class="control-label">主营类目</label>
+		    <div class="controls">
+		      <input type="text" name="tag" maxlength="50" value="{$data.tag}" placeholder="最多50个字符">
+		    </div>
+		  </div>
+	  	  <div class="control-group">
+		    <label class="control-label">职位</label>
+		    <div class="controls">
+		      <input type="text" name="position" maxlength="10" value="{$data.position}" placeholder="最多10个字符">
+		    </div>
+		  </div>
+		  <div class="control-group">
+		    <label class="control-label">品牌类型</label>
+			<div class="controls js_is_virtual">
+				<label class="radio inline">
+					<input type="radio" name="brand" value="1" checked="checked">自由品牌
+				</label>
+				<label class="radio inline">
+					<input type="radio" {$data['brand'] == 2 ?'checked="checked"':''} name="brand" value="2">代理品牌
+				</label>
+			</div>
+		  </div>
+		  <div class="control-group">
+		    <label class="control-label">一键转发</label>
+			<div class="controls js_is_virtual">
+				<label class="radio inline">
+					<input type="radio" name="forward" value="1" checked="checked">可以
+				</label>
+				<label class="radio inline">
+					<input type="radio" {$data['forward'] == 2 ?'checked="checked"':''} name="forward" value="2">不可以
+				</label>
+			</div>
+		  </div>
+	  </div>
+  </div>
+  
+  
+  <div class="form-group">
+  	 <div class="control-group">
+	    <label class="control-label">产品信息</label>
+	    <div class="vdenorProduct">
+		    <if condition="empty($data['product_desc']) eq true">
+			    <div class="controls" style="margin-bottom:10px;" data-key="0">
+			      <input type="text" name="product[0][title]" value="" style="width:200px;" placeholder="产品名称">
+			      <input type="text" name="product[0][price]" value="" style="width:70px;" placeholder="零售价">
+			      <input type="text" name="product[0][url]" value="" style="width:400px;" placeholder="链接地址"><i onclick="plus_product(this)" class="icon-plus"></i>
+			    </div>
+		    <else/>
+		    	<foreach name="data['product_desc']" key="key" item="item">
+			    	<div class="controls" style="margin-bottom:10px;" data-key="{$key}">
+				      <input type="text" name="product[{$key}][title]" value="{$item.title}" style="width:200px;" placeholder="产品名称">
+				      <input type="text" name="product[{$key}][price]" value="{$item.price}" style="width:70px;" placeholder="零售价">
+				      <input type="text" name="product[{$key}][url]" value="{$item.url}" style="width:400px;" placeholder="链接地址"><i onclick="plus_product(this)" class="icon-plus"></i><if condition="$key gt 0"><i onclick="minus_product(this)" class=" icon-minus"></i></if>
+				    </div>
+			    </foreach>
+		    </if>
+	    </div>
+	 </div>
+  </div>
+  
+  
+  <div class="form-group">
+  	 <div class="form-item">
+		<div class="control-group">
+		    <label class="control-label">备注</label>
+		    <div class="controls">
+		      <textarea rows="5" style="width:704px;" name="remark" maxlength="200" placeholder="最多200个字符">{$data.remark}</textarea>
+		    </div>
+		</div>
+	 </div>
+  </div>
+  <div class="form-actions">
+     <button type="submit" class="btn btn-primary">保存</button>
+     <button type="button" class="btn">取消</button>
+  </div>
+</form>
+<script type="text/javascript">
+	//添加
+	function plus_product(index){
+		var data_key = $('.vdenorProduct> div').last().attr('data-key');
+		var key = 1 + parseInt(data_key);
+		var html = '';
+		html += '<div class="controls" style="margin-bottom:10px;" data-key="'+key+'">';
+		html += '	<input type="text" name="product['+key+'][title]" value="" style="width:200px;" placeholder="产品名称">';
+		html += '	<input type="text" name="product['+key+'][price]" value="" style="width:70px;" placeholder="零售价">';
+		html += '	<input type="text" name="product['+key+'][url]" value="" style="width:400px;" placeholder="链接地址"><i onclick="plus_product(this)" class="icon-plus"></i><i onclick="minus_product(this)" class=" icon-minus"></i>';
+		html += '</div>';
+		$(".vdenorProduct").append(html);
+	}
+	
+	//移除
+	function minus_product(index){
+		var $this = $(index);
+		$this.parent('div').remove();
+	}
+</script>

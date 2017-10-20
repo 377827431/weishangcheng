@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<include file="_layout/mall.head.html" />
+<literal>
+<style>
+.cart-container .check-container{width:35px;float:left;height:90px;line-height:90px;text-align:center}
+.check{border-radius:100%;display:inline-block;vertical-align:middle;line-height:60px;background-position:0 0;width:20px;height:20px;background-image:url("__CDN__/img/mall/trade2x-1416817757559.png");background-repeat:no-repeat;background-size:20px 40px}
+.check.checked{background-position:0 -20px}
+.cart-container .block:first-of-type{margin-top:0}
+.cart-container .block .header{padding:0 15px}
+.cart-container .detail{margin-left:135px}
+.cart-container .delete-btn{width:64px;height:100%;position:absolute;right:-10px;top:0;background-color:#da8f3e;color:#fff;font-size:12px;display:none}
+.cart-container .delete-btn span{left:17px;position:absolute;top:50%;margin-top:-6px}
+.cart-container .quantity{display:none;background-color:#f5f5f5}
+.block.editing .delete-btn{display:block}
+.block.editing .goods-title{display:none}
+.block.editing .quantity{display:inline-block}
+.bottom-fix .bottom-cart{padding:0 10px;height:40px;background-color:#ffffff;font-weight:500;color:#da8f3e;position:relative}
+.bottom-fix .bottom-cart .select-all{font-weight:500;float:left;width:55px;height:40px;color:#ccc}
+.bottom-fix .bottom-cart .select-all.checked{color:#da8f3e}
+.bottom-fix .bottom-cart .select-all.delete{color:#ed5050}
+.bottom-fix .bottom-cart>div{height:40px;line-height:40px;font-size:14px}
+.bottom-fix .bottom-cart .total-price{padding-right:80px;text-align:center;font-weight:700;width:auto;margin-left:55px}
+.bottom-fix .bottom-cart button{position:absolute;right:10px;padding:4px 10px;top:5px;height:30px;margin-top:0px;min-width:75px;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
+.bottom-fix .bottom-cart button.hide{display:none}
+.bottom-fix .bottom-cart .check{margin:-5px 5px 0 0}
+.bottom-fix .bottom-cart.editing{color:#f24d4d}
+.bottom-fix .bottom-cart.disable{color:#ccc}
+.bottom-fix .bottom-cart .cancel-delete{top:5px;position:absolute;width:45px;right:90px}
+.check.disabled{-webkit-filter: grayscale(1);}
+.block.editing .main-tag{display:none}
+.block .main-tag{font-size:12px;color:#999}
+</style>
+</literal>
+</head>
+<body class="body-fixed-bottom">
+	<div class="container">
+		<div class="content clearfix js-page-content">
+			<div id="cart-container" class="cart-container"></div>
+            <div id="invalid-container" class="cart-container"></div>
+            <div id="empty-container"></div>
+			<div class="js-cart-bottom bottom-fix" style="padding:0">
+				<div class="bottom-cart clear-fix js-cart-bottom">
+					<div class="select-all checked js-select-all">
+						<span class="check checked"></span>全选
+					</div>
+					<div class="total-price js-total-price">合计：0</div>
+					<button class="btn-go-pay btn btn-red js-go-pay">结算(0)</button>
+				</div>
+			</div>
+		</div>
+		<include file="_layout/mall.copyright.html" />
+	</div>
+</body>
+<script type="text/javascript">
+requirejs(['buyer/cart'], function(cart){
+	cart.init({$jsonList});
+});
+</script>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="我的" />
+    <script src="/js/flexible.js"></script>
+    <link rel="stylesheet" href="__CDN__/css/usercenter.css?modify=20160921" type="text/css" />
+</head>
+<body class="body-fixed-bottom">
+    <div class="container">
+        <div class="content ">
+            <div class="content-body">
+                <div class="personal-header">
+                    <div class="advertisement">
+                        <foreach name="advs" item="item">
+                        <a href="{$item.url}" class="ellipsis" target="_blank">{$item.title}</a>
+                        </foreach>
+                    </div>
+                    <div class="headimg js-edit-info">
+                        <div style="background-image: url({$user.headimgurl});" class="headimg-url"></div>
+	                </div>
+	                <div style="display: block;text-align: center;color: #fff;margin:10px 0 15px">{$user.agent_title}ID:{$user.id}</div>
+                </div>
+                <div class="order-related">
+                    <ul class="uc-order list-horizon clearfix">
+                        <li>
+                            <a class="link clearfix relative link-topay" href="__MODULE__/order#topay" target="_blank">
+                                <if condition="$orderNum['topay'] gt 0"><span class="title-num">{$orderNum['topay']}</span></if>
+                            	<p class="title-info c-black font-size-12">待付款</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="link clearfix relative link-tosend" href="__MODULE__/order#tosend" target="_blank">
+                                <if condition="$orderNum['tosend'] gt 0"><span class="title-num">{$orderNum['tosend']}</span></if>
+                            	<p class="title-info c-black font-size-12">待发货</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="link clearfix relative link-send" href="__MODULE__/order#send" target="_blank">
+                                <if condition="$orderNum['send'] gt 0"><span class="title-num">{$orderNum['tosend']}</span></if>
+                            	<p class="title-info c-black font-size-12">待收货</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="link clearfix relative link-rate" href="__MODULE__/order#torate" target="_blank">
+                                <if condition="$orderNum['torate'] gt 0"><span class="title-num">{$orderNum['torate']}</span></if>
+                                <p class="title-info c-black font-size-12">待评价</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="link clearfix relative link-refund" href="__MODULE__/order#torefund" target="_blank">
+                                <if condition="$orderNum['torefund'] gt 0"><span class="title-num">{$orderNum['torefund']}</span></if>
+                                <p class="title-info c-black font-size-12">退款/售后</p>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="block block-list list-vertical">
+                        <a class="block-item link clearfix ico-order" href="__MODULE__/order#all" target="_blank">
+                            <p class="title-info c-black font-size-14">全部订单</p>
+                        </a>
+                    </div>
+
+                    <div class="block block-list list-vertical" style="margin-bottom: 0;">
+                        <a class="block-item link clearfix ico-pointsstore" href="__MODULE__/balance" target="_blank">
+                            <p class="title-info c-black font-size-14">我的资产</p>
+                        </a>
+                    </div>
+                    <ul class="uc-order list-horizon clearfix my-wallet" style="border-bottom: 1px solid #e5e5e5;">
+                        <li>
+                            <a class="link clearfix relative" href="__MODULE__/balance#balance" target="_blank">
+                                <span class="title-num">{$user.balance}</span>
+                                <p class="title-info c-black font-size-12">{$project.balance_alias}</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="link clearfix relative" href="__MODULE__/balance#wallet" target="_blank">
+                                <span class="title-num">{$user.wallet}</span>
+                            	<p class="title-info c-black font-size-12">{$project.wallet_alias}</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="link clearfix relative" href="__MODULE__/balance#score" target="_blank">
+                                <span class="title-num">{$user.score}</span>
+                            	<p class="title-info c-black font-size-12">{$project.score_alias}</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="link clearfix relative" href="#" onclick="toast.show('暂无优惠券')" >
+                                <span class="title-num">{$user.coupon_num}</span>
+                             	<p class="title-info c-black font-size-12">优惠券</p>
+                            </a>
+                        </li><li>
+                            <a class="link clearfix relative" href="{$cardGoodsURL}" target="_blank">
+                                <span class="title-num">{$user['card_discount']}</span>
+                            	<p class="title-info c-black font-size-12">会员卡</p>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="block block-list list-vertical">
+                        <a class="block-item link clearfix ico-manage js-edit-info" href="javascript:;">
+                            <p class="title-info c-black font-size-14">个人资料</p>
+                        </a>
+                        <!-- <a class="block-item link clearfix ico-team" href="__MODULE__/agent">
+                            <p class="title-info c-black font-size-14">推广员中心</p>
+                        </a> -->
+                    </div>
+                    <div class="block block-list">
+                        <a class="block-item link center" href="javascript:win.close()">
+                            <p class="title-info c-black">退出系统</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+   		<include file="_layout/mall.copyright.html" />
+        <include file="_layout/mall.footer.html" />
+    </div>
+</body>
+    <script>
+    require(['jquery'], function(){
+        var user = {:json_encode($user)};
+        var $headimgurl = $('.js-edit-info');
+        $headimgurl.on('click', function(){ 
+            require(['buyer/edit'], function(view){
+                view.show(user, function(data){
+                    user = $.extend(user, data);
+                    $.ajax({
+                        url: "__MODULE__/personal/save",
+                        data: data,
+                        type: 'post',
+                        datatype: 'text'
+                    });
+                })
+            });
+            return false;
+        });
+        
+        // 领积分
+        $('.js-sign').on('click', function(){
+        	var $this = $(this);
+        	$.ajax({
+        		url: '/h5/personal/sign',
+        		type: 'post',
+        		dataType: 'json',
+        		success: function(data){
+        			toast.show('连续签到'+data.continued+'次');
+        			$this.siblings('.balance-value').html('积分余额：¥' + (data.balance*1 + data.no_balance*1).toFixed(2));
+        		}
+        	});
+        	return false;
+        });
+
+        <notempty name="register">
+       $headimgurl.trigger('click')
+       </notempty>
+    });
+    </script>
+</html>

@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="店铺管理" />
+    <link rel="stylesheet" href="__CDN__/css/seller/keyshop.css?20170902">
+    <link rel="stylesheet" href="__CDN__/css/seller/IDcardValid.css">
+    <link rel="stylesheet" href="__CDN__/css/seller/shadow_loading.css">
+    <link rel="stylesheet" href="__CDN__/css/seller/canvas_img_cut.css">
+    <style>
+        .thisput{border:none;outline:none;text-align:right;display:inline-block;padding-top:0px;padding-bottom:0px;color:#878787;position: relative;top: -1px;}
+        .thisput:focus{color:black;}
+        li.first_shop_logo_li[data-inited="true"] a .clearfix img{display:inline;}
+        li.first_shop_logo_li[data-inited="true"] a .clearfix span.uninited_text{display:none;}
+        li.first_shop_logo_li[data-inited="false"] a .clearfix img{display:none;}
+        li.first_shop_logo_li[data-inited="false"] a .clearfix span.uninited_text{display:block;}
+        span.shop_profile_view,
+        span.shop_sign{display:inline-block;float:right;color:#a9a9a9;width:60%;text-align:right;overflow:hidden;text-overflow: ellipsis;white-space: nowrap;word-break:break-all;}
+        .p_title{font-size:14px;font-family:"微软雅黑";line-height:30px;}
+        .upload_qr_container{display:block;position:fixed;bottom:0px;background-color: #fff;}
+        #upload_qr_dailog{display:block;position:fixed;width: 100%;height: 100%;background-color: rgba(0,0,0,0.7);z-index:9999;}
+        ul.create_shop_ul li a:after{top: 19px;}
+        li[data-inited="true"] .bitian{
+            display:none;
+        }
+        #upload_pay_dailog img.last{
+            padding-bottom: 120px;  
+        }
+		.wen {
+            width: 15px;
+            position: relative;
+            top: .2rem;
+            margin: 0px 10px 0px 3px;
+            cursor: pointer;
+        }
+        #Authent_dailog,
+    #Authent_dailogs,
+    #Authent_dailogss,
+    #Authent_dailogsss{
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+     }
+     .Authent_dailog_box{
+        position: fixed;
+        z-index: 5000;
+        width: 80%;
+        max-width: 300px;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        background-color: #FFFFFF;
+        text-align: left;
+        border-radius: 6px;
+        overflow: hidden;
+     }
+     .Authent_dailog_bd{
+        font-size: 14px;
+        line-height: 1.5;
+        word-wrap: break-word;
+        word-break: break-all;
+        color: #000;
+        padding: 20px;
+     }
+     .Authent_dailog_ft{
+        position: relative;
+        line-height: 39px;
+        font-size: 14px;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex;
+        text-align: center;
+     }
+     .Authent_dailog_btn{
+        display: block;
+        -webkit-box-flex: 1;
+        -webkit-flex: 1;
+        flex: 1;
+        color: #ffffff;
+        text-decoration: none;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        position: relative;
+        background: #DD8C3A;
+     }
+     #js-shop-logo{
+         border-radius: 50%;
+     }
+    </style>
+</head>
+<body class="body-fixed-bottom">
+    <!--?号弹窗-->
+    <div id="Authent_dailog" style="display:none">
+        <div class="Authent_dailog_box">
+            <div class="Authent_dailog_bd">根据国家相关法律法规,共同维护互联网交易环境，需实名认证审核后才能继续使用小店。请先填写重要信息。</div>
+        </div>
+    </div>
+    <!-- ?号弹窗 -->
+<div class="container">
+    <div class="content ">
+        <div class="content-body">
+            <div id="cut_img" style="display:none;">
+                <div class="canvas_container">
+                    <canvas id="result_canvas">
+                        <p>插件无法加载...</p>
+                    </canvas>
+                    <canvas id="show_canvas">
+                        <p>插件无法加载...</p>
+                    </canvas>
+                    <canvas id="mask_canvas">
+                        <p>剪切插件</p>
+                    </canvas>
+                </div>
+                <div class="cut_controller">
+                    <div class="cut_save" style="cursor:pointer;">保存</div>
+                    <div class="cut_cancel" style="cursor:pointer;">取消</div>
+                </div>
+            </div>
+            <div id="upload_qr_dailog" style="display:none;">
+                <div class="upload_qr_container" style="width:100%;box-sizing:border-box;padding-left:4%;padding-right:4%;border-top:1px solid #bdbdbd;padding-bottom:20px;">
+                    <div class="dailog_mask"></div>
+                    <div class="upload_qr">
+                        <p class="p_title" style="padding-top:16px;padding-bottom:16px;">请<span class="whoes"></span>微信二维码，以便客户光顾您的小店时，可以及时与您沟通，提升交易哦！</p>
+                    </div>
+                    <div style="position:relative;height:40px;">
+                        <button class="btn btn-block p_title upload_or_modify_btn" style="background-color:#da8f3e;color:white;position:absolute;top:0;width:100%;height:100%;">上传二维码</button>
+                        <input type="file" class="upfile" data-from-where="" style="position:absolute;top:0;width:100%;box-sizing:border-box;height:100%;opacity:0;">
+                        <!-- <input class="upfile" data-from-where="shop_logo" type="file" style="position: absolute;top: 0px;left: 0px;width: 100%;height: 50px;opacity: 0; cursor:pointer;"> -->
+                    </div>
+                    <div class="del_qr_con" style="position:relative;height:40px;margin-top:10px;">
+                        <button class="btn btn-block p_title del_qr_btn" data-from-where="kefu_qr" style="background-color:#da8f3e;color:white;position:absolute;top:0;width:100%;height:100%;">删除二维码</button>
+                        <!-- <input class="upfile" data-from-where="shop_logo" type="file" style="position: absolute;top: 0px;left: 0px;width: 100%;height: 50px;opacity: 0; cursor:pointer;"> -->
+                    </div>
+                </div>
+            </div>
+            <div id="upload_pay_dailog" style="position:absolute;top:0px;left:0px;z-index:1000000;display:none; width: 100%;">
+                <img style="width:100%;display:block;" src="" alt="">
+                <img style="width:100%;display:block;" src="" alt="">
+                <img style="width:100%;display:block;" src="" alt="">
+                <img style="width:100%;display:block;padding-bottom:120px;" src="" alt="">
+                <div style="background-color:white;position:fixed;bottom:0px;width:100%;padding:10px 0px;border-top:1px solid #8b8b8b;">
+                    <p style="color:#da8f3c;width:100%;text-align:center;line-height:20px;font-size:14px;">请上传您真实有效的微信收款二维码图片</p>
+                    <p style="color:#da8f3c;width:100%;text-align:center;line-height:20px;font-size:14px;">以便客户购买您的商品后能立即向您付款</p>
+                    <div class="upload_pay_button" style="width:80%;height:40px;line-height:40px;color:white;font-size:16px;background-color:#da8f3c;border-radius:6px;margin:10px auto;text-align:center;">上传微信收款二维码</div>
+                    <input type="file" class="upfile" data-from-where="" id="upfile"  style="width:100%;height:100%;position:absolute;top:0px;opacity:0;"/>
+                </div>
+            </div>
+            <ul class="create_shop_ul">
+                <li class="placeholder_span">
+                    <div style="height:10px;background-color:#f8f8f8; padding: 15px 10px;font-size: 14px; color:#db8e40">店铺信息</div>
+                </li>
+                <li class="first_shop_logo_li js-shop-logo-s" data-flag="shop_logo" data-inited="{$data['logo']?'true':'false'}">
+                   
+                    <a href="javascript:;">
+                        <div class="clearfix">
+                            <span class="left">店铺LOGO</span><span class="right right_content"><img class="shop_logo" id="js-shop-logo" src="{$data['logo']}"/></span>
+                            <span class="left uninited_text" style="float:right;padding-right:16px;color:#878787;position:relative;top:1px;">未上传</span>
+                        </div>
+                    </a>
+                    <input class="upfile" data-from-where="shop_logo" type="file" style="position: absolute;top: 0px;left: 0px;width: 100%;height: 50px;opacity: 0; cursor:pointer;">
+                </li>
+                <li>
+                    <div class="clearfix" style="padding: 17px 10px;display: block;font-size: 14px;color: #303030;">
+                        <span class="left">店铺名称</span>
+                        <span class="triangle"></span>
+                        <input class="thisput" id="js-shop" type="text" style="float:right;"  placeholder="给小店起个好名字吧~" value="{$data['name']}">
+                    </div>
+                </li>
+                <!--<li>-->
+                    <!--<a href="">-->
+                        <!--<div class="clearfix">-->
+                            <!--<span class="left">店铺名称</span><span class="right right_content">美妙人生</span>-->
+                        <!--</div>-->
+                    <!--</a>-->
+                <!--</li>-->
+                <li data-flag="shop_wlcm" data-inited="{$data['shop_sign']?'true':'false'}"}>
+                    <a href="javascript:" class="js-shop-sign" style="padding:0px;padding-right:1em;">
+                        <div class="clearfix" style="padding: 17px 10px;display: block;font-size: 14px;color: #303030;">
+                        <span class="left">店招图片</span>
+                        <!-- <span class="triangle"></span> -->
+                        <span class="shop_sign">{$data['is_shop_sign']}</span>
+                    </div></a>
+                </li>
+                <li>
+                    <a href="javascript:" class="js-desc" style="padding:0px;padding-right:1em;">
+                        <div class="clearfix" style="padding: 17px 10px;display: block;font-size: 14px;color: #303030;">
+                        <span class="left">店铺介绍</span>
+                        <!-- <span class="triangle"></span> -->
+                        <span class="shop_profile_view">{$data['is_desc']}</span>
+                    </div></a>
+                </li>
+                <!-- validated waiting unvalidate-->
+                <li class="placeholder_span">
+                    <div style="height:10px;background-color:#f8f8f8;padding: 15px 10px;font-size: 14px; color:#db8e40">
+                        重要信息
+                        <span style="color:#9c9c9c; font-size:14px; margin-left:5px">请完善，否则功能将受限</span>
+                    </div>
+                </li>
+                <li class="name_valid {$auth_status}" <?php echo ($auth_status == 'data-inited="true"' || $auth_status == 'data-inited="false"' ? '' : '*') ?> >
+                    <!--<span  style="position:absolute;left:2px;color:#ff2a00;font-size:14px;line-height:46px;font-family:'宋体'">*</span>-->
+                    <div class="clearfix" style="padding: 17px 10px;display: block;font-size: 14px;color: #303030;">
+                        <!--<span class="left" style="display:flex;flex-direction:row;justify-content:flex-start;color:#303030;font-size:14px;font-family:'宋体'"><span style="color:#303030;font-size:14px;font-family: '微软雅黑'">实名认证</span>(必填项)</span>-->
+                        <span class="left">实名认证<img class="wen" type="rz" src="/img/seller/wen.png" alt=""></span>
+                        <span class="triangle"></span>
+                        <span style="float:right" state="unvalidate">去认证</span>
+                        <span style="float:right" state="validated">已认证</span>
+                        <span style="float:right" state="waiting">审核中</span>
+                        <span style="float:right" state="rejected">审核失败</span>
+                    </div>
+                </li>
+                <li class="name_skm">
+                    <!--<span  style="position:absolute;left:2px;color:#ff2a00;font-size:14px;line-height:46px;font-family:'宋体'">*</span>-->
+                    <div class="clearfix" style="padding: 17px 10px;display: block;font-size: 14px;color: #303030;">
+                        <!--<span class="left" style="display:flex;flex-direction:row;justify-content:flex-start;color:#303030;font-size:14px;font-family:'宋体'"><span style="color:#303030;font-size:14px;font-family: '微软雅黑'">实名认证</span>(必填项)</span>-->
+                        <span class="left">收款码<img class="wen" type="skm" src="/img/seller/wen.png" alt=""></span>
+                        <span class="triangle"></span>
+                        <if condition="$pay_code eq 1">
+                            <span style="float:right; color:#a9a9a9">未上传</span>
+                        </if>
+                        <if condition="$pay_code eq 2">
+                            <span style="float:right; color:#a9a9a9">已上传</span>
+                        </if>
+                        <if condition="$pay_code eq 3">
+                            <span style="float:right; color:#a9a9a9">支付宝未上传</span>
+                        </if>
+                        <if condition="$pay_code eq 4">
+                            <span style="float:right; color:#a9a9a9">微信未上传</span>
+                        </if>
+                    </div>
+                </li>
+                <!-- <li class="first_shop_logo_li show_upload_pay" data-open ="0" data-flag="manager_pay_qr" {$data['pay_qr'] == '' ? 'data-inited="false"' : 'data-inited="true"'}>
+                    <a href="javascript:void(0);" data-from-where="dianzhu_pay_qr">
+                        <div class="clearfix">
+                            <span class="left">店主微信收款码图片</span><span class="right right_content"><img class="shop_logo js-owner-pay-wx" src="{$data['pay_qr']}"/></span>
+                            <span class="left uninited_text" style="float:right;padding-right:14px;color:#a9a9a9;position:relative;top:1px;">未上传</span>
+                        </div>
+                    </a>
+                </li>
+                 <li class="first_shop_logo_li show_upload_pay" data-open ="1" data-flag="manager_pay_zfb" {$data['pay_zfb'] == '' ? 'data-inited="false"' : 'data-inited="true"'} >
+                    <span style="position:absolute;left:2px;color:#ff2a00;font-size:14px;line-height:46px;font-family:'宋体'"></span>
+                    <a href="javascript:void(0);" data-from-where="dianzhu_pay_zfb">
+                        <div class="clearfix">
+                            <span class="left">店主支付宝收款码图片</span><span class="right right_content"><img class="shop_logo js-owner-pay-zfb" src="{$data['pay_zfb']}"/></span>
+                            <span class="left uninited_text" style="float:right;padding-right:14px;color:#a9a9a9;position:relative;top:1px;">未上传</span>
+                        </div>
+                    </a>
+                </li> -->
+                <li class="placeholder_span">
+                    <div style="height:10px;background-color:#f8f8f8;padding: 15px 10px;font-size: 14px; color:#db8e40">经营信息</div>
+                </li>
+                <li class="change_mobile">
+                    <div class="clearfix" style="padding: 17px 10px;display: block;font-size: 14px;color: #303030;">
+                        <span class="left">店主手机号</span>
+                        <span class="triangle"></span>
+                        <input class="thisput" id="js-mobile" type="text" style="float:right;" placeholder="请输入您的手机号" value="{$data['mobile']}">
+                    </div>
+                </li>
+                <li class="change_wx" data-inited="true">
+                    <div class="clearfix" style="padding: 17px 10px;display: block;font-size: 14px;color: #303030;">
+                        <span class="left">店主微信号</span>
+                        <span class="triangle"></span>
+                        <input class="thisput" id="js-weixinid" type="text" style="float:right;" placeholder="请输入您的微信号" value="{$data['wx_no']}">
+                    </div>
+                </li>
+                <li class="first_shop_logo_li" data-flag="manager_qr" data-inited="true">
+                    <a href="javascript:void(0);" class="show_upload" data-from-where="dianzhu_qr">
+                        <div class="clearfix">
+                            <span class="left">店主微信二维码图片<img class="wen" type="ewm" src="/img/seller/wen.png" alt=""></span><span class="right right_content"><img class="shop_logo js-owner-wx" src="{$data['owners_wx']}"/></span>
+                            <span class="left uninited_text" style="float:right;padding-right:14px;color:#a9a9a9;position:relative;top:1px;">未上传</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="first_shop_logo_li" data-flag="server_qr" data-inited="{$data['kefu_wx']?'true':'false'}">
+                    <a href="javascript:void(0);" class="show_upload" data-from-where="kefu_qr">
+                        <div class="clearfix">
+                            <span class="left">客服微信二维码图片</span><span class="right right_content"><img class="shop_logo js-kefu-wx" src="{$data['kefu_wx']}"/></span>
+                            <span class="left uninited_text" style="float:right;padding-right:16px;color:#a9a9a9;position:relative;top:1px;">未上传</span>
+                        </div>
+                    </a>
+                    <!-- <input class="upfile" data-flag="server_qr" type="file" style="position: absolute;top: 0px;left: 0px;width: 100%;height: 50px;opacity: 0;"> -->
+                </li>
+                <li class="placeholder_span">
+                    <div style="height:10px;background-color:#f8f8f8;padding: 15px 10px;font-size: 14px; color:#db8e40">账号信息</div>
+                </li>
+                <li>
+                    <a href="javascript:" class="js-pwd_modify" style="padding:0px;padding-right:1em;">
+                        <div class="clearfix" style="padding: 17px 10px;display: block;font-size: 14px;color: #303030;">
+                        <span class="left">账号设置</span>
+                        <!-- <span class="triangle"></span> -->
+                        <span class="shop_profile_view">{$username}</span>
+                    </div></a>
+                </li>
+
+                <!-- <li style="display:flex;justify-content: center;align-items: center;width:80%;height:50px;margin-left:10%;border:none !important;">
+                    请先完成<span style="color:#ff2a00;">*</span>号必填项，以免影响小店的正常使用
+                </li> -->
+
+            </ul>
+
+            <div class="bottom_btn_box js-cshop"><button class="btn btn-block" style="background-color:#da8f3e;color:white;">保存</button></div>
+            <!-- validated waiting unvalidate  -->
+
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+</script>
+<script>
+require(['image_cut','jquery','lrz'],function(t){
+    //点击?号弹窗提示
+    $(".wen").on("click",function(e){
+        console.log(e);
+        var type = $(this).attr("type");
+        if(type == "rz"){
+            $(".Authent_dailog_bd").text("根据国家相关法律法规，互联网交易需实名认证，审核通过后才能继续使用小店。");
+            $("#Authent_dailog").fadeIn(300);
+            return false;
+        }else if(type == "ewm"){
+            $(".Authent_dailog_bd").text("店主微信二维是客户增加联系、咨询等场景的重要信息，请认真填写。");
+            $("#Authent_dailog").fadeIn(300);
+            return false;
+        }else{
+            $(".Authent_dailog_bd").text("请按教程上传您的收款码。收款码将是客户向您支付的重要途径，如不填写客户将无法直接向您付款。");
+            $("#Authent_dailog").fadeIn(300);
+            return false;
+        }
+    })
+    $("#Authent_dailog").on("click",function(){
+        $("#Authent_dailog").fadeOut(300);
+    })
+    //保存图片回填来源
+    var from_where = "";
+    //绑定input.upfile事件
+    $("body").on("input[type='file']","change",function(){
+        console.log(123);
+    })
+    $("input[type='file']").on("change",function(){
+        //获取来源
+        from_where = $(this).attr("data-from-where");
+        var oFile = $(this).get(0).files[0];
+        $(this).val('');
+        lrz(oFile).then(function(rst){
+
+            if(from_where == "shop_logo" || from_where == "kefu_qr" || from_where == "dianzhu_qr"){
+                $("#cut_img").show();
+                switch(from_where){
+                    case "shop_logo":
+                        $(".js-shop-logo-s").attr('data-inited', true);
+                        $("#upload_qr_dailog").hide();
+                        $("#upload_pay_dailog").hide();
+                        t.show({
+                            show_canvas:"#show_canvas",
+                            mask_canvas:"#mask_canvas",
+                            result_canvas:"#result_canvas",
+                            canvas_container:".canvas_container",
+                            source_imgSrc:rst.base64,
+                            mask_border:40,
+                            radio_wh:1,
+                            min_length:100
+                        })
+                        break;
+                    case "kefu_qr":
+                    case "dianzhu_qr":{
+                        $("#upload_qr_dailog").hide();
+                        $("#upload_pay_dailog").hide();
+                        t.show({
+                            show_canvas:"#show_canvas",
+                            mask_canvas:"#mask_canvas",
+                            result_canvas:"#result_canvas",
+                            canvas_container:".canvas_container",
+                            source_imgSrc:rst.base64,
+                            mask_border:40,
+                            radio_wh:1,
+                            min_length:100
+                        })
+                        break;
+                    }
+                }
+            }else{
+                var imgBase64 = rst.base64;
+                var fd = new FormData();
+                fd.append("upfile",1);
+                fd.append("upfile", imgBase64);
+                $.ajax({
+                    url: "__CDN__/ueditor?action=uploadscrawl",
+                    type: "POST",
+                    processData: false,
+                    contentType: false,
+                    data: fd,
+                    success: function(d) {
+                        var dd = JSON.parse(d);
+                        if (dd.state == 'SUCCESS'){
+                            switch(from_where){
+                                case "manager_pay_qr":{
+                                    $("li[data-flag='manager_pay_qr'] img").attr("src",dd.url);
+                                    $("li[data-flag='manager_pay_qr']").attr("data-inited",true);
+                                    $("#upload_pay_dailog").hide();
+                                    toast.show("上传成功");
+                                    break;
+                                }
+                                case "manager_pay_zfb":{
+                                    $("li[data-flag='manager_pay_zfb'] img").attr("src",dd.url);
+                                    $("li[data-flag='manager_pay_zfb']").attr("data-inited",true);
+                                    $("#upload_pay_dailog").hide();
+                                    toast.show("上传成功");
+                                    break;
+                                }
+                            }
+                            
+                        }
+                        //console.log(dd);
+                        $(this).attr("data-inited","true");
+                    }
+                });
+
+            }
+
+        })
+    })
+    //图片剪切框保存按钮
+    $(".cut_save").click(function(){
+        imgBase64 = t.getImageSrc();
+        var fd = new FormData();
+        fd.append("upfile",1);
+        fd.append("upfile", imgBase64);
+        $.ajax({
+            url: "__CDN__/ueditor?action=uploadscrawl",
+            type: "POST",
+            processData: false,
+            contentType: false,
+            data: fd,
+            success: function(d) {
+                var dd = JSON.parse(d);
+                if (dd.state == 'SUCCESS'){
+                    switch(from_where){
+                        case "shop_logo":{
+                            console.log("处理店铺图片");
+                            $("li.first_shop_logo_li[data-flag='shop_logo'] img.shop_logo").attr("src",dd.url);
+                            break;
+                        }
+                        case "kefu_qr":{
+                            console.log("处理客服图片");
+                            $("li[data-flag='server_qr'] img").attr("src",dd.url);
+                            $("li[data-flag='server_qr']").attr("data-inited",true);
+                            break;
+                        }
+                        case "dianzhu_qr":{
+                            console.log("处理店主图片");
+                            $("li[data-flag='manager_qr'] img").attr("src",dd.url);
+                            $("li[data-flag='manager_qr']").attr("data-inited",true);
+                            break;
+                        }
+                        case "dianzhu_pay_qr":{
+                            console.log("处理店主付款二维码图片");
+                            $("li[data-flag='manager_pay_qr'] img").attr("src",dd.url);
+                            $("li[data-flag='manager_pay_qr']").attr("data-inited",true);
+                            break;
+                        }
+                        case "dianzhu_pay_zfb":{
+                            console.log("处理店主付款二维码图片");
+                            $("li[data-flag='manager_pay_zfb'] img").attr("src",dd.url);
+                            $("li[data-flag='manager_pay_zfb']").attr("data-inited",true);
+                            break;
+                        }
+                        
+                    }
+                }
+                //console.log(dd);
+                $(this).attr("data-inited","true");
+            },
+            complete:function(){
+                $('#cut_img').hide();
+            }
+        });
+    });
+    //图片剪切框取消按钮
+    $(".cut_cancel").click(function(){
+        $('#cut_img').hide();
+    });
+    //点击弹出二维码弹窗
+    $("a.show_upload").click(function(){
+        $("#upload_qr_dailog").show();
+        from_where = $(this).attr("data-from-where");
+        var upload_or_modify = "";
+        var kefu_or_dianzhu = "";
+        if(from_where == "kefu_qr"){
+            kefu_or_dianzhu = "客服";
+        }else{
+            kefu_or_dianzhu = "店主";
+        }
+        if($(this).parent().attr("data-inited")=="false"){
+            upload_or_modify = "上传";
+            $("div.del_qr_con").hide();
+        }else{
+            upload_or_modify = "修改";
+            $("div.del_qr_con").show();
+        }
+        $("#upload_qr_dailog span.whoes").text(""+upload_or_modify+kefu_or_dianzhu);
+        $("#upload_qr_dailog button.upload_or_modify_btn").text(upload_or_modify+"二维码");
+        $("#upload_qr_dailog input.upfile").attr("data-from-where",from_where);
+        $("#upload_qr_dailog button.del_qr_btn").attr("data-from-where",from_where);
+        return false;
+    });
+    //点击弹出店铺收款二维码弹窗
+    $("li.show_upload_pay").click(function(){
+        //是否初始化
+        var isInit = $(this).attr("data-inited");
+        var data_flag = $(this).attr("data-flag");
+        var data_open = $(this).attr("data-open");
+        $("#upfile").attr("data-from-where",data_flag);
+        if(isInit == "false" && data_open == 1){
+              $(".upload_pay_button").text("上传支付宝收款二维码")
+        }else if(isInit == "true" && data_open == 1){
+              $(".upload_pay_button").text("修改支付宝收款二维码")
+        }else if(isInit == "false" && data_open == 0){
+              $(".upload_pay_button").text("上传微信收款二维码")
+        }else{
+              $(".upload_pay_button").text("修改微信收款二维码")
+        }
+        if(data_open == 0){
+            $("#upload_pay_dailog img").eq(3).show();
+            $("#upload_pay_dailog img").eq(0).removeAttr("src").attr("src","__CDN__/img/seller/1.png");
+            $("#upload_pay_dailog img").eq(1).removeAttr("src").attr("src","__CDN__/img/seller/2.png");
+            $("#upload_pay_dailog img").eq(2).toggleClass("last",false).removeAttr("src").attr("src","__CDN__/img/seller/3.png");
+            $("#upload_pay_dailog img").eq(3).removeAttr("src").attr("src","__CDN__/img/seller/4.jpg");
+            $("#upload_pay_dailog p").eq(0).text("请上传您真实有效的微信收款二维码图片");
+            $("#upload_pay_dailog p").eq(1).text("以便客户购买您的商品后能立即向您付款");
+        }else{
+            $("#upload_pay_dailog img").eq(3).hide();
+            $("#upload_pay_dailog img").eq(0).removeAttr("src").attr("src","__CDN__/img/seller/zf1.png");
+            $("#upload_pay_dailog img").eq(1).removeAttr("src").attr("src","__CDN__/img/seller/zf2.png");
+            $("#upload_pay_dailog img").eq(2).addClass("last").removeAttr("src").attr("src","__CDN__/img/seller/zf3.png");
+            $("#upload_pay_dailog p").eq(0).text("请上传您真实有效的支付宝收款二维码图片");
+            $("#upload_pay_dailog p").eq(1).text("以便客户购买您的商品后能立即向您付款");
+             
+        }
+         $("#upload_pay_dailog").show();
+    });
+
+    //删除微信二维码
+    $("#upload_qr_dailog button.del_qr_btn").on("click",function(){
+        var from_where = $(this).attr("data-from-where");
+        switch(from_where){
+            case "kefu_qr":{
+                console.log("处理客服图片");
+                $("li[data-flag='server_qr'] img").attr("src",'');
+                $("li[data-flag='server_qr']").attr("data-inited",false);
+                break;
+            }
+            case "dianzhu_qr":{
+                console.log("处理店主图片");
+                $("li[data-flag='manager_qr'] img").attr("src",'');
+                $("li[data-flag='manager_qr']").attr("data-inited",false);
+                break;
+            }
+        }
+        $("#upload_qr_dailog").hide();
+        console.log(from_where);
+        return false;
+    })
+    //关闭弹出二维码弹窗
+    $("#upload_qr_dailog").click(function(){
+        $(this).hide();
+    })
+    $("#js-weixinid").on("input",function(){
+        if($(this).val() == ""){
+            $("li.change_wx").attr('data-inited',false);
+        }else{
+            $("li.change_wx").attr('data-inited',true);
+        }
+    })
+
+    $('.js-cshop').on('click', function(){
+        var shop_name = $('#js-shop').val();
+
+        var mobile = $('#js-mobile').val();
+        var wxnick = $('#js-weixinnick').val();
+        var wxid = $('#js-weixinid').val();
+        var desc = $('#js-desc').val();
+        var logo = $('li.first_shop_logo_li[data-flag="shop_logo"] img.shop_logo').attr("src");
+        var wlcm = $('li.first_shop_logo_li[data-flag="shop_wlcm"] img.shop_logo').attr("src");
+        var manager_qr = $('li.first_shop_logo_li[data-flag="manager_qr"] img.shop_logo').attr("src");
+        var server_qr = $('li.first_shop_logo_li[data-flag="server_qr"] img.shop_logo').attr("src");
+        var zfb_qr = $("li[data-flag='manager_pay_zfb'] img").attr("src");                
+        var dianzhu_pay_qr = $('li.first_shop_logo_li[data-flag="manager_pay_qr"] img.shop_logo').attr("src");
+        var dianzhu_pay_zfb = $('li.first_shop_logo_li[data-flag="manager_pay_zfb"] img.shop_logo').attr("src");
+        //必填项验证
+//        if($("li.name_valid").hasClass("unvalidate") || $("li.name_valid").hasClass("rejected")){
+//            toast.show("请完成必填项后方可开店成功");
+//            return false;
+//        }
+//        if($("li.show_upload_pay").attr("data-inited") == "false"){
+//            toast.show("请完成必填项后方可开店成功");
+//            return false;
+//        }
+//        var wx_num = $("#js-weixinid").val();
+//        if(wx_num == ""){
+//            toast.show("请完成必填项后方可开店成功");
+//            return false;
+//        }
+        if(shop_name == ""){
+            toast.show("请填写店铺名称");
+            return false;
+        }
+//        if(logo == ""){
+//            toast.show("请完成必填项后方可开店成功");
+//            return false;
+//        }
+        $.ajax({
+            url: "/seller/shop/ajax_save",
+            data: {logo: logo, name:shop_name, mobile:mobile, manager_qr:manager_qr, server_qr:server_qr,wxnick:wxnick,wxid:wxid},
+            type: 'post',
+            success: function(data){
+                if (data == '1'){
+                    toast.show('已保存');
+                    window.location.href = "/seller"
+                }else{
+                    toast.show(data);
+                }
+            }
+        });
+    });
+
+    // 实名认证弹窗
+    $(".cardvalidate_dailog li.dailog_title").click(function(){
+        $("div.cardvalidate_dailog").hide();
+    });
+    $(".name_valid").click(function(){
+        setRecord();
+        window.location.href="/seller/certification/alipay_verify?id=1&from=shop";
+        //实名认证点击
+    });
+    $(".name_skm").on('click', function(){
+        setRecord();
+        window.location.href="/seller/shop/pay_code";
+        //收款码
+    });
+    $(".js-desc").on('click', function(){
+        setRecord();
+        window.location.href="/seller/shop/profile";
+        //店铺简介
+    });
+    $(".js-pwd_modify").on('click', function(){
+        setRecord();
+        window.location.href="/seller/shop/setaccounts";
+        //修改密码
+    });
+
+    $(".js-shop-sign").on('click', function(){
+        setRecord();
+        window.location.href="/seller/shop/shop_sign";
+        //店招
+    });
+
+    $('.submit_valid_qr').click(function(){
+        var true_name = $("li.true_name input").val();
+        var card_num = $("li.cart_num input").val();
+        if(true_name == ""){
+            toast.show("请填写真实姓名");
+            return false;
+        }
+        if(card_num == ""){
+            toast.show("请填写身份证号");
+            return false;
+        }
+        var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+        if(!reg.test(card_num)){
+            toast.show("身份证格式不对，请重新输入");
+            return false;
+        }
+        var alreadyUpdateCardPhoto = $('li.card_photo_container').attr("data-inited");
+        if(alreadyUpdateCardPhoto == false || $("li.card_photo_container[data-flag='card_photo'] img").attr("src") == '__CDN__/img/seller/20170521170318.png'){
+            toast.show("请上传手持身份证照片");
+            return false;
+        }
+        var card_img = $("li.card_photo_container[data-flag='card_photo'] img").attr("src");
+        //提交的参数
+//        console.log({
+//            true_name:true_name,
+//            card_num:card_num,
+//            card_img:card_img
+//        })
+        $.ajax({
+            url: "/seller/shop/update_auth",
+            data: {true_name: true_name, card_num: card_num, card_img:card_img},
+            type: 'post',
+            success: function(data){
+                if (data == '1'){
+                    $(".cardvalidate_dailog").attr("state","waiting");
+                    setTimeout(function(){
+                        $(".cardvalidate_dailog li.dailog_title").trigger('click');
+                    },2000);
+                    $("li.name_valid").toggleClass("rejected",false);
+                    $("li.name_valid").toggleClass("validated",false);
+                    $("li.name_valid").toggleClass("unvalidate",false);
+                    $("li.name_valid").addClass("waiting");
+                }else{
+                    toast.show(data);
+                }
+            }
+        });
+        //提交到后台以后成功调用隐藏方法  提交成功进入 审核中
+    });
+
+    function setRecord()
+    {
+        document.cookie="shop_name=" + encodeURIComponent($('#js-shop').val());
+        document.cookie="shop_logo=" + $('#js-shop-logo').attr("src");
+        document.cookie="shop_mobile=" + $('#js-mobile').val();
+        document.cookie="shop_owner_wx=" + $('.js-owner-wx').attr("src");
+        document.cookie="shop_owner_pay_wx=" + $('.js-owner-pay-wx').attr("src");
+        document.cookie="shop_owner_pay_zfb=" + $('.js-owner-pay-zfb').attr("src");
+        document.cookie="shop_kefu_wx=" + $('.js-kefu-wx').attr("src");
+        document.cookie="wx_nick=" + $('#js-weixinnick').val();
+        document.cookie="wx_id=" + $('#js-weixinid').val();
+    }
+
+})
+</script>
+
+</body>
+</html>

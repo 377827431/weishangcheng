@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>免费注册开店</title>
+<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/2.3.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/admin.register.css"></link>
+</head>
+<body>
+<div class="container js-container">
+    <div id="header">
+        <div class="header-side">
+            <a href="__MODULE__/login" class="js-route-transfer">已有帐号, 立即登录</a>
+        </div>
+        <!-- <a href="__MODULE__/login" class="js-route"><div class="header-logo"></div></a> -->
+        <div class="header-title">免费注册</div>
+    </div>
+    <div id="main">
+        <div class="clearfix">
+            <div class="content js-content">
+                <form id="register_form" class="form-horizontal">
+                    <div class="control-group-container">
+                        <div class="control-group ">
+                            <label class="control-label">手机号码</label>
+                            <div class="controls">
+                                <input type="text" class="js-mobile css-mobile" name="mobile" tabindex="1" placeholder="今后使用手机号登录" maxlength="11" autocomplete="off" data-rule-mobile="mobile" required="required" data-msg-required="请输入手机号码">
+                            </div>
+                        </div>
+                        <div class="err-msg"></div>
+                    </div>
+                    <div class="control-group-container">
+                        <div class="control-group">
+                            <label class="control-label">短信验证码</label>
+                            <div class="controls">
+                                <div class="input-append">
+                                    <input class="js-captcha input-half" tabindex="2" type="text" maxlength="6" name="captcha" placeholder="填写6位短信验证码" required="required" data-msg-required="请输入验证码">
+                                    <button type="button" class="btn js-fetch-sms btn-operation">获取验证码</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="err-msg">
+                        </div>
+                    </div>
+                    <div class="control-group-container">
+                        <div class="control-group">
+                            <label class="control-label">平台名称</label>
+                            <div class="controls">
+                                <input type="text" tabindex="3" name="name" placeholder="默认店铺名称（之后可以修改）" required="required" maxlength="15" data-msg-required="请输入平台名称">
+                            </div>
+                        </div>
+                        <div class="err-msg"></div>
+                    </div>
+                    <div class="control-group-container">
+                        <div class="control-group">
+                            <label class="control-label">设置密码</label>
+                            <div class="controls" style="position: relative;">
+                                <input class="js-password-focus" tabindex="4" type="password" name="password" required="required" placeholder="6~20位字符，包含字母和数字" data-rule-rangelength="6,20" data-msg-rangelength="长度应在6至20位之间" data-msg-required="请输入密码" maxlength="20" autocomplete="off">
+                                <span class="icon-switch-password icon-password-hide js-switch-password-display"></span>
+                            </div>
+                        </div>
+                        <div class="err-msg"></div>
+                    </div>
+                    <div class="control-group">
+                        <button type="submit" tabindex="5" class="js-submit btn btn-block btn-large btn-primary btn-signup">确认注册</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        <p class="copyright">© <a href="//www.xingyebao.com">xingyebao.com</a></p>
+    </div>
+</div>
+</body>
+<script src="//cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/jquery-validate/1.15.0/jquery.validate.min.js"></script>
+<script type="text/javascript">
+var $register_form = $('#register_form'),
+    $mobile = $register_form.find('.js-mobile'),
+    $password = $register_form.find('.js-password-focus'),
+    $captcha  = $register_form.find('.js-captcha'),
+    $switchPWD = $register_form.find('.js-switch-password-display'),
+    $submit = $register_form.find('.js-submit');
+
+$register_form.on('focus', 'input', function(){
+    $(this)
+    .parents('.control-group-container:first')
+    .removeClass('valid-failed')
+    .addClass('active')
+    .children('.err-msg').html('');
+    return false;
+}).on('blur', 'input', function(){
+    $(this)
+    .parents('.control-group-container:first')
+    .removeClass('active');
+    return false;
+});
+
+jQuery.validator.addMethod("mobile", function (value, element) {
+    var tel = /^1[3|4|5|7|8]\d{9}$/;
+    return this.optional(element) || (tel.test(value));
+}, "请输入有效的手机号码");
+
+$('.js-fetch-sms').on('click', function(){
+	var mobile = $mobile.val();
+	if(!/^1[3|4|5|7|8]\d{9}$/.test(mobile)){
+		return alert('请输入正确的手机号'), false
+	}
+	
+	var $sms = $(this);
+	$sms.attr('disabled', 'disabled');
+	$.ajax({
+		url: '__MODULE__/register/captcha',
+		data: {mobile: mobile},
+		type: 'post',
+		dataType: 'json',
+		success: function(data){
+			if(data.status == 1){
+				var index = 60;
+				var timer = setInterval(function(){
+					index--;
+					$sms.html('重新获取('+index+')');
+					if(index == 0){
+						window.clearInterval(timer);
+						$sms.removeAttr('disabled');
+                        $sms.html('重新获取');
+					}
+				}, 1000);
+			}else{
+				alert(data.info);
+				$sms.removeAttr('disabled');
+			}
+		},
+		error: function(){
+			$sms.removeAttr('disabled');
+		}
+	});
+	return false;
+});
+
+$register_form.validate({
+    errorClass: 'help-block',
+    errorElement: "span",
+    highlight: function (element, errorClass, validClass) {
+        $(element).parents('.control-group-container:first').addClass('valid-failed');
+    },
+    unhighlight: function (element, errorClass, validClass) {
+        $(element).parents('.control-group-container:first').removeClass('valid-failed').children('.err-msg').html('');
+    },
+    errorPlacement:function($error, element){
+        $(element).parents('.control-group-container:first').children('.err-msg').html($error.html());
+    },
+    submitHandler: function (form) {
+        $submit.attr('disabled', 'disabled').html('确认注册...');
+        var data = $register_form.serialize();
+        $.ajax({
+            url: '__MODULE__/register/create',
+            type: 'post',
+            data: data,
+            dataType: 'json',
+            success: function(data){
+                if(data.status == 1){
+                    window.location.href = data.url;
+                }else{
+                	alert(data.info);
+                    $submit.removeAttr('disabled').html('确认注册');
+                }
+            },
+            error: function(){
+                $submit.removeAttr('disabled').html('确认注册');
+                show_error('系统繁忙，请稍后再试！');
+            }
+        });
+        return false;
+    }
+});
+
+$switchPWD.on('click', function(){
+    $switchPWD.toggleClass('icon-password-show');
+    $password.attr('type', $switchPWD.hasClass('icon-password-show') ? 'text' : 'password');
+    return false;
+});
+</script>
+</html>

@@ -1,0 +1,51 @@
+<toolbar id="toolbar" class="toolbar">
+</toolbar>
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-url="__ACTION__" data-toolbar="#toolbar" >
+    <thead>
+    <tr>
+        <th data-width="40" data-checkbox="true"></th>
+        <th data-field="id">ID</th>
+        <th data-field="tid" class="js-tid">订单id</th>
+        <th data-field="title">提醒类型</th>
+        <th data-field="name">卖家昵称</th>
+        <th data-field="created">创建时间</th>
+        <th data-field="status">状态</th>
+        <th data-width="80" data-formatter="formatter_action" data-align="right">操作</th>
+    </tr>
+    </thead>
+</table>
+<script type="text/javascript">
+    function formatter_action(val, row, index){
+        var id = row.id;
+        var html = '<p>' +
+            '    <a href="javascript:;" class="js-detail">详情</a>' +
+            '</p>'
+        return html;
+    }
+
+    $('#table').on('click', '.js-detail',function(){
+        var $ele = $(this),
+            id = $ele.parents('tr:first').data('uniqueid');
+        var tid = $ele.parents('tr:first').children('.js-tid').html();
+        $.ajax({
+            url: '/Reminder/delete',
+            type: 'post',
+            data: {id:id},
+            dataType: 'json',
+            success: function(){
+                $('#table').bootstrapTable('refresh');
+                window.open( "/order?kw="+tid);
+            }
+        });
+        return false;
+    });
+
+    $(document).ready(function () {
+        setInterval("startRequest()",60000);
+    });
+    function startRequest()
+    {
+        $('#table').bootstrapTable('refresh');
+    }
+</script>

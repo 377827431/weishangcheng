@@ -1,0 +1,117 @@
+<!-- 用户店铺主页图片 店名 logo 全部商品数目，上新商品数目，我的订单 -->
+<div id="user_shop_top">
+	<div class="user_shop_face">
+		<img class="face_img" src="{$shop_info.shop_sign}">
+	</div>
+	
+	<div class="shop_core_info">
+		<div class="shop_core_cell shop_cell1">
+			<div class="shopimg">
+				<div style="background-image: url({$shop_info.logo});" class="shopimg-url"></div>
+			</div>
+		</div>
+		<div class="shop_core_cell shop_cell2">
+			<p class="shop_core_name">{$shop_info.name}</p>
+			<p class="shop_real_name">
+				<if condition="$shop_info['transfers_auth'] eq 1">
+				<i class="active"></i>该店铺已通过实名认证
+				<else/>
+				<i></i>该店铺未通过实名认证
+				</if>
+			</p>
+			<ul class="goods_msg_ul clearfix">
+				<li><a href="javascript:;">商品数：<span>{$all_goods_count ? $all_goods_count : 0}</span></a></li>
+				<li class="new_num"><a href="javascript:;">最近上新：<span>{$new_goods_count ? $new_goods_count : 0}</span></a></li>
+			</ul>
+		</div>
+		<div class="shop_core_cell shop_cell3">
+			<div class="goto_share" style="cursor:pointer;">
+				<img src="__CDN__/img/mall/qr_code_icon.png">
+				<p>分享店铺码</p>
+			</div>	
+		</div>
+	</div>
+	<div class="shop_core_notice">
+		<p>{$shop_info.desc}</p>
+	</div>
+</div>
+<script>
+	//欢迎光临我的小店，各位亲随便看哦！！有问题可以联系我~
+	//文字溢出效果
+	require(['jquery'],function($){
+		//使用requestAnimationFrame节约动画运行时的CPU开支
+		window.requestAnimationFrame = window.requestAnimationFrame
+		|| window.mozRequestAnimationFrame
+		|| window.webkitRequestAnimationFrame
+		|| window.msRequestAnimationFrame;
+		//控制动画执行速度
+		var FPS = 20;
+		function animationFPS(callback){
+			setTimeout(function(){
+				requestAnimationFrame(callback)
+			},1000/FPS);
+		}
+		var $father = $("li.welcome_text");
+		var father_height = $father.height();
+		var $son = $("li.welcome_text .welcome_text_container");
+		var son_height = $son.height();
+		//如果子文字内容超出容器。触发动画
+		if(son_height > father_height){
+			$son.append($son.find("*").clone());
+			var init_pos = 0;
+			function move(){
+				$son[0].style.top = --init_pos+'px';
+				if(init_pos == -son_height){
+					init_pos = 0;
+				}
+				//animationFPS(move);
+			}
+			//animationFPS(move);//触发
+		}
+
+		//用户点击去分享
+		$('.goto_share').on('click',function(){
+			//初始化
+            $.ajax({
+                url: 'https://seller.xingyebao.com/login/shop_qr',
+                type: 'post',
+                data: {id:{$id},shop_id:{$shop_info['id']}},
+                dataType: 'json',
+                success: function(data){
+                	$(window).on("resize",function(){
+							if(window.orientation == 0 || window.orientation == 180) {
+			                    var width = $(window).width()/1.5;
+								var height = $(window).height()*0.7;
+								var x = height/6;
+								$(".share_code_body").css({
+									height:height+"px !important",
+									top:x+'px'
+								})
+								$(".share_logo").css("height",height+"px");
+			                }else {
+			                    var width = $(window).width()/4;
+								var height = $(window).height()*0.6;
+								var x = height/4;
+								$(".share_code_body").css({
+									height:height+"px !important",
+									top:x+'px'
+								})
+								$(".share_logo").css("height",height+"px");
+			            	}
+						}).trigger("resize");
+						$("#share_code_body").attr("style","display:flex");
+	                    $('.share_logo').attr('src', data);
+	                    var a = data.split('?');
+	                    $('#share_img').attr('href', a[0]);
+	                    var $dailog = $("#share_code_body");
+	                    $('#share_code_body').fadeIn(300);
+                }
+            });
+		})
+		$('.new_num').on('click', function (){
+            $('html, body').animate({
+                scrollTop: $(".new_num").offset().top
+            }, 200);
+        })
+	})
+</script>

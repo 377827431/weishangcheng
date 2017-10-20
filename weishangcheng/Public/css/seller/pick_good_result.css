@@ -1,0 +1,35 @@
+*{
+	padding: 0px;
+	margin: 0px;
+}
+/*铺货等待页面*/
+p.page_loading{text-align:center;font-size:16px;color:orange;margin-top:100px;margin-bottom:16px;}
+img.page_loading{display:block;width:40px;margin:0 auto;}
+div.page_loading{position:fixed;width:100%;height:100%;background-color:rgba(0,0,0,0.1);}
+/*铺货页面*/
+#answer_container {overflow:hidden;background-color: #fff;}
+#answer_container section:nth-child(1){padding-bottom:20px;position:relative;font-size:0;padding-top:20px;background-color: #fff;}
+#answer_container section:nth-child(1) div:nth-child(1){width:40%;display:inline-block;}
+#answer_container section:nth-child(1) div:nth-child(2){width:60%;display:inline-block;}
+#answer_container section:nth-child(1) div:nth-child(1) img{width:90%;display:block;float:right;margin-right:5%;}
+#answer_container section:nth-child(1) div:nth-child(2) p:nth-child(1){font-size:24px;margin-top:12px;line-height:30px;color:#d53111;font-weight:bolder;font-family: "微软雅黑";}
+#answer_container section:nth-child(1) div:nth-child(2) p:nth-child(2){font-size:14px;color:#5b5b5b;font-family: "微软雅黑";}
+div.goon_pick_container{padding-top:15px;padding-bottom:10px;background-color: #fff;}
+div.goon_pick{width:30%;height:30px;line-height:30px;text-align:center;border-radius:6px;color:white;font-family:"微软雅黑";background-color: #ff7103;font-size:14px;margin:0 auto;}
+
+.instructor_container {background-color: #ff7103;padding:30px;padding-bottom:300px;}
+.instructor_container div.link_container{position:relative;top:3px;}
+.instructor_container div.link_container>span{display:inline-block;width:40px;height:40px;background:url(/img/pick_good_result/vedio_curse.png) no-repeat;background-size:100% 100%;}
+.instructor_container div.link_container>a {display:inline-block;text-decoration: none;height:40px;width:calc(100% - 40px);background-color: white;float:right;border-top-right-radius: 6px;border-bottom-right-radius: 6px;}
+.instructor_container div.link_container>a div{line-height:40px;text-overflow: ellipsis;overflow:hidden;white-space:nowrap;font-size:14px;}
+.instructor_container div.link_container>a div span:nth-child(1){color:#ff7103;}
+.instructor_container div.link_container>a div span:nth-child(2){color:#505050;}
+.instructor_span{width:100%;height:10px;background: url(/img/pick_good_result/pick_good_bg.jpg) repeat-y;background-size:100% auto;}
+.qr_container {background-color: #d53111;border-radius:6px;position:relative;}
+.qr_container img:nth-child(1){display:block;width:100%;border-radius: 6px;}
+.qr_container img:nth-child(2){display:block;position:absolute;top:0px;left:0px;height:100%;border-top-left-radius: 6px;border-bottom-left-radius: 6px;padding-right:200px;}
+.instructor_help{background-color: #fff;border-radius: 6px;padding-top:.5em;padding-bottom:.5em;}
+.instructor_help p{line-height:20px;font-size:14px;font-family: "微软雅黑";padding-left:1em;color:#454545;}
+#answer_container{background-color: #ff7103;overflow:hidden;}
+html{width:100%;height:100%;}
+body{overflow:hidden;width:100%;height:100%;}

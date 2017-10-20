@@ -1,0 +1,129 @@
+<toolbar id="toolbar">
+	<form class="search-box" novalidate="novalidate">
+		<div class="input-append js-date">
+			<input type="text" name="lucky_date" value="" placeholder="抽奖日期">
+			<span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
+		</div>
+		<input type="text" name="nickname" value="" placeholder="微信昵称">
+		<button type="button" data-name="search" class="btn btn-default" data-event-type="default">
+			<i class="icon-search"></i>
+		</button>
+	</form>
+</toolbar>
+
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-url="__URL__" data-toolbar="#toolbar">
+    <thead>
+		<tr>
+			<th data-width="40" data-checkbox="true"></th>
+			<th data-width="100" data-field="mid">会员ID</th>
+			<th data-width="150" data-field="nickname">微信昵称</th>
+			<th data-width="60" data-field="sex" data-align="center" data-formatter="fomat_sex">性别</th>
+			<th data-width="150" data-field="lucky_time" data-align="center">中奖时间</th>
+			<th data-width="150" data-field="subscribe_time" data-align="center">关注时间</th>
+			<th data-width="150" data-field="unsubscribe_time" data-align="center">取消关注时间</th>
+			<th data-field="city">所在城市</th>
+		</tr>
+	</thead>
+</table>
+
+<!-- 添加幸运 -->
+<div id="luckyModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="luckyModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="luckyModalLabel">抽取幸运之星</h3>
+  </div>
+  <div class="modal-body form-horizontal">
+  	<div class="control-group">
+    	<label class="control-label">所在地</label>
+	    <div class="controls">
+	      <select style="width:130px"id="province_id"data-city="#city_id"><option value="">不限</option></select>
+	      <select style="width:130px"id="city_id"><option value="">不限</option></select>
+	    </div>
+  	</div>
+  	<div class="control-group">
+    	<label class="control-label">微信昵称</label>
+	    <div class="controls">
+	    	<input type="text" class="js-contains" maxlength="3" placeholder="包含某个文字">
+	    </div>
+  	</div>
+  	<div class="control-group">
+    	<label class="control-label">性别</label>
+	    <div class="controls">
+	      <select class="js-sex">
+		    <option value="">不限</option>
+	        <option value="1">男</option>
+	        <option value="2">女</option>
+		  </select>
+	    </div>
+  	</div>
+    <div class="control-group">
+    	<label class="control-label must">关注时间</label>
+	    <div class="controls">
+	      <div class="input-append js-date" style="margin-bottom:10px" data-format="yyyy-MM-dd hh:mm:ss">
+			<input type="text" value="{$parameter.start_time}" class="js-subscribe_start" readonly="readonly">
+			<span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
+		  </div>
+	    </div>
+	    <div class="controls">
+	      <div class="input-append js-date" data-format="yyyy-MM-dd hh:mm:ss">
+			<input type="text" value="{$parameter.end_time}" class="js-subscribe_end" readonly="readonly">
+			<span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
+		  </div>
+	    </div>
+  	</div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+    <button class="btn btn-primary js-ok">抽取</button>
+  </div>
+</div>
+
+<script type="text/javascript">
+function fomat_sex(sex, row, index){
+	if(sex == '1'){
+		return '男';
+	}else if(sex == '2'){
+		return '女';
+	}else{
+		return '保密';
+	}
+}
+
+$(function(){
+	win.initDate('.js-date');
+	$('#table').on('add', function(e, gridView){
+		$modal.modal('show');
+		return false;
+	});
+	
+	var $modal = $('#luckyModal');
+	$modal.modal({show: false});
+	$modal.find('.js-ok').on('click', function(){
+		var data = {};
+		data.province = $('#province_id :selected').text();
+		data.city = $('#city_id :selected').text();
+		data.contains = $modal.find('.js-contains').val();
+		data.sex = $modal.find('.js-sex').val();
+		data.subscribe_start = $modal.find('.js-subscribe_start').val();
+		data.subscribe_end = $modal.find('.js-subscribe_end').val();
+		
+		$.ajax({
+			url: '__URL__/add',
+			type: 'post',
+			dataType: 'json',
+			data: data,
+			waitting: '正在抽取幸运之星~',
+			success: function(user){
+				alertMsg('恭喜会员' + user.mid);
+				$modal.modal('hide');
+				$('#table').bootstrapTable('prepend', user);
+			}
+		});
+		
+		return false;
+	});
+	Address.bind('#province_id');
+});
+</script>
+<script src="/js/address.js"></script>

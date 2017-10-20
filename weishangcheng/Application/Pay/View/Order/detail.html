@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<include file="_layout/mall.head.html" title="订单结算中心" />
+<literal>
+<style>
+.container{padding-bottom: 51px}
+.select-express{position:relative; font-size:12px}
+.select-express select{opacity:0;position:absolute;width:100%;height:100%;left:0;right:0;top:0;bottom:0;}
+.select-express.error{color:red}
+.select-express .express_name{color:#ddd}
+.arrow{line-height:20px;margin-right: 10px}
+.arrow:after{content:'';position:absolute;width:7px;height:7px;border-top:2px solid #cbc9cc;border-right:2px solid #cbc9cc;-webkit-transform:rotate(45deg);-moz-transform:rotate(45deg);-ms-transform:rotate(45deg);transform:rotate(45deg);top:15px;right:12px}
+.order-total-pay{padding:0}
+.order-total-pay .btn{flex:1;position:relative;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;margin-left:9px;width:110px;height:45px;border-radius:23px;background-color:#da8f3e;color:#fff}
+.order-total-pay .btn:nth-child(2){margin-left:10px;}
+</style>
+<style type="text/css">
+        div.Payment_popups{
+            display:flex;
+            position:fixed;
+            width:100%;
+            height:100%;
+            background-color:rgba(0,0,0,0.6);
+            top:0px;
+            left:0px;
+            z-index:99999;
+        }
+        div.Payment_popups_box{
+            width:100%;
+            height:100%;
+            justify-content:center;
+            align-items:center;
+            color:white;
+        }
+        .close_dc{
+            display:block;
+            position:relative;
+            top:6%;
+            left:74%;
+            margin-left:10px;
+            width:25px;
+            height:25px;
+
+        }
+        .close_dc img{
+            width:100%;
+            height:100%;
+        }
+        .Payment_popups_box_zf,
+        .Payment_popups_box_bz
+        {
+            width:70%;
+            margin-left:15%;
+        }
+        .Payment_popups_box_zf{
+            width:50%;
+            margin-left:25%;
+        }
+        .Payment_popups_box p{width:100%;text-align:center;font-size:14px;color:#ffd800;}
+        .Payment_popups_box p.yangdonglei{height:30px;display:flex;align-items:center;width:100%;justify-content:center;font-size:14px;}
+        .wx_or_zhifubao_span{font-size:18px;color:#ffd800;text-indent:.5em;}
+        .Payment_popups_box .data_value{color:#ffd800;}
+
+    </style>
+</literal>
+</head>
+<body>
+	<div class="container">
+		<div class="content" style="padding-bottom:50px;">
+            <div style="background:#ff7e00 url(__CDN__/img/mall/trade_status_{$trade.status}.png) no-repeat 90% center;background-size: auto 100%;position: static;padding: 20px;color: #fff;">
+                <div>
+                    <h3>待支付</h3>
+                    <p id="trade_message" style="font-size: 12px;margin-top: 5px;line-height:15px;">{$message}</p>
+                </div>
+            </div>
+            <div class="express-panel" style="padding-left:20px;padding-right:20px;padding-top:20px;">
+                <div class="logistics-tips font-size-12 c-orange hide">很抱歉，该地区暂不支持配送。</div>
+                <ul class="express-detail">
+                    <li class="clearfix">
+                        <span class="name">收货人：{$trade.receiver_name}</span>
+                        <span class="tel">{$trade.receiver_mobile}</span>
+                    </li>
+                    <li class="address-detail">收货地址：{$trade.receiver_province} {$trade.receiver_city} {$trade.receiver_county} {$trade.receiver_detail}</li>
+                </ul>
+            </div>
+			<!-- 商品列表 -->
+            <div class="js-goods-list-container">
+                <div class="block block-list block-order">
+                    <div class="header"><span>店铺：{$trade.seller_name}</span></div>
+                    <div class="trade-item">
+                        <foreach name="orders" item="order">
+                        <a class="name-card name-card-goods clearfix block-item" href="{$order['detail_url']}">
+                            <div class="thumb"><img src="{$order.pic_url}"></div>
+                            <div class="detail">
+                                <div class="clearfix detail-row">
+                                    <div class="right-col text-right">
+                                        <div class="price"><span class="price-prefix">{$order['view_price'][0]['prefix']}</span><em>{$order['view_price'][0]['price']}</em><span class="price-suffix">{$order['view_price'][0]['suffix']}</span></div>
+                                        <div class="price"><span class="price-prefix">{$order['view_price'][1]['prefix']}</span><em>{$order['view_price'][1]['price']}</em><span class="price-suffix">{$order['view_price'][1]['suffix']}</span></div>
+                                    </div>
+                                    <div class="left-col">
+                                        <div class="goods-title"><h3 class="l2-ellipsis">{$order.title}</h3></div>
+                                    </div>
+                                </div>
+                                <div class="clearfix detail-row">
+                                    <div class="right-col">
+                                        <div class="num c-gray-darker">×<span class="num-txt">{$order.quantity}</span></div>
+                                    </div>
+                                    <div class="left-col"><p class="c-gray-darker sku">{$order.spec}</p></div>
+                                </div>
+                                <div class="clearfix detail-row">
+                                    <div class="right-col main-tag">{$order.main_tag}</div>
+                                    <div class="left-col error-box">{$order.errmsg}</div>
+                                </div>
+                            </div>
+                        </a>
+                        </foreach>
+                        <if condition="$trade['discount_fee'] gt 0">
+                        <div class="block-item font-size-12 js-discount">
+                            <span>店铺优惠</span>
+                            <div class="pull-right">¥{$trade['discount_fee']}</div>
+                        </div>
+                        </if>
+                        <div class="block-item">
+                            <span>配送方式</span>
+                            <div class="pull-right">{$trade.express}</div>
+                        </div>
+                        <div class="block-item order-message clearfix js-order-message" data-type="msg">
+                            <textarea class="js-msg-container font-size-12" placeholder="给卖家留言..." id="buyer_remark">{$trade.buyer_remark}</textarea>
+                        </div>
+                    </div>
+                    <div class="block-item">合计
+                        <div class="pull-right c-orange">
+                            <php>
+                            if($trade['sum_fee'] > 0 && $trade['sum_score'] > 0){
+                                echo '<span>¥'.$trade['sum_fee'].'</span> + <span>'.$trade['sum_score'].'积分</span>';
+                            }else if($trade['sum_fee'] > 0){
+                                echo '<span>¥'.$trade['sum_fee'].'</span>';
+                            }else if($trade['sum_score'] > 0){
+                                echo '<span>'.$trade['sum_score'].'积分</span>';
+                            }
+                            </php>
+                        </div>
+                    </div>
+                </div>
+            </div>
+			<div class="js-order-total" style="margin-top:10px;position:relative">
+	            <div class="block-item sum-detail">
+                    <p><span class="title-info">商品总额</span><span class="pull-right">¥{$trade.total_fee}</span></p>
+                    <p><span class="title-info">运费</span><span class="pull-right">¥{$trade.total_postage}</span></p>
+                    <if condition="$trade['discount_fee'] gt 0">
+                    <p><span class="title-info">店铺优惠</span><span class="pull-right">- ¥{$trade.discount_fee}</span></p>
+                    </if>
+                    <if condition="$trade['paid_wallet'] gt 0">
+                    <p><span class="title-info">{$project['wallet_alias']}抵用</span><span class="pull-right">- ¥{$trade.paid_wallet}</span></p>
+                    </if>
+                    <if condition="$trade['paid_balance'] gt 0">
+                    <p><span class="title-info">{$project['balance_alias']}抵用</span><span class="pull-right">- ¥{$trade.paid_balance}</span></p>
+                    </if>
+                    <if condition="$trade['adjust_fee'] neq '0.00'">
+                    <p><span class="title-info">调价</span><span class="pull-right">{:floatval($trade['adjust_fee']) < 0 ? '-' : '+'} ¥{:abs($trade['adjust_fee'])}</span></p>
+                    </if>
+                    <if condition="$trade['paid_fee'] gt 0">
+                    <p><span class="title-info">其他支付</span><span class="pull-right">- ¥{$trade.paid_fee}</span></p>
+                    </if>
+                    <if condition="$trade['total_score'] gt 0">
+                    <p><span class="title-info">应付的积分</span><span class="pull-right">{$trade.total_score}积分</span></p>
+                    </if>
+                    <if condition="$trade['discount_score'] gt 0">
+                    <p><span class="title-info">优惠的积分</span><span class="pull-right">{$trade.discount_score}积分</span></p>
+                    </if>
+                    <if condition="$trade['paid_score'] gt 0">
+                    <p><span class="title-info">已付的积分</span><span class="pull-right">- {$trade.paid_score}积分</span></p>
+                    </if>
+                </div>
+                <div class="pay-arrow"></div>
+                <div class="block-item sum-need-pay">
+                    <span class="title-info">还应支付</span>
+                    <php>
+                    if($trade['payment'] > 0 && $trade['payscore'] > 0){
+                        echo '<span class="pull-right">'.$trade['payment'].'元</span><br><span class="pull-right">'.$trade['payscore'].'积分</span>';
+                    }else if($trade['payscore'] > 0){
+                        echo '<span class="pull-right">'.$trade['payscore'].'积分</span>';
+                    }else{
+                        echo '<span class="pull-right">¥'.$trade['payment'].'</span>';
+                    }
+                    </php>
+                </div>
+                <div class="block block-list" id="switch-diyong">
+                    <foreach name="switch" item="item">
+                    <div class="block-item">
+                        <span class="title-info">{$item.message}</span>
+                        <div class="switch mini js-diyong" data-field="{$item.field}"></div>
+                    </div>
+                    </foreach>
+                    <div class="block-item">
+                        <span class="title-info">匿名购买</span>
+                        <div id="anonymous" class="switch mini{$trade['anonymous'] ? ' switch-on' : ''}" data-field="anonymous"></div>
+                    </div>
+               </div>
+            </div>
+			<div class="js-order-total-pay order-total-pay bottom-fix">
+                <div class="pay-container clearfix">
+                    <div class="pull-margin-up">
+                        <div style="display:flex;height:50px;justify-content: flex-start;align-items: center;width:90%;margin:0 auto;">
+                            <span class="c-gray-darker font-size-16">共<span class="c-orange"> {$trade.total_quantity} </span>件，</span>
+                            <span class="c-gray-darker font-size-16">合计：</span>
+                            <span id="need_pay">
+                            <php>
+                            if($trade['payment'] > 0 && $trade['payscore'] > 0){
+                                $payment = split_money($trade['payment']);
+                                echo '<span class="c-orange"><span class="js-price font-size-16">¥'.$payment[0].'</span><span class="js-price-sub font-size-12">'.$payment[1].'</span></span> + ';
+                                echo '<span class="c-orange"><span class="js-price font-size-16">'.$trade['payscore'].'</span><span class="js-price-sub font-size-12">积分</span></span>';
+                            }else if($trade['payscore'] > 0){
+                                echo '<span class="c-orange"><span class="js-price font-size-16">'.$trade['payscore'].'</span><span class="js-price-sub font-size-12">积分</span></span>';
+                            }else{
+                                $payment = split_money($trade['payment']);
+                                echo '<span class="c-orange"><span class="js-price font-size-16">¥'.$payment[0].'</span><span class="js-price-sub font-size-12">'.$payment[1].'</span></span>';
+                            }
+                            </php>
+                            </span>
+                        </div>
+
+                        <div class="zhifu_btn_con" style="display:flex;padding-left:10px;padding-right:10px;height:50px;justify-content: flex-end;align-items: center;">
+                            <if condition = "$isLB eq 1">
+                                <if condition="$has_zfb eq 1">
+                                <button type="button" class="js-confirm1 btn btn-red-f44 commit-bill-btn" style="background-color:#000" >支付宝付款</button>
+                                <button type="button" class="js-confirm2 btn btn-red-f44 commit-bill-btn" style="margin-left:0;" >微信付款</button>
+                                <else/>
+                                <button type="button" class="js-confirm2 btn btn-red-f44 commit-bill-btn" >微信付款</button>
+                                </if>
+                            <else/>
+                            <button type="button" class="js-confirm btn btn-red-f44 commit-bill-btn" {$hasError ? 'disabled="disabled"' : ''}>{$btn_text}</button>
+                            </if>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		</div>
+        <include file="_layout/mall.copyright.html" />
+	</div>
+    <!-- 弹窗 -->
+    <div class="Payment_popups" style="display:none;">
+        <div class="Payment_popups_box" style="position: relative;">
+            <div class="close_dc"><img src="/img/close_dc.png"></div>
+            <p class="yangdonglei" style="margin-bottom: 6px;"><img class="Payment_popups_icon" src="/img/zfb_icon.png"/><span class="wx_or_zhifubao_span">扫码付款</span></p>
+            <p style="font-size: 14px; margin-top: 0px; margin-bottom: 6px;"><span class="data_value" style="font-size: 24px; font-weight: bold;">180.00</span>元</p>
+            <img id="ydl_payment_popups_img" onerror="reload_img(this.src)" class="Payment_popups_box_zf"  src="/img/wx_qr.png"/>
+            <img class="Payment_popups_box_bz" style="margin-top:20px" src="/img/wx_bz.png"/>
+        </div>
+    <script>
+    var buyer = {$buyer};
+    require(['jquery'], function(){
+    	var $message = $('#trade_message');
+    	var timer = setInterval(function(){
+    		var data = countDown({$trade.pay_timeout}000);
+    		$message.html('距离订单自动关闭还剩'+(data.day > 0 ? data.day+'天':'') + (data.hour > 0 ? data.hour+'小时':'') + (data.minute > 0 ? data.minute+'分':'') + (data.second > 0 ? data.second+'秒':''));
+    	}, 1000);
+
+    	var $switch = $('#switch-diyong .js-diyong');
+    	$switch.on('change', function(){
+    		var field = '', html = '', value = 0, checked = false, payment = {$trade.payment}, payscore = {$trade.payscore};
+    		$switch.each(function(i){
+    			value = 0;
+    			field = $switch.eq(i).data('field');
+    			if(field == 'wallet'){
+    				if(this.checked){
+        				value = payment > buyer[field] ? buyer[field] : payment;
+        				payment = payment.bcsub(value, 2);
+        				html = '可用{$project['wallet_alias']}抵用'+value.toFixed(2)+'元';
+    				}else{
+    					html = '可用{$project['wallet_alias']}抵用';
+    				}
+    			}else if(field == 'balance'){
+    				if(this.checked){
+        				value = payment > buyer[field] ? buyer[field] : payment;
+        				payment = payment.bcsub(value, 2);
+        				html = '可用{$project['balance_alias']}抵用'+value.toFixed(2)+'元';
+    				}else{
+    					html = '可用{$project['balance_alias']}抵用';
+    				}
+    			}else if(field == 'score'){
+    				if(this.checked){
+        				value = payment > buyer[field] ? buyer[field] : payscore;
+        				payscore = payscore.bcsub(value, 2);
+        				html = '可用积分支付'+value.toFixed(2);
+    				}else{
+    					html = '可用积分支付';
+    				}
+    			}
+
+    			$(this).data('amount', value).prev().html(html);
+    		});
+
+    		var html = [], price = payment.split('.');
+    		if(parseFloat(payment) > 0){
+            	html.push('<span class="c-orange"><span class="js-price font-size-16">¥'+price[0]+'</span><span class="js-price-sub font-size-12">.'+price[1]+'</span></span>');
+            }
+			if(parseFloat(payscore) > 0){
+            	html.push('<span class="c-orange"><span class="js-price font-size-16">'+payscore+'</span><span class="js-price-sub font-size-12">积分</span></span>');
+            }
+			if(html.length == 0){
+            	html.push('<span class="c-orange"><span class="js-price font-size-16">¥'+price[0]+'</span><span class="js-price-sub font-size-12">.'+price[1]+'</span></span>');
+			}
+    		$('#need_pay').html(html.join(' + '));
+    		return false;
+    	});
+        $('.js-order-total-pay .js-confirm1').on('click', function(){
+            var zfb = 'zfb';
+            $(".Payment_popups_box_zf").attr("src","/img/zfb_qr.png");
+            $.ajax({
+                url:"__PAY__/order/getPayQr",
+                data:{tid:{$trade.tid},wx_or_zfb:zfb},
+                dataType:"json",
+                type:"post",
+                success:function(data){
+                    $(".Payment_popups_box span.data_value").text(data.payment);
+                    $(".Payment_popups_box_zf").attr("src",data.pay_qr);
+                    $(".Payment_popups span.wx_or_zhifubao_span").text("截屏保存扫码付款");
+                    $(".Payment_popups_box_bz").attr("src",data.explain);
+                    $(".Payment_popups").show();
+                }
+            });
+        });
+        $('.js-order-total-pay .js-confirm2').on('click', function(){
+            $(".Payment_popups_box_zf").attr("src","/img/wx_qr.png");
+            $.ajax({
+                url:"__PAY__/order/getPayQr",
+                data:{tid:{$trade.tid}},
+                dataType:"json",
+                type:"post",
+                success:function(data){
+                    $(".Payment_popups_box span.data_value").text(data.payment);
+                    $(".Payment_popups_box_zf").attr("src",data.pay_qr);
+                    $(".Payment_popups span.wx_or_zhifubao_span").text("扫码付款");
+                    $(".Payment_popups_box_bz").attr("src",data.explain);
+                    $(".Payment_popups").show();
+                }
+            });
+        });
+        $(".close_dc").click(function(){
+            $(".Payment_popups").hide();
+        })
+     	// 显示支付按钮并立即生成支付
+    	require(['h5/pay'], function(pay){
+			var errmsg = '{$errmsg}', $btn = $('.js-order-total-pay .js-confirm');
+			$btn.on('click', function(){
+    			if(errmsg != '' && !confirm(errmsg)){
+    				return false;
+    			}
+    			errmsg = '';
+    			$btn.attr('disabled', 'disabled');
+
+    			var data = {
+					tid: '{$trade.tid}',
+					buyer_remark: $('#buyer_remark').val(),
+					use_wallet: 0,
+					use_balance: 0,
+					use_score: 0,
+					anonymous: 0
+    			};
+    			data.buyer_remark = $.trim(data.buyer_remark);
+    			data.anonymous = $('#anonymous').hasClass('switch-on') ? 1 : 0;
+
+    			// 抵用
+    			var $switch = $('#switch-diyong .js-diyong');
+    			$switch.addClass('disabled');
+    			$switch.each(function(i){
+    				if($switch.eq(i).hasClass('switch-on')){
+    					var field = $switch.eq(i).data('field');
+    					data['use_'+field] = $switch.eq(i).data('amount');
+    				}
+    			});
+
+    			$.ajax({
+    				url: '__PAY__/order/wxpay',
+    				data: data,
+    				type: 'post',
+    				dataType: 'json',
+    				success: function(param){
+    					if(param.payment > 0){
+        					pay.callpay(param, function(res){
+        						if(res.errcode == 0){
+        							if(param.payscore > 0){
+        	    						alert('您还需要支付'+param.payscore+'积分');
+        	    					}
+    	    						window.location.href = param.redirect;
+        						}
+        					});
+    					}else if(param.payscore > 0){
+    						alert('您还需要支付'+param.payscore+'积分');
+    						window.location.href = param.redirect;
+    					}
+    				},
+    				error: function(){
+    					$btn.removeAttr('disabled');
+    				}
+    			});
+    			return false;
+    		});
+    	});
+    });
+    </script>
+</body>
+</html>

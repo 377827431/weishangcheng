@@ -1,0 +1,80 @@
+<div id="toolbar" class="toolbar">
+	<form id="order_search" class="form-horizontal" style="margin:0">
+		<div class="clearfix">
+			<div class="filter-groups">
+				<div class="control-group">
+					<label class="control-label">代理手机号</label>
+					<div class="controls">
+						<input type="text" name="mobile" maxlength="11">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">收入/支出</label>
+					<div class="controls">
+						<select name="status">
+							<option value="">全部</option>
+							<option value="1">收入</option>
+							<option value="2">支出</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="filter-groups">
+				<div class="control-group">
+					<label class="control-label" style="width: 120px;">时间</label>
+					<div class="controls" style="margin-left:125px;">
+						<div class="input-append date" data-format="yyyy-MM-dd hh:mm:ss">
+							<input type="text" name="start_date" style="width: 130px;" value="{:date('Y-m-d 00:00:00', strtotime('-1 day'))}">
+							<span class="add-on"><i class="icon-th"></i></span>
+						</div>
+						至
+						<div class="input-append date" data-format="yyyy-MM-dd hh:mm:ss">
+							<input type="text" name="end_date" style="width: 130px;" value="{:date('Y-m-d').' 23:59:59'}">
+							<span class="add-on"><i class="icon-th"></i></span>
+						</div>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" style="width: 120px;">类型</label>
+					<div class="controls" style="margin-left:125px;">
+						<select name="type" style="width: 173px;">
+							<option value="">全部</option>
+							<foreach name="balacne_type" item="vo" key="key">
+								<option value="{$key}">{$vo}</option>
+							</foreach>
+						</select>
+						<input class="btn btn-primary" type="submit" value="查询"style="margin-left: 15px;">
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-url="__URL__" data-toolbar="#toolbar"  data-page-list="[1, 10, 25, 50, All]">
+	<thead>
+		<tr>
+			<th data-width="150" data-field="nickname">代理姓名</th>
+			<th data-width="150" data-field="type">类型</th>
+			<th data-width="100" data-field="money">金额</th>
+			<th data-width="100" data-field="balance">结余</th>
+			<th data-width="150" data-field="create_time">时间</th>
+			<th data-field="reason">描述</th>
+		</tr>
+	</thead>
+</table>
+
+<script>
+$(function(){
+	$('#only_platform').on('change', function(){
+		var $input = $(this).parent().prev();
+		
+		if(this.checked){
+			$input.attr('disabled', 'disabled');
+		}else{
+			$input.removeAttr('disabled');
+		}
+		return false;
+	});
+});
+</script>

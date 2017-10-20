@@ -1,0 +1,42 @@
+<toolbar id="toolbar">
+    <form class="search-box">
+        <notempty name="shopList">
+        <select name="shop_id" " style="width:150px;">
+            <option value="">全部店铺</option>
+            <foreach name="shopList" item="item">
+            <option value="{$item.id}">{$item.name}</option>
+            </foreach>
+        </select>
+        </notempty>
+        <div class="input-append date" data-format="yyyy-MM-dd hh:mm:ss">
+            <input type="text" name="start_date" value="{$start_date}" style="width: 75px;">
+            <span class="add-on"><i class="icon-th"></i></span>
+        </div>
+        至
+        <div class="input-append date" data-format="yyyy-MM-dd hh:mm:ss">
+            <input type="text" name="end_date" value="{$end_date}" style="width: 75px;">
+            <span class="add-on"><i class="icon-th"></i></span>
+        </div>
+        <button type="submit" class="btn btn-default">
+            <i class="icon-search"></i>
+        </button>
+    </form> 
+</toolbar>
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-url="__URL__" data-toolbar="#toolbar">
+    <thead>
+        <tr>
+            <th data-field="name" data-width="250">店铺名</th>
+            <th data-field="username" data-width="110">操作人</th>
+            <th data-field="trade_count" data-width="60" data-align="center">订单总数</th>
+            <th data-field="created" data-width="140">导出时间</th>
+            <th data-formatter="formatter_action">操作</th>
+        </tr>
+    </thead>
+</table>
+
+<script>
+function formatter_action(val, row, index){
+    return '<a href="__ACTION__?id='+row.id+'" target="_blank">下载</a>';
+}
+</script>

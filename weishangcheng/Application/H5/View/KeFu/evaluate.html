@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="服务评价" />
+    <style>
+    .kf-headimgurl{text-align:center}
+    .kf-headimgurl img{width:30%}
+    .kf-info{margin:20px 0;text-align:center}
+    .kf-connection{padding:14px 0}
+    .kf-connection .kf-icon{width:72px;height:72px;margin:0 auto;border-radius:50%;border:2px solid #fff;padding:4px}
+    .kf-connection .kf-icon img{width:100%}
+    .kf-attitude-score{color:#fff}
+    .hr-text .text{color:#c8c8c8}
+    .star{font-size:25px;padding:20px 0;text-align:center}
+    .star .active{color:#f90}
+    .block-list .block-dot{background:none}
+    textarea, input{border:1px solid #e8e8e8;box-sizing: border-box;border-radius:3px;width:100%;padding:8px}
+    textarea{height:135px}
+    input{padding: 10px 8px;margin-top:14px}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <ul class="block block-list">
+                <li class="block-item">
+                    <div class="block-dot"><img src="__CDN__/img/logo_rgb.png"></div>
+                    <div class="block-info">
+                        <div class="block-title">{$kefu.nickname}
+                            <span class="block-tag">
+                                <span class="kf-attitude-score">★{$kefu.avg_score}</span>
+                            </span>
+                        </div>
+                        <div class="block-content">接待时间{$kefu.work_start}~{$kefu.work_end}<span class="pull-right">{$kefu.times}人</span></div>
+                    </div>
+                </li>
+            </ul>
+            <div class="kf-connection">
+                <div class="kf-icon">
+                    <img src="__CDN__/img/weixin-yellow.png">
+                </div>
+            </div>
+            <div class="hr-text"><div class="text">已评价服务</div></div>
+            <div class="star js-star-container">
+            <php>
+            for($i=0; $i<$data['attitude']; $i++){
+               echo '<span class="active">★</span> ';
+            }
+            for($i=0; $i<5-$data['attitude']; $i++){
+               echo '<span>☆</span> ';
+            }
+            </php>
+            </div>
+            <div class="hr-text"><div class="text">意见反馈</div></div>
+            <div style="padding:14px">
+                <textarea placeholder="300字符以内" class="js-message" maxlength="300" {$canEdit ? '' : 'disabled'}>{$data['message']}</textarea>
+                <if condition="$canEdit">
+                <input type="tel" placeholder="平台绑定的手机号" class="js-mobile" maxlength="11" {$canEdit ? '' : 'disabled'}>
+                <button class="btn btn-block btn-red js-submit" style="margin-top:14px">意见反馈</button>
+                <else />
+                <button class="btn btn-block btn-red " style="margin-top:14px" disabled>已收到您的意见反馈</button>
+                </if>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    require(['jquery'], function(){
+        <if condition="$canEdit">
+        var $stars = $('.js-star-container>span'),
+            $mobile = $('.js-mobile'),
+            $message = $('.js-message'),
+            postData = {id: {$data['id']}, attitude: {$data['attitude']}, message: '', mobile: ''};
+        $('.js-star-container').on('click', 'span', function(){
+            var $ele = $(this), index = $ele.index();
+            $stars.each(function(i){
+                if(i <= index){
+                    $stars.eq(i).addClass('active').html('★');
+                }else{
+                    $stars.eq(i).removeClass('active').html('☆');
+                }
+            });
+            
+            postData.attitude = index;
+            return false;
+        });
+        
+        $('.js-submit').on('click', function(){
+            postData.mobile = $mobile.val();
+            postData.message = $message.val();
+            
+            if(postData.message.length < 10){
+                return toast.show('意见不能少于10个字符'), false;
+            }
+            
+            $.ajax({
+                url: '/h5/kefu/feedback',
+                type: 'post',
+                dataType: 'json',
+                data: postData,
+                success: function(){
+                    location.reload();
+                    //win.close();
+                }
+            
+            });
+            return false;
+        });
+        </if>
+        
+        // 再次连接客服
+        // some code
+    });
+    </script>
+</body>
+</html>

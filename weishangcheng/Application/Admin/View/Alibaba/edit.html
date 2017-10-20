@@ -1,0 +1,54 @@
+<div id="goodsModal" method="post" action="__ACTION__?goods_id={$goods_id}" class="modal modal-small hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+<form method="post" action="__ACTION__" data-validate="true" data-submit="ajax" class="form-horizontal">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3>编辑</h3>
+  </div>
+	  <div class="modal-body">
+	  	<input type="hidden" name="id" value="{$data.id}">
+		<div class="control-group">
+			<label class="control-label must">退货联系人</label>
+			<div class="controls">
+				<input type="text"  name="receiver_name" value="{$data.receiver_name}" placeholder="" maxlength="15" required="required">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label must">退货电话</label>
+			<div class="controls">
+				<input type="text" class="required number" name="receiver_mobile" value="{$data.receiver_mobile}" placeholder="" maxlength="15" required="required">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label ">退货邮编</label>
+			<div class="controls">
+				<input class="number" type="text" name="receiver_zip" value="{$data.receiver_zip}" placeholder="" minlength="6"  maxlength="6" >
+			</div>
+		</div>
+		<div class="control-group">
+				<label class="control-label must">退货地址</label>
+				<div class="controls">
+					<select required="required" name="receiver_province" id="province_id" data-city="#city_id" data-selected="{$data.receiver_province}" data-name="true" style="width:78px;">
+						<option value="">请选择</option>
+					</select>
+					<select required="required" name="receiver_city" id="city_id" data-county="#county_id" data-selected="{$data.receiver_city}" data-name="true" style="width:78px;">
+					<option value="">请选择</option></select>
+					<select required="required" name="receiver_county" id="county_id"  data-selected="{$data.receiver_county}" data-name="true" style="width:78px;"><option value="">请选择</option></select>
+				</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label must">详细地址</label>
+			<div class="controls">
+				<input type="text" name="receiver_detail" value="{$data.receiver_detail}" placeholder="" maxlength="25" required="required">
+			</div>
+		</div>
+	  </div>
+	  <div class="modal-footer">
+	  	<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+	  	<button type="submit" class="btn btn-primary" aria-hidden="true">保存</button>
+	  </div>
+</form>
+	<script src="/js/address.js"></script>
+	<script type="text/javascript">
+		Address.bind("#province_id");
+	</script>
+</div>

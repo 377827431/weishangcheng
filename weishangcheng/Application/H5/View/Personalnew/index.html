@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="我的" />
+    <script src="/js/flexible.js"></script>
+    <link rel="stylesheet" href="__CDN__/css/usercenter_new.css?modify=2017083000" type="text/css" />
+</head>
+<body class="body-fixed-bottom">
+<div class="container">
+    <div class="content ">
+        <div class="content-body">
+            <div class="personal-header">
+                <div class="advertisement">
+                    <foreach name="advs" item="item">
+                        <a href="{$item.url}" class="ellipsis" target="_blank">{$item.title}</a>
+                    </foreach>
+                </div>
+                <div class="personal_info_box clearfix">
+                    <div class="headimg js-edit-info">
+                        <div style="background-image: url({$user.headimgurl});" class="headimg-url"></div>
+                    </div>
+                    <div class="personal_nick_box">
+                        <p class="person_nick ellipsis">{$user.agent_title}</p>
+                        <p class="person_id">ID:{$user.id}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="order-related">
+                <div class="new_uc_order_box clearfix">
+                    <span class="has_buy_goods">已买到的商品</span>
+                    <a <?php if($testMember!=1){?>href="__MODULE__/ordernew#all"<?php }else{ ?>href="javascript:toast.show('您当前操作为买家行为 请在微信中查看');"<?php }?> target="_blank" class="all_order_btn">全部订单</a>
+                </div>
+                <ul class="uc-order list-horizon clearfix">
+                    <li>
+                        <a class="link clearfix relative" <?php if($testMember!=1){?>href="__MODULE__/ordernew#topay"<?php }else{ ?>href="javascript:toast.show('您当前操作为买家行为 请在微信中查看');"<?php }?> target="_blank">
+                        <p class="title-num">{$orderNum['topay']}</p>
+                        <p class="title-info c-black">待付款</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="link clearfix relative" <?php if($testMember!=1){?>href="__MODULE__/ordernew#tosend"<?php }else{ ?>href="javascript:toast.show('您当前操作为买家行为 请在微信中查看');"<?php }?> target="_blank">
+                        <p class="title-num">{$orderNum['tosend']}</p>
+                        <p class="title-info c-black">待发货</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="link clearfix relative" <?php if($testMember!=1){?>href="__MODULE__/ordernew#send"<?php }else{ ?>href="javascript:toast.show('您当前操作为买家行为 请在微信中查看');"<?php }?> target="_blank">
+                        <p class="title-num">{$orderNum['send']}</p>
+                        <p class="title-info c-black">待收货</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="link clearfix relative" <?php if($testMember!=1){?>href="__MODULE__/ordernew#torate"<?php }else{ ?>href="javascript:toast.show('您当前操作为买家行为 请在微信中查看');"<?php }?> target="_blank">
+                        <p class="title-num">{$orderNum['torate']}</p>
+                        <p class="title-info c-black">待评价</p>
+                        </a>
+                    </li>
+                </ul>
+
+
+
+                <div class="block block-list list-vertical">
+                    <!-- <a class="block-item link clearfix ico-mystore" href="{$url}">
+                        <p class="title-info c-black font-size-14">我的小店</p>
+                    </a> -->
+                    <a class="js-manage-address block-item link clearfix ico-addressee" href="javascript:;">
+                        <p class="title-info c-black font-size-14">管理收件人</p>
+                    </a>
+                </div>
+                <!-- <div class="block block-list list-vertical">
+                    <a class="block-item link clearfix ico-novice" href="javascript:;">
+                        <p class="title-info c-black font-size-14">新手教程</p>
+                    </a>
+                </div> -->
+
+            </div>
+        </div>
+    </div>
+
+    <div class="js-footer footer" style="padding: 10px 0 20px;">
+        <div class="copyright">
+            <span class="company">小店由【兴业宝科技】提供技术支持</span>
+        </div>
+    </div>
+    <include file="_layout/mall.footer.html" />
+
+</div>
+<input type="hidden" value="{$testMember}" class="testMember">
+</body>
+<script>
+    require(['jquery'], function(){
+        require(["buyer/address"], function(modal){
+            $('.js-manage-address').on('click', function(){
+                var testMember = $('.testMember').val();
+                if(testMember != 1){
+                    modal.url = "__MODULE__";
+                    modal.show();
+                }else{
+                    toast.show("您当前操作为买家行为 请在微信中查看");
+                    return false;
+                }
+            })
+            // 选择收货地址
+            modal.onSelect = function(data){
+                console.log(data);
+            }
+        });
+    })
+
+    require(['jquery'], function(){
+        var user = {:json_encode($user)};
+        var $headimgurl = $('.js-edit-info');
+        $headimgurl.on('click', function(){
+            if({$testMember} != 1){
+                require(['buyer/edit'], function(view){
+                    view.show(user, function(data){
+                        user = $.extend(user, data);
+                        $.ajax({
+                            url: "__MODULE__/personalnew/save",
+                            data: data,
+                            type: 'post',
+                            datatype: 'text'
+                        });
+                    })
+                });
+            }else{
+                toast.show("您当前操作为买家行为 请在微信中查看");
+                return false;
+            }
+            return false;
+        });
+    });
+</script>
+</html>

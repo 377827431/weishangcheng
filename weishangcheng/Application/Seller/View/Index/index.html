@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="小店中心" />
+    <link rel="stylesheet" href="__CDN__/css/seller/keyshop.css?20170901">
+    <link rel="stylesheet" href="__CDN__/css/seller/pick_dailog.css?20170831">
+    <link rel="stylesheet" href="__CDN__/css/shop.homepage.css?20170901">
+</head>
+ <style>
+     #Authent_dailog{
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+     }
+     .Authent_dailog_box{
+        position: fixed;
+        z-index: 5000;
+        width: 80%;
+        max-width: 300px;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        background-color: #FFFFFF;
+        text-align: left;
+        border-radius: 6px;
+        overflow: hidden;
+     }
+     .Authent_dailog_bd{
+        font-size: 14px;
+        line-height: 1.5;
+        word-wrap: break-word;
+        word-break: break-all;
+        color: #000;
+        padding: 20px;
+     }
+     .Authent_dailog_ft{
+        position: relative;
+        line-height: 39px;
+        font-size: 14px;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex;
+        text-align: center;
+     }
+     .Authent_dailog_btn{
+        display: block;
+        -webkit-box-flex: 1;
+        -webkit-flex: 1;
+        flex: 1;
+        color: #ffffff;
+        text-decoration: none;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        position: relative;
+        background: #DD8C3A;
+     }
+     
+ </style>
+<body style="background-color:#fff;">
+
+    <if condition="$t_auth eq 0">
+        <!-- 实名认证弹窗 -->
+        <div id="Authent_dailog">
+            <div class="Authent_dailog_box">
+                <div class="Authent_dailog_bd">根据国家相关法律法规、共同维护互联网交易环境，需实名认证审后才能继续使用小店。请先填写重要信息。</div>
+                <div class="Authent_dailog_ft">
+                    <a href="/seller/certification/alipay_verify?from=index" class="Authent_dailog_btn">立即认证</a>
+                </div>
+            </div>
+        </div>
+        <!-- /实名认证弹窗 -->
+    </if>
+
+<div class="container">
+    <div class="content">
+        <div class="content-body">
+            <!--分享二维码弹窗-->
+            <!-- <div id="share_code_body">
+                <div class="share_code_body">
+                    <span class="close_icon"></span>
+                    <img class="share_logo" src="{$qr_url}" style="display:block;border-radius:10px;">
+                </div>
+            </div> -->
+            <div id="share_code_body">
+                <div class="share_code_body"  style="width:100%;background-color:transparent; margin-top:0px !important; width:auto !important;">
+                    <span class="close_icon" style="background:none;color:white;top:-40px;right:0%;font-size:25px;width:40px;height:40px;font-family:'宋体';text-align:center;line-height:40px;">×</span>
+                    <?php if($iswx!=1){?><?php }?>
+                        <img style="width: auto;display:block;margin:0 auto;" class="share_logo" src="{$qr_url}" alt="" >
+                        <div class="click_fenxiang" style="margin:0 auto;margin-top:10px;padding:10px 0px;text-align:center;color:white;background-color:#e4bc91;font-size:15px;border-radius:8px;">点击分享图片</div>
+                    <?php if($iswx!=1){?><?php }?>
+                </div>
+            </div>
+            
+            <!--二维码教程弹窗-->
+            <div id="qr_code_help_dailog">
+                <div class="qr_code_help_dailog">
+                    <div class="qr_code_help_body">
+                        <span class="qr_code_help_dailog_close"></span>
+                        <div class="video_tutorial clearfix">
+                            <a href="" class="video_tutorial_link">
+                                <span style="top:0;">视频教程</span>
+                                <p>【点击查看】如何在微信端管理我的微店</p>
+                            </a>
+                        </div>
+                        <div class="jiyang_img">
+                            <img src="__CDN__/img/mall/find_shop.jpg">
+                        </div>
+                        <div class="text_container">
+                            <p>步骤：</p>
+        					<p>1、长按保存二维码图片；</p>
+        					<p>2、打开微信扫一扫；</p>
+        					<p>3、从相册选取保存的二维码；</p>
+        					<p>4、扫码关注打开“我的店铺”。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 弹窗开始 -->
+            <div class="pick_result_dailog pick_mask" data-pick-result="success" style="display:none;">
+                <div class="dailog_body">
+                    <div class="result_img"></div>
+                    <div class="result_info">
+                        <p>铺货成功！</p>
+                        <p class="failed_reason">商品数目不足</p>
+                    </div>
+                    <a href="javascript:void(0);" class="pick_edit_goods"><div class="goon_pick">编辑商品</div></a>
+                    <div class="close_icon">×</div>
+                </div>
+            </div>
+            <!-- 弹窗结束-->
+            <div class="key_shop_header">
+                <div class="key_shop_table clearfix">
+                    <div class="key_header_box">
+                        <img id="member_head_img" src="{$data.head_img}">
+                    </div>
+                    <div class="key_name_box">
+                        <p class="key_shop_name">{$data.name}</p>
+                        <!-- <a href="{$url}" class="enter_shop_btn">查看我的小店</a> -->
+                        <a href="javascript:void(0);" class="enter_shop_btn">查看我的小店</a>
+                    </div>
+                </div>
+                <ul class="my_three_function">
+                    <li>
+                        <a>
+                            <p class="js-turn">{$data.trade.turn}</p>
+                            <span>今日成交额</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/seller/order?param=today">
+                            <p class="js-count">{$data.trade.count}</p>
+                            <span>今日订单</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/seller/order?param=topay">
+                            <p class="js-topay">{$data.trade.topay}</p>
+                            <span>未付款</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/seller/order?param=tosend">
+                            <p class="js-tosend">{$data.trade.tosend}</p>
+                            <span>待发货</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/seller/order?param=send">
+                            <p class="js-send">{$data.trade.send}</p>
+                            <span>已发货</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="ul_main_box_module">
+                <ul class="key_main_module clearfix">
+                    <!-- <li>
+                        <a href="javascript:void(0);" class="goto_share">
+                            <i class="code_link key_icon"></i>
+                            <p>商城二维码</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/seller/ali">
+                            <i class="my_goods key_icon"></i>
+                            <p>我的货源</p>
+                        </a>
+                    </li> -->
+                    <li>
+                        <a href="/seller/shop?from=index">
+                            <i class="shop_manage key_icon"></i>
+                            <p>店铺管理</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/seller/commodity">
+                            <i class="goods_manage key_icon"></i>
+                            <p>商品管理</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/seller/order">
+                            <i class="order_manage key_icon"></i>
+                            <p>订单管理</p>
+                        </a>
+                    </li>
+                    <!--<li>-->
+                        <!--<a href="">-->
+                            <!--<i class="more_set key_icon"></i>-->
+                            <!--<p>更多设置</p>-->
+                        <!--</a>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<a href="/seller/income">-->
+                            <!--<i class="withdrawals key_icon"></i>-->
+                            <!--<p>我的收入</p>-->
+                        <!--</a>-->
+                    <!--</li>-->
+                    <!-- <li>
+                        <a href="#">
+                            <i class="payback_cfg key_icon"></i>
+                            <p>营销中心</p>
+                        </a>
+                    </li> -->
+                    <!-- <li>
+                        <a href="/seller/Member">
+                            <i class="member_lv key_icon"></i>
+                            <p>会员等级</p>
+                        </a>
+                    </li> -->
+                    <!-- <li>
+                        <a href="/seller/Commision/promoters">
+                            <i class="payback_cfg key_icon"></i>
+                            <p>推广员</p>
+                        </a>
+                    </li> -->
+                </ul>
+                <div class="i_list_bottom"></div>
+            </div>
+            <!-- <div class="video_tutorial clearfix trigger_share_dailog">
+                <a href="" class="video_tutorial_link">
+                    <span>视频教程</span>
+                    <p>【点击查看】如何在微信端管理我的微店</p>
+                </a>
+            </div> -->
+        </div>
+    </div>
+        <div class="js-footer footer" style="padding: 10px 0 20px;background-color:#fff;">
+            <div class="copyright">
+                <span class="company">
+                    <?php if($is_tester == 1 ){ ?><a href="/seller/test"><?php } ?>
+                小店由【兴业宝科技】提供技术支持
+                <?php if($is_tester ==1 ){ ?></a><?php }?>
+                </span>
+            </div>
+        </div>
+</div> 
+<input value="{$shopid}" id="shopidc" type="hidden">
+<!-- <input type="hidden" class="js-result" value="{$isshow['result']}">
+<input type="hidden" class="js-reason" value="{$isshow['reason']}"> -->
+<script>
+    require(['jquery'],function(){
+        require(['alipan'],function(ali){
+            if(ali.isAvailable){
+                $("#share_code_body").click(function(){
+                    $("#share_code_body").hide();
+                    ali.aliShare("",[''+$('#share_code_body img.share_logo').eq(0).attr('src')]);
+                })
+            }else{
+                $(".click_fenxiang").hide();
+            }
+
+        })
+        //分享
+
+
+
+
+        var rand = new Date().getTime();
+        $.ajax({
+            url: '__MODULE__/index?modify='+rand,
+            dataType: 'json',
+            success: function(data){
+                $('.js-turn').html(data.turn);
+                $('.js-count').html(data.count);
+                $('.js-topay').html(data.topay);
+                $('.js-tosend').html(data.tosend);
+                $('.js-send').html(data.send);
+            }
+        });
+
+        // param = {result:"success|waiting|failed",failed_reason:"库存不足"}
+        function GetQueryString(name){
+            var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if(r!=null)return  unescape(r[2]); return null;
+        }
+
+        function initPage(){
+            var code = decodeURI(GetQueryString("code"));
+            var reason = decodeURI(GetQueryString("reason"));
+            var result = "";
+            if(code == 0){
+                result = "success";
+            }else{
+                result = "failed";
+            }
+            if(code == 0){
+                setParam({result:result,failed_reason:reason});
+                window.history.replaceState(null,"小店中心",window.location.protocol+"//"+window.location.host+window.location.pathname);
+                showDailog();
+            }else if(code == -1){
+                setParam({result:result,failed_reason:reason});
+                window.history.replaceState(null,"小店中心",window.location.protocol+"//"+window.location.host+window.location.pathname);
+                showDailog();
+            }else{
+                closeDailog();
+            }
+        }
+        initPage();
+        function setParam(param){
+            $('div.pick_result_dailog').attr('data-pick-result',param.result);
+            if(param.result == "success"){
+                $("div.result_info p").eq(0).text("铺货成功!");
+            }else if(param.result == "failed"){
+                $("div.result_info p").eq(0).text("铺货失败!");
+                $("div.result_info p").eq(1).text(param.failed_reason);
+                $('.pick_edit_goods').hide();
+            }
+        }
+        function showDailog(){
+            $("div.pick_result_dailog").show();
+        }
+        function closeDailog(){
+            $("div.pick_result_dailog").hide();
+        }
+        //弹窗关闭
+        $("div.close_icon").click(function(){
+            // window.location.replace('/seller');
+            closeDailog();
+        })
+        $('.goon_pick').on('click', function(){
+            window.location.href="/seller/commodity";
+            closeDailog();
+        });
+        //模拟弹窗显示
+        setParam({
+            result:$('.js-result').val(),
+            failed_reason:$('.js-reason').val()
+        })
+//        分享二维码事件
+        $('.goto_share').on('click',function(){
+            $.ajax({
+                url: '__MODULE__/Qr/shop_qr',
+                type: 'post',
+                dataType: 'json',
+                success: function(data){
+                    $('.share_logo').attr('src', data);
+                    $('#share_code_body').fadeIn(300);
+                }
+            });
+        })
+        $('span.close_icon').on('click',function(){
+            $("#share_code_body").fadeOut(300);
+        })
+
+        //长按二维码
+        $(".qr_code_help_dailog_close").click(function(){
+            $('#qr_code_help_dailog').hide();
+        })
+        $('.trigger_share_dailog').click(function(){
+            $('#qr_code_help_dailog').show();
+            return false;
+        })
+        $(".enter_shop_btn").click(function(){
+            var shopidc = $('#shopidc').val();
+            console.log()
+            $.ajax({
+                url: 'https://seller.xingyebao.com/login/shop_qr2',
+                type: 'post',
+                data: {shop_id:shopidc},
+                dataType: 'json',
+                success: function(data){
+                    $(window).on("resize",function(){
+                        if(window.orientation == 0 || window.orientation == 180) {
+                            var width = $(window).width()/1.5;
+                             var height = $(window).height()*0.7;
+                             var x = height/6;
+                             $(".share_code_body").css({
+                                 height:height+"px !important",
+                                 top:x+'px'
+                             })
+                             $(".share_logo").css("height",height+"px");
+                         }else {
+                             var width = $(window).width()/4;
+                             var height = $(window).height()*0.6;
+                             var x = height/4;
+                             $(".share_code_body").css({
+                                 height:height+"px !important",
+                                 top:x+'px'
+                             })
+                             $(".share_logo").css("height",height+"px");
+                         }
+                    }).trigger("resize");
+                    $("#share_code_body").attr("style","display:flex");
+                    $('.share_logo').attr('src', data);
+                    var a = data.split('?');
+                    $('#share_img').attr('href', a[0]);
+                    var $dailog = $("#share_code_body");
+                    $('#share_code_body').fadeIn(300);
+                }
+            });
+        })
+        //页面加载异步更新订单状态
+        $.ajax({
+            url:"/seller/order/synOrderShop",
+            success:function(){
+                //console.log('syn_success');
+            }
+        })
+    })
+</script>
+
+</body>
+</html>

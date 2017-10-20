@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<include file="_layout/mall.head.html" title="创建小店"/>
+	<style>
+		html{background-color:#fff;}
+		.login-modal{background-color: #fff;position:initial;}
+		.login-modal .logo_seller{margin-top: 0.7rem;}
+		.login-modal .am-button{height: 1.0rem;line-height: 1.0rem;}
+		.login-modal .am-list{display:flex;flex-direction: column;align-items: center;}
+		.login-modal .am-list-item{border-bottom:1px solid #e4bc91;background-color: white;display:flex;justify-content: flex-start;align-items: center;height:1.25rem;width:8.43rem;margin:0px;margin-top:0.3rem;}
+		.login-modal .am-button-submit{background: #dd8d39;color:#fff;font-size:18px;box-shadow: none;}
+		.login-modal input.am-input-required{margin:0px;}
+		.login-modal .am-list-button{border-left:none;}
+		.login-modal div.am-list-item.ydl_valid input.am-input-required{width:3.333333rem;}
+		.login-modal div.am-list-item.ydl_valid .am-list-action.am-list-action-msg{display:none;}
+		.login-modal div.am-list-item.ydl_valid .am-list-button{height: 0.8rem;line-height: 0.8rem;border-radius: .575rem;color: #8a6f54;border:1px solid #e4bc91;}
+		.login-modal div.ydl_pwd_show{bottom:initial;right:.28rem;}
+		.login-modal div.ydl_other_link #forget{margin-right:.3666667rem;text-decoration:underline;}
+		.login-modal div.ydl_add_shop p{color:rgba(73,44,13,1);text-align:center;}
+		p.ydl_ptitle{line-height:50px;font-size:16px;color: #806140;width: 8.77333333rem;margin: 10px auto;}
+		p.ydl_ptitle a{color:#513b24;}
+		.login-modal div.ydl_add_shop p.ydl_plabel{text-align:left;line-height:2em;font-size:14px;font-family: "微软雅黑";}
+		.login-modal div.am-field.ydl_am_field{width:8.43rem;height:1.15rem;margin-top: 0.3rem;margin-bottom: 0.6rem;}
+		.login-modal div.ydl_add_shop>div{box-sizing:border-box;width:100%;height:auto;padding-left:9%;padding-right:9%;color:rgba(73,44,13,1);font-size:14px;}
+		.login-modal div.ydl_add_shop>div>div:nth-child(1){float:left;line-height:2em;}
+		.login-modal div.ydl_add_shop>div>div:nth-child(n+2){width:100%;padding-left:6%;box-sizing:border-box;line-height:2em;}
+		.login-modal div.ydl_add_shop div.ydl_clearfix{clear:both !important;}
+		.login-modal div.ydl_add_shop img{display:block;width: 5rem;height: 5rem;background-color: white;margin-left: 2.5rem;margin-top: 1rem;margin-bottom: 1.5rem;}
+		.login-modal .getCheckcode{color:#806140;font-size: 16px;height: 0.8rem;}
+
+		div.require_password #show-pwd {display:block !important;margin-right:1em;position:relative;top:0px;right:0px;}
+		div.require_password input[type='password'] {width: auto;}
+		div.procity_info{display:block;position:fixed;top:0px;left:0px;width: 100%;height: 100%;background-color: rgba(0,0,0,0.6);z-index:100;}
+		div.procity_con{width:90%;margin-left:5%;background-color:white;margin-top:100px;padding:10px;box-sizing: border-box;border-radius: 6px;}
+		div.procity_con p.title{font-size:16px;text-align:center;line-height:2em;border-bottom:1px solid #ccc;}
+		div.procity_con p.item{line-height:2em;}
+		div.procity_con p.item:last-child{margin-bottom: 10px;}
+		div.procity_con p.item.font-bold{font-weight: bold;}
+		
+		.kphone_icon{display: inline-block;width: 25px;height: 25px;background: url('/img/login_register.png?20170830');background-size: 25px 125px;}
+		.kcheck_icon{display: inline-block;width: 25px;height: 25px;background: url('/img/login_register.png?20170830');background-size: 25px 125px;background-position: 0 -24px;}
+		.kpsword_icon{display: inline-block;width: 25px;height: 25px;background: url('/img/login_register.png?20170830');background-size: 25px 125px;background-position: 0 -49px;}
+		
+		.imitate_check{display: inline-block;width: 30px;height: 30px;background: url('/img/login_register.png?20170830');background-size: 30px 150px;background-position: 0 -113px;vertical-align: middle;cursor: pointer;}
+		.imitate_checked{background: url('/img/login_register.png?20170830');background-size: 30px 150px;background-position: 0 -83px;}
+		#agree_procity{filter:alpha(opacity=0);opacity:0;width:20px;height:20px;visibility: hidden;float: left;display: none;}
+		
+		.login-modal input.am-input-required{width: auto;}
+
+	</style>
+</head>
+<body style="background-color:#fff;">
+	<div class="procity_info" style="display:none;">
+		<div class="procity_con" style="position:relative;">
+			<div class="close_icon" style="position:absolute;right:-6px;top:-6px;width: 25px;height: 25px;background-color:#e4bc91;font-family:'宋体';display:flex;align-items:center;justify-content:center;color:white;font-size:20px;border-radius:50%;">×</div>
+			<p class="title">用户协议</p>
+			<div style="height:200px;overflow-y:auto;">
+				<p class="item" style="margin-top:10px;">开店工具（以下简称“开店”）是由哈尔滨兴业宝科技有限公司（以下简称“兴业宝”）向使用开店的用户（以下简称“您”）提供快速打造自有商城的互联网工具，为用户提供了绑定自有支付账户，实名认证等保障措施。客户通过工具可以方便的建立H5商城与完成收单支付到自己账户的过程。本协议由您和兴业宝签订。</p>
+				<p class="item font-bold">声明与承诺</p>
+				<p class="item">一、您在注册成为用户之前，请认真阅读本《用户协议》（以下简称“协议”），以确保您充分理解本协议中各条款。您的注册、登录、使用等行为将视为对本协议的接受，并同意接受本协议各项条款的约束。</p>
+				<p class="item">二、本协议开店有权基于国家法律法规变化、业务调整、产品更新及维护交易秩序、保护消费者权益等需要，不定时对本协议内容更新，并在工具内发布，更新后的协议条款一旦公布即代替原来的协议条款，恕不再另行通知。在修改协议条款后，如果用户不接受修改后的条款，请立即停止使用开店提供的服务，用户继续使用开店提供的服务将被视为接受修改后的协议。</p>
+				<p class="item">三、在您同意接受本协议并注册成为用户时，您是具有法律规定的完全民事权利能力和民事行为能力，能够独立承担民事责任的自然人、法人或其他组织；本协议内容不受您所属国家或地区的排斥。不具备前述条件的，您应立即终止注册或停止使用本服务。</p>
+				<p class="item">四、作为工具，开店在整个交易过程中完全充当工具角色，自有收款账户的商家整个采购流程中开店仅提供信息对接，资金均不通过开店资金系统流转。对于自身无支付权限的卖家，开店也仅充当销售与采购角色，开店不为客户提供任何交易担保或资金转移服务。</p>
+				<p class="item font-bold">开店工具功能和结算服务概要</p>
+				<p class="item">一、店铺账号：指在您使用本工具时，向您提供的店铺唯一编号。您可自行设置密码，转发商品信息，并用以查询或计算您的货款。</p>
+				<p class="item">二、买家（您的客户）可以从您注册的开店店铺中采购所有已发布的产品。</p>
+				<p class="item">三、考虑到很多用户前期不具备可开放收款的支付账户，在其申请微信和支付宝个人收款账号之前开店可为其买家提供代采购服务。流程如下：买家直接从您的开店店铺购买产品，货款支付到开店---开店收到货款后帮助您从供应商处快速下单并将货款支付给您---您收到下单提醒后完成对供应商产品的付款采购。</p>
+				<p class="item">四、买家货款支付到开店后，开店会实时支付到您的微信钱包，整个过程由系统自动完成，非人工操作，但实现此功能须满足两个条件，第一，您的店铺已通过实名认证审核；第二，您在微信软件中至少进入一次店铺。另注意因微信支付限制，自动结时有以下注意事项：</p>
+				<p class="item">1．不支持给非实名用户打款；</p>
+				<p class="item">2．给同一个实名用户付款，单笔单日限额2万元；</p>
+				<p class="item">3．一个商户同一日付款总额限额100万元；</p>
+				<p class="item">4．单笔结算最小金额为1元；</p>
+				<p class="item">5．同一用户自动结算时，付款时间间隔不得低于15秒；</p>
+				<p class="item font-bold">免责声明 </p>
+				<p class="item">一、您确保其所输入的您的资料无误，如果用户提供的注册资料不合法、不真实、不准确、不详尽的，用户需承担因此引起的相应责任及后果，并且开店保留终止您使用本工具各项服务的权利。 </p>
+				<p class="item">二、开店不对因下述任一情况导致的任何损害赔偿承担责任，包括但不限于利润、商誉、使用、数据等方面的损失或其他无形损失的损害赔偿： </p>
+				<p class="item">1．开店有权基于单方判断，包含但不限于认为您已经违反本协议的明文规定及精神，暂停、中断或终止向您提供本服务或其任何部分，并移除您的资料。 </p>
+				<p class="item">2．开店在发现交易异常或您有违反法律规定或本协议约定的行为时，有权不经通知先行暂停或终止该账户的使用（包括但不限于对该账户名下的在途交易采取取消交易等限制措施）并拒绝您使用本工具服务之部分或全部功能。 </p>
+				<p class="item">三、如因开店根据本协议声明与承诺中的第二条对本协议内容进行单方面变更，您不同意变更后的协议内容停止使用本服务，双方终止合作的，开店不承担任何损害赔偿责任。 </p>
+				<p class="item">四、系统中断或故障，系统因下列状况无法正常运作，导致您无法使用各项服务的，开店不承担损害赔偿责任，该状况包括但不限于：</p>
+				<p class="item">1．开店公告之系统停机维护期间。</p>
+				<p class="item">2．微信相关功能或服务器关闭、维护、停机期间。</p>
+				<p class="item">3．电信设备出现故障不能进行数据传输的。 </p>
+				<p class="item">4．如因海啸、台风、地震、洪水、停电、战争、恐怖袭击等不可抗力之因素，造成开店系统障碍时。 </p>
+				<p class="item">5．由于黑客攻击、电信部门技术调整或故障、网站升级、银行方面的问题等原因而造成的服务中断或者延迟。 </p>
+				<p class="item">五、对下列情形，开店不承担任何责任： </p>
+				<p class="item">1．并非由于开店的故意而导致本服务未能提供的；</p>
+				<p class="item">2．由于您的故意或过失导致您及/或任何第三方遭受损失的；</p>
+				<p class="item">本协议自2017年7月26日起执行。</p>
+			</div>
+			<!-- <div style="display:flex;justify-content:flex-end;align-items:center;padding-top:10px;">
+				<input id="agree_procity" type="checkbox" checked/>
+				<label for="" style="display:inline-block;font-size:16px;line-height:30px;" style="text-align:center;">我已阅读，并同意此协议</label>
+			</div> -->
+
+		</div>
+	</div>
+</body>
+<script>
+require(['seller/login_modal'], function(modal){
+    modal.init({appid: '{$appid}', mobile: '{$mobile}', redirect: '{$redirect}',aliid: '{$aliid}', userid: "{$userid}"});
+});
+require(['jquery'],function(){
+	$("body").on("click","a.pop_procity",function(){
+		$("div.procity_info").show();
+	})
+	$("div.procity_info div.close_icon").on("click",function(){
+		$("div.procity_info").hide();
+	})
+	$("body").on("click","#js_imitate_check",function(){
+        var checkbox = $(this).siblings('#agree_procity');
+
+        if ($(this).hasClass('imitate_checked')) {
+            checkbox.attr('checked', false);
+            $(this).removeClass('imitate_checked');
+        } else {
+            checkbox.attr('checked', true);
+            $(this).addClass('imitate_checked')
+        }
+    });
+
+})
+</script>
+
+<style>
+.offshelf_dialog{display: none;}
+.offshelf_dialog .offshelf_dialog_bg{height: 100%; position: fixed; top: 0px; left: 0px; right: 0px; z-index: 1000; transition: none 0.2s ease; opacity: .7; background-color: rgba(0, 0, 0, 0.901961);}
+
+.offshelf_dialog .offshelf_dialog_box{text-align:center;border-radius:6px;background-color: #fff;width: 80%;position: fixed;left:50%;top:50%;margin-left:-40%;margin-top:-100px;z-index: 1001;}
+.offshelf_dialog .offshelf_dialog_box .offshelf_dialog_content{text-align:center;padding: 36px 12px;}
+.offshelf_dialog .offshelf_dialog_box .offshelf_dialog_content>img{width: 40%;}
+.offshelf_dialog .offshelf_dialog_box .offshelf_dialog_content p.dialog_text_main{font-size: 14px;margin-top: 10px;line-height: 24px;text-align: center;}
+
+.offshelf_dialog .close_icon_btn{cursor: pointer;width: 24px;height: 24px;font-size: 18px;line-height: 24px;text-align: center;border-radius: 50%;color: #fff;position: absolute;right: 8px;top: 8px;background-color: #e4bc91;}
+
+</style>
+
+
+<!--下架弹窗-->
+<div class="offshelf_dialog">
+    <div class="offshelf_dialog_bg"></div>
+    <div class="offshelf_dialog_box">
+        <a href="javascript:;" class="close_icon_btn">×</a>
+        <div class="offshelf_dialog_content">
+            <p class="dialog_text_main">
+                请联系平台客服处理，</br>客服电话：<a href="javascript:;" style="color:#da8f3e;" onclick="window.location.href='tel:18329046555'">18329046555</a>
+            </p>
+        </div>
+    </div>
+</div>
+</html>

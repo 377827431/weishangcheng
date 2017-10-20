@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="我的收入" />
+    <link rel="stylesheet" href="__CDN__/css/seller/order_detail.css">
+    <style>
+        .tixian_dailog{position:absolute;bottom:0px;width:100%;display:none;}
+        .dailog_mask{position:fixed;bottom:0px;width:100%;height:100%;background-color: rgba(0,0,0,0.8);}
+        .tixian_body{position:absolute;bottom:0px;height:396px;width:100%;background-color: #f1f0f5;}
+        .close_container{height:32px;line-height:32px;background-color:#f1f0f5;font-size:24px;font-family:'宋体';text-align:right;border-bottom:1px solid #eaeaea;}
+        .close_icon{padding-right:10px;color:#a09fa4;}
+        .close_icon:hover{cursor: pointer;}
+        .tixian_info{width:100%;}
+        .tixian_info table{width:inherit;font-size:14px;background-color: white;}
+        .tixian_info table tr td{line-height:40px;}
+        .tixian_info table tr td.td_l {width:36%;}
+        .tixian_info table tr td.td_r {width:64%;}
+        .tixian_info table tr td[rowspan='4']{position:relative;}
+        .tixian_info table tr td[rowspan='4'] span{position:absolute;top:0px;left:10px;}
+        .tixian_info table tr{border-bottom:1px solid #eaeaea;}
+        .font-black{color:#090909;}
+        .font-blue{color:#58709c;}
+        .font-grey{color:#a3a3a3;}
+        span.select_icon{box-sizing:border-box;display:inline-block;width:20px;height:20px;border-radius:10px;border:1px solid #eaeaea;float:right;margin-top:10px;margin-right:10px;}
+        span.select_icon:hover{cursor: pointer;}
+        td.on span.select_icon{background-color: #fc4f0d;border:none;background: url('__CDN__/img/seller/select_icon.png') no-repeat; background-size:100% 100%;}
+        input.cash_num{}
+        .info_ps {padding-top:14px;}
+        .info_ps p{line-height:18px;font-size:14px;color:#747476;padding-left:0.4em;}
+        .tixian_sure_btn{position:absolute;bottom:15px;left:4%;width:92%;border-radius:6px;height:38px;line-height:38px;color:white;font-size:16px;text-align:center;background-color:#fc4f0d;}
+        .tixian_sure_btn:hover{cursor: pointer;}
+        .show_bank_num::before{content:"账号："}
+        /*说明*/
+        p.blue{color:#009bdd;font-size:14px;line-height:50px;}
+        p.blue::before{content:"";display:inline-block;width:25px;height:25px;background:url(/img/seller/gantan.png) no-repeat;background-size:100% 100%;vertical-align:middle;top:-2px;position:relative;margin-left:1em;margin-right:.3em;}
+        div.instruction{line-height:2em;}
+        div.instruction p{text-indent:1.5em;}
+        div.instruction ul{padding-left:2.5em;}
+        div.instruction ul,div.instruction li{list-style-type:disc;}
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="content ">
+        <div class="content-body">
+            <div class="div_span"></div>
+            <div class="remain_container">
+                <if condition="$isLB eq 1">
+                <div class="remain_fund js-pp">{$data['sab2']}</div>
+                <div class="remain_fund_label">今日成交额（元）</div>
+                <ul>
+                    <li><p class="p11">{$data['wait_settlement']}</p><p>交易中</p></li>
+                    <li><p class="p22">{$data['balance']}</p><p>已完成</p></li>
+                    <li><p class="p33">{$data['sab']}</p><p>本月成交额</p></li>
+                </ul>
+                <else/>
+                <div class="remain_fund js-pp">{$data['tab']}</div>
+                <div class="remain_fund_label">今日成交额 (元)</div>
+                <ul>
+                    <li><p class="p11">{$data['wait_settlement']}</p><p>交易中</p></li>
+                    <li><p class="p22">{$data['balance']}</p><p>已完成</p></li>
+                    <li><p class="p33">{$data['sab']}</p><p>本月成交额</p></li>
+                </ul>
+                </if>
+            </div>
+            <!--<div class="div_span"></div>-->
+            <!--<a href="javascript:void(0);">-->
+                <!--<div class="repay_detail">-->
+                    <!--<span>返利明细</span>-->
+                    <!--<span>元</span>-->
+                    <!--<span>0</span>-->
+                <!--</div>-->
+            <!--</a>-->
+            <div class="div_span"></div>
+            <a href="/seller/income/bill">
+                <div class="trade_detail">
+                    <span>交易明细</span>
+                    <span>元</span>
+                    <if condition="$isLB eq 1">
+                    <span>{$data['balance']}</span> 
+                    <else/>
+                    <span>{$data['sab2']}</span>
+                    </if>
+                </div>
+            </a>
+            <!-- <if condition="$isLB eq 1"> -->
+            <!-- <a href="/seller/income/certnotice">
+            <p class="blue">为什么我的“已结算金额”一直是0.00？</p>
+            </a>
+            <div class="instruction">
+                <p>因微信支付限制，自动结时有以下注意事项</p>
+                <ul>
+                    <li>不支持给非实名用户打款;</li>
+                    <li>给同一实名用户打款，每笔单日限额2万元;</li>
+                    <li>一个商户同一日付款总限额100万元;</li>
+                    <li>单笔结算最小金额为1元;</li>
+                    <li>同一用户自动结算时，付款时间间隔不得低于15秒;</li>
+                </ul>
+            </div> -->
+            <!-- <else/> -->
+            <a href="/seller/income/selectMethod">
+                <div class="bind_bank">
+                    <span>提现账户</span>
+                    <span class="tixian_ways" style="float:right" tixian_flag="{$data.method}">
+                        <if condition="$data.method eq 'alipay'">
+                            支付宝
+                        <elseif condition="$data.method eq 'bank'"/>
+                            银行卡
+                        <else />
+                            未选择提现方式
+                        </if>
+                    </span>
+                </div>
+            </a>
+            <!-- <a href="/seller/income/bank_edit">
+                <div class="bind_bank">
+                    <span>绑定银行卡</span>
+                </div>
+            </a> -->
+            <div class="fetch_cash_container">
+                <div class="fetch_cash">提现</div>
+            </div>
+            <!-- </if> -->
+        </div>
+    </div>
+
+</div>
+<div class="tixian_dailog">
+    <div class="dailog_mask"></div>
+    <div class="tixian_body">
+        <div class="close_container"><span class="close_icon">×</span></div>
+        <div class="tixian_info">
+            <input type="hidden" class="bank_card_id">
+            <input type="hidden" class="bank_name">
+            <input type="hidden" class="ali_name">
+            <table>
+                <tr>
+                    <td rowspan="5" class="td_l font-black" style="padding-left: 10px;"><span>提现到</span></td>
+                    <td class="tixian_method weixin_method td_r font-grey"><span>微信零钱</span><span class="select_icon"></span></td>
+                </tr>
+                <tr>
+                    <td class="tixian_method alipay_method td_r font-blue"><span>支付宝</span><span class="select_icon"></span></td>
+                </tr>
+                <tr>
+                    <td class="tixian_method bank_method td_r font-blue on"><span>银行卡</span><span class="select_icon"></span></td>
+                </tr>
+                <tr  style="border-bottom:none">
+                    <td class="td_r font-grey bank_name"><span class="js-bank-name" bank_id="10001">招商银行</span></td>
+                </tr>
+                <tr>
+                    <td class=" td_r font-grey show_bank_num" card_code="2302303032032030300003">2302303032032030300003</td>
+                </tr>
+                <tr>
+                    <td class="td_l font-black" style="padding-left:10px;">金额(元)</td>
+                    <td class="td_r font-grey"><input class="cash_num" placeholder="提现金额"></td>
+                </tr>
+            </table>
+        </div>
+        <div class="info_ps">
+            <p>1、微信零钱:24小时内到账</p>
+            <p>2、银行卡:48小时内到账，节假日顺延</p>
+        </div>
+        <div class="tixian_sure_btn">确定</div>
+    </div>
+</div>
+<script src="__CDN__/js/seller/income.js"></script>
+<script>
+    require(['jquery'],function($){
+        // 选择的提现方式
+        var tixian_method = "";
+        //弹窗显示的方法
+        //调用例子
+//        show_tixian(100);
+        function show_tixian(param){
+            //把提现金额传到弹窗中
+            $('.tixian_dailog .cash_num').text(param);
+            $('.tixian_dailog').show();
+        }
+        //弹窗关闭的方法
+        $(".tixian_dailog .close_icon").click(function(){
+            $(".tixian_dailog").hide();
+        })
+        //注册提现方式切换事件
+        $('.tixian_dailog td.tixian_method').click(function(){
+            if($(this).hasClass("weixin_method")){
+                return false;
+            }
+            if($(this).hasClass("alipay_method")){
+                var ali_acount = $("input.ali_name").val();
+                $("span.js-bank-name").text("收款方支付宝账号");
+                $("td.show_bank_num").text(ali_acount);
+                $("td.show_bank_num").attr("card_code",ali_acount);
+            }
+            if($(this).hasClass("bank_method")){
+                var bank_card_id = $("input.bank_card_id").val();
+                var bank_name = $("input.bank_name").val();
+                 $("span.js-bank-name").text(bank_name);
+                 $("td.show_bank_num").text(bank_card_id);
+                 $("td.show_bank_num").attr("card_code",bank_card_id);
+            }
+            $('.tixian_dailog td.tixian_method').toggleClass('on',false);
+            $(this).toggleClass('on',true);
+        })
+        //弹窗提交方法
+        $('.tixian_sure_btn').click(function(){
+            var can_tixian = $.trim($(".js-pp").text());
+            if(parseFloat(can_tixian)<1){
+                toast.show("可提现金额小于1元时不可提现");
+                return false;
+            }
+
+            var method = $('.tixian_dailog td.tixian_method.on').hasClass('weixin_method')?"weixin":$('.tixian_dailog td.tixian_method.on').hasClass('alipay_method')?"alipay":"bank";
+            var cash_num = $('.tixian_dailog input.cash_num').val();
+
+            if(isNaN(cash_num)||cash_num==""){
+                toast.show("请输入提现金额");
+                return false;
+            }
+
+            var fix_amountTest=/^(([1-9]\d*)|\d)(\.\d{1,2})?$/;
+            if(fix_amountTest.test(cash_num)==false){
+                toast.show("请输入有效金额");
+                return;
+            }
+            console.log(method);
+            $.ajax({
+                url: "/seller/income/transfers",
+                type: "POST",
+                data: {method:method,cash_num:cash_num},
+                success: function(data) {
+                    if (data['is_ok'] == 1){
+                        $('.p11').html(data.no_settlement);
+                        $('.p22').html(data.sab);
+                        $('.p33').html(data.frozen_balance);
+                        $('.js-pp').html(data.transfers_balance);
+                        $(".tixian_dailog").hide();
+                        $('.cash_num').val('');
+                        toast.show('已提交申请');
+                    }
+                    if (data['is_ok'] == 2){
+                        toast.show('请先绑定银行卡');
+                    }
+                    if(data['is_ok'] == 3){
+                        toast.show('请先绑定支付宝');
+                    }
+                }
+            });
+        })
+    })
+
+</script>
+</body>
+</html>

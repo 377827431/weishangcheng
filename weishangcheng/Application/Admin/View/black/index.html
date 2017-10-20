@@ -1,0 +1,66 @@
+<toolbar id="toolbar">
+	<form class="search-box">
+        <select name="status">
+            <option value="all">状态</option>
+            <option value="1" selected="selected">冻结中</option>
+            <option value="0">已解封</option>
+        </select>
+		<input type="text" name="kw" value="" placeholder="会员ID/手机号">
+		<button type="button" data-name="search" class="btn btn-default" data-event-type="default">
+			<i class="icon-search"></i>
+		</button>
+	</form>
+</toolbar>
+
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-url="__URL__" data-toolbar="#toolbar" data-page-size="20" data-page-list="[5, 10, 25, 50, All]">
+    <thead>
+		<tr>
+			<th data-width="40" data-checkbox="true"></th>
+			<th data-width="100" data-field="nickname" data-formatter="formate_member">姓名</th>
+            <th data-width="80" data-field="days" data-align="center">封号天数</th>
+            <th data-width="120" data-field="created">封号时间</th>
+            <th data-width="120" data-field="expires_in">解封时间</th>
+            <th data-width="60" data-field="status">状态</th>
+			<th data-field="remark">备注</th>
+		</tr>
+	</thead>
+</table>
+<script type="text/javascript">
+function formate_member(val, row, index){
+	return '<a href="/member?mid='+row.mid+'" target="_blank">'+row.nickname+'</a>'
+}
+
+$(function(){
+	// 解封
+	var $table = $('#table');
+	$table.on('unblock', function(e, gridview){
+		var rows = $table.bootstrapTable('getSelections'); // 当前页被选中项(getAllSelections 所有分页被选中项)
+		if(rows.length == 0){ 
+			alertMsg('请勾选被解封名单', 'warning');
+			return false; 
+		}
+		
+		var id = [];
+		for(i=0;i<rows.length;i++){
+			id.push(rows[i]['id']);
+		}
+		
+		if(!confirm('确定要从黑名单中解除吗？')){
+			return false;
+		}
+		
+		$.ajax({
+            url:'__URL__/unblock',
+            type:'post',
+            dataType:'json',
+			waitting: '正在解除...',
+            data: {id: id.join(',')},
+            success:function(data){
+            	alertMsg('解除成功,用户可登录！'); 
+            	window.location.reload();
+            }
+        })
+	});
+});
+</script>

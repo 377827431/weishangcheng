@@ -1,0 +1,56 @@
+<style>
+.table{background-color:#fff;border:1px solid #ddd}
+.num{width:30px;text-align:center}
+.btn{width:35px;}
+.table td.thread{text-align:center;padding:0;vertical-align: middle;}
+</style>
+<table class="table">
+    <tr>
+        <th style="width:160px">频道KEY</th>
+        <th style="width:150px">频道名称</th>
+        <th style="text-align:center;width:80px">待执行数量</th>
+        <th style="text-align:center;width:130px">当前线程</th>
+        <th>备注</th>
+    </tr>
+    <foreach name="list" item="item">
+    <tr data-channel="{$item.channel}">
+        <td>{$item.channel}</td>
+        <td>{$item.title}</td>
+        <td style="text-align:center"><a href="javascript:;" class="js-lsize">{$item.size}</a></td>
+        <td class="js-thread thread">
+            <button class="btn" data-type="minus">-</button>
+            <input type="text" class="num" value="{$item.quantity}" disabled="disabled" style="background-color:#fff">
+            <button class="btn" data-type="plus">+</button>
+        </td>
+        <td>{$item.remark}</td>
+    </tr>
+    </foreach>
+    <tr>
+        <td colspan="5" style="text-align:center"><a href="/listener/unsubscribe" style="color:red">点此关闭所有监听</a></td>
+    </tr>
+</table>
+<script>
+$(function(){
+	$('.js-thread').on('click', '.btn', function(){
+		var $this = $(this), channel = $this.parents('tr:first').data('channel'), type = $this.data('type'), $num = $this.siblings('.num');
+		$.ajax({
+			url: '__MODULE__/listener/subscribe?channel='+channel+'&type='+type,
+			dataType: 'json',
+			success: function(quantity){
+				$num.val(quantity);
+			}
+		});
+		return false;
+	}).on('click', '.js-lsize', function(){
+		var $this = $(this), channel = $this.parents('.js-channel').data('channel');
+		$.ajax({
+			url: '__MODULE__/listener/execute?channel='+channel,
+			dataType: 'json',
+			success: function(html){
+				$this.html(html);
+			}
+		});
+		return false;
+	});
+});
+</script>

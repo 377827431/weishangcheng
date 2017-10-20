@@ -1,0 +1,125 @@
+<style>
+.gridview2{margin-top:10px;}
+</style>
+<toolbar id="toolbar"></toolbar>
+
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table" data-url="__URL__" data-toolbar="#toolbar" 
+data-side-pagination="client" data-page-size="6" data-page-list="[6, 10, 25, 50, All]">
+    <thead>
+		<tr>
+			<th data-width="20" data-checkbox="true"></th>
+			<th data-width="160" data-field="name" >频道名称</th>
+			<th data-width="280" data-field="created" >创建时间</th>
+			<th data-width="100" data-field="template" >样式路径</th>
+		</tr>
+	</thead>
+</table>
+
+<!-- 按钮表格 -->
+<div class="gridview2"></div>
+
+<script type="text/javascript">
+	var toolbarUrl = '__MODULE__/ArticleType?menu=', $menuTable, $btn_gridview;
+	$(function() {
+		$menuTable = $('#table')
+				.on(
+						'clickRow',
+						function(e, row, $element) {
+							if ($btn_gridview == null) {
+								var $gridview2 = $('.gridview2');
+								$gridview2.load(toolbarUrl + row.id,
+										function() {
+											win.init($gridview2);
+											$btn_gridview = $('#btn_gridview')
+													.gridView();
+
+											$menuTable.gridView('resetView');
+											$('#current_menu').val(row.id);
+											$btn_gridview.data('data-menu',
+													row.id);
+										});
+								return;
+							} else if ($btn_gridview.data('data-menu') == row.id) {
+								return;
+							}
+
+							$btn_gridview.data('data-menu', row.id);
+							$btn_gridview.data('bootstrap.table').options.url = toolbarUrl
+									+ row.id;
+							$btn_gridview.bootstrapTable('refresh');
+						}).on('deleted', function(e, ajaxData, status) {
+					// 菜单删除移除按钮
+					if (status != 'success') {
+						return;
+					}
+
+					if ($btn_gridview != undefined) {
+						var menu_id = $btn_gridview.data('data-menu');
+						$.each(ajaxData.deletedRows, function(i, item) {
+							if (menu_id == item.id) {
+								$btn_gridview.bootstrapTable('load', {
+									total : 0,
+									rows : []
+								});
+								return false;
+							}
+						});
+					}
+				}).on('cache', function() {
+					alertConfirm({
+						content : '确定更新缓存吗？',
+						ok : function() {
+							$.ajax({
+								url : '__URL__/cache',
+								type : 'post',
+								dataType : 'json'
+							});
+						}
+					});
+				}).on('saveSort', function(e, gridview, params) {
+					var list = {};
+					$('#table tbody .sort').each(function(i, input) {
+						list[input.dataset.id] = input.value;
+					});
+
+					alertConfirm({
+						content : '<h4>确定保存排序吗？</h4>数字越大越靠前',
+						ok : function() {
+							$.ajax({
+								url : '__URL__/saveSort',
+								data : {
+									list : list
+								},
+								dataType : "json",
+								type : 'post',
+								error : function() {
+									alertMsg('排序失败！');
+								}
+							});
+						}
+					});
+				});
+	});
+
+	// 格式化数据
+	function format_sort(sort, row, index) {
+		return '<input type="text" class="sort" data-id="'+row.id+'" style="width:20px; margin:0;text-align:center;padding: 0 3px;" value="'+sort+'" />';
+	}
+
+	//格式化数据
+	function fomat_status(status, row, index) {
+		if (status == 1) {
+			return '显示';
+		} else if (status == 2) {
+			return '隐藏';
+		} else if (status == 0) {
+			return '禁用';
+		}
+	}
+	
+	function formatter_group(val, row, index){
+		var group = {1:'店铺设置', 2: '商品管理', 3: '订单中心', 4: '会员中心', 5: '营销中心', 6: '数据中心'};
+		return group[val] || '无';
+	}
+</script>

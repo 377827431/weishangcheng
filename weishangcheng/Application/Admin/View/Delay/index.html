@@ -1,0 +1,71 @@
+<toolbar id="toolbar" class="toolbar">
+</toolbar>
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-url="__ACTION__" data-toolbar="#toolbar" >
+    <thead>
+    <tr>
+        <th data-width="40" data-checkbox="true"></th>
+        <th data-field="id">ID</th>
+        <th data-field="amount">提现金额</th>
+        <th data-field="name">提现店铺</th>
+        <th data-field="created">创建时间</th>
+        <th data-field="type">提现类型</th>
+        <th data-field="bc_name">银行名称</th>
+        <th data-field="bc_no">银行卡号/支付宝帐号</th>
+        <th data-field="card_name">姓名</th>
+        <th data-field="card_no">身份证号</th>
+        <th data-field="wxid">微信号</th>
+        <th data-width="80" data-formatter="formatter_action" data-align="right">操作</th>
+    </tr>
+    </thead>
+</table>
+<script type="text/javascript">
+    function formatter_action(val, row, index){
+        var id = row.id;
+        var html = '<p>' +
+            '    <a href="javascript:;" class="js-confirm">确认</a>' +
+            '    <span>-</span>' +
+            '    <a href="javascript:;" class="js-cancel">取消</a>'+
+            '</p>'
+        return html;
+    }
+
+    $('#table').on('click', '.js-cancel, .js-confirm',function(){
+        var $ele = $(this),
+            id = $ele.parents('tr:first').data('uniqueid'),
+            url = $('#toolbar').data('module'),
+            postData = {};
+        if($ele.hasClass('js-cancel')){
+            var message = $ele.data('message') || '确定要取消申请吗？';
+            if(!confirm(message)){
+                return false;
+            }
+            postData['id'] = id;
+            $.ajax({
+                url: url + '/cancel',
+                type: 'post',
+                data: postData,
+                dataType: 'json',
+                success: function(){
+                    $('#table').bootstrapTable('refresh');
+                }
+            });
+        }else if($ele.hasClass('js-confirm')){
+            var message = $ele.data('message') || '确认已经完成？';
+            if(!confirm(message)){
+                return false;
+            }
+            postData['id'] = id;
+            $.ajax({
+                url: url + '/confirm',
+                type: 'post',
+                data: postData,
+                dataType: 'json',
+                success: function(){
+                    $('#table').bootstrapTable('refresh');
+                }
+            });
+        }
+        return false;
+    });
+</script>

@@ -1,0 +1,49 @@
+<form id="helpEditModal" class="modal modal-small hide fade form-horizontal" tabindex="-1" role="dialog" aria-hidden="true" method="post" action="__ACTION__" data-validate="true" data-submit="ajax" >
+  <div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	   <h3>编辑分类</h3>
+  </div>
+  <div class="modal-body">
+    <input type="hidden" name="id" value="{$data.id}"> 
+	<div class="control-group hide">
+    </div> 
+    <div class="control-group">
+      <label class="control-label must">分类名称</label>
+      <div class="controls">
+        <input type="text" name="type_name" value="{$data.type_name}" placeholder="最多6个字符" maxlength="6" required="required">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label must">分类图标</label>
+        <div class="controls">
+          <input class="hide" type="text" name="icon" value="{$data.icon}" readonly="readonly"  data-msg-required="请上传图标">
+          <img id="shop_logo" src="{$data.icon}" class="img-polaroid btn-up" alt="logo" style="width: 64px; height: 64px;">
+        </div>
+    </div> 
+  </div>
+  <div class="modal-footer">
+  	<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+  	<button type="submit" class="btn btn-primary" aria-hidden="true">保存</button>
+  </div>
+</form>
+
+<script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="/ueditor/ueditor.all.min.js"></script>
+<div style="display: none;" id="editor" class="edui-default"></div>
+<style>.modal{z-index:600}.modal-backdrop{z-index:500}</style>
+<script>
+$(function(){
+	var editor = UE.getEditor('editor',{isShow: false});
+	$('#shop_logo').on('click', function(){
+		var $img = $(this);
+		var $input_url = $img.prev();
+		editor.removeListener('beforeInsertImage');
+		editor.addListener('beforeInsertImage', function (t, list) {
+			$input_url.val(list[0]['src']);
+			$img.attr('src', list[0]['src']);
+        });
+		
+		editor.getDialog("insertimage").open();
+	});
+});
+</script>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="设置售价" />
+    <link rel="stylesheet" href="__CDN__/css/seller/sale_gift_cfg.css">
+    <style>
+        .icon_2017060901::before{content:"";display:inline-block;vertical-align:middle;width:1em;height:1em;margin-right:.5em;background:url("__CDN__/img/seller/2017060901.png") no-repeat;background-size:100% 100%;}
+        .icon_2017060902::before{content:"";display:inline-block;vertical-align:middle;width:1em;height:1em;margin-right:.5em;background:url("__CDN__/img/seller/2017060902.png") no-repeat;background-size:100% 100%;}
+        .icon_2017060903::before{content:"";display:inline-block;vertical-align:middle;width:1em;height:1em;margin-right:.5em;background:url("__CDN__/img/seller/2017060903.png") no-repeat;background-size:100% 100%;}
+        .icon_2017060904::before{content:"";display:inline-block;vertical-align:middle;width:1em;height:1em;margin-right:.5em;background:url("__CDN__/img/seller/2017060904.png") no-repeat;background-size:100% 100%;}
+        .icon_2017060905::before{content:"";display:inline-block;vertical-align:middle;width:1em;height:1em;margin-right:.5em;background:url("__CDN__/img/seller/2017060905.png") no-repeat;background-size:100% 100%;}
+        .icon_2017060906::before{content:"";display:inline-block;vertical-align:middle;width:1em;height:1em;margin-right:.5em;background:url("__CDN__/img/seller/2017060906.png") no-repeat;background-size:100% 100%;}
+        .icon_2017060907::before{content:"";display:inline-block;vertical-align:middle;width:1em;height:1em;margin-right:.5em;background:url("__CDN__/img/seller/2017060907.png") no-repeat;background-size:100% 100%;}
+        .icon_2017060908::before{content:"";display:inline-block;vertical-align:middle;width:1em;height:1em;margin-right:.5em;background:url("__CDN__/img/seller/2017060908.png") no-repeat;background-size:100% 100%;}
+        .icon_2017060909::before{content:"";display:inline-block;vertical-align:middle;width:1em;height:1em;margin-right:.5em;background:url("__CDN__/img/seller/2017060909.png") no-repeat;background-size:100% 100%;}
+        li.yuanjia_price_li,
+        li.kucun_li{display:none;}
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <div class="content ">
+        <div class="content-body">
+            <div class="modify_price_container" style="padding-bottom:27px;">
+                <ul>
+                    <!-- <li class="good_photos">
+                        <div>
+                            <img group-id="-1" src="__CDN__/img/seller/item1.jpg">
+                            <img group-id="1" src="__CDN__/img/seller/item1.jpg">
+                            <img group-id="2" src="__CDN__/img/seller/item1.jpg">
+                            <img group-id="3" src="__CDN__/img/seller/item1.jpg">
+                            <img group-id="4" src="__CDN__/img/seller/item1.jpg">
+                        </div>
+                    </li> -->
+                    <li class="tag_container">
+                        <p class="icon_2017060909">颜色分类：</p>
+                        <div style="padding-top:10px;">
+                            <foreach name="goods['sku']" item="vn" key="kn">
+                                <if condition="$kn eq 0">
+                                    <span group-id="{$kn+1}" class="tag tag-black on">{$vn.name}</span>
+                                <else />
+                                    <span group-id="{$kn+1}" class="tag tag-black">{$vn.name}</span>
+                                </if>
+                            </foreach>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <ul style="width:100%;padding-left:4%;padding-right:4%;box-sizing:border-box;background-color: #fff;">
+                <li class="item_view_container">
+                    <div class="item_photo">
+                        <img src="{$goods.pic_url}" alt="">
+                    </div>
+                    <div class="item_price">
+                        <ul>
+                            <foreach name="goods['sku']" item="v" key="k">
+                                <if condition="$k eq 0">
+                                    <li class="factory_price_li on" group-id="{$k+1}"><span class="factory_price">{$v.cost}</span></li>
+                                    <li class="sell_price_li on"  group-id="{$k+1}"><span class="sell_price">{$v.price}</span></li>
+                                    <li class="increse_price_li on"  group-id="{$k+1}"><span class="increse_price">{$v.profit}</span></li>
+                                    <li class="yuanjia_price_li on"  group-id="{$k+1}">100</li>
+                                    <li class="kucun_li on"  group-id="{$k+1}">{$v.stock}</li>
+                                <else />
+                                    <li class="factory_price_li" group-id="{$k+1}"><span class="factory_price">{$v.cost}</span></li>
+                                    <li class="sell_price_li"  group-id="{$k+1}"><span class="sell_price">{$v.price}</span></li>
+                                    <li class="increse_price_li"  group-id="{$k+1}"><span class="increse_price">{$v.profit}</span></li>
+                                    <li class="yuanjia_price_li"  group-id="{$k+1}">100</li>
+                                    <li class="kucun_li"  group-id="{$k+1}">{$v.stock}</li>
+                                </if>
+                            </foreach>
+
+                        </ul>
+                    </div>
+                    <div style="clear:both"></div>
+                </li>
+                <!-- <li class="pre_price">
+                    <span class="gift_title">商品原价：</span>
+                    <foreach name="goods['sku']" item="v" key="k">
+                        <if condition="$k eq 0">
+                            <span group-id="{$k+1}" class="gift_price on"><span class="price_value">{$v.price}</span></span>
+                        <else />
+                            <span group-id="{$k+1}" class="gift_price"><span class="price_value">{$v.price}</span></span>
+                        </if>
+                    </foreach>
+                </li> -->
+                <li class="bat_set_flag" style="margin-top:10px;display:flex;justify-content:space-between;align-items:center;">
+                    <label style="font-size:14px;color:#656565;text-indent:1em;">批量设置价格</label>
+                    <input class="mui-switch mui-switch-animbg" type="checkbox">
+                </li>
+                <li class="sold_price">
+                    <span>价格设置:<span style="font-size:12px;">不得低于成本价</span></span>
+                        <input class="sell_price" type="number" value="{$goods['sku'][0]['price']}" defalut_price="{$goods['sku'][0]['price']}" placeholder="{$goods['sku'][0]['price']}">
+
+                </li>
+                <li class="store_set_flag" style="margin-top:10px;display:flex;justify-content:space-between;align-items:center;" >
+                    <label style="font-size:14px;color:#656565;text-indent:1em;">批量设置库存</label>
+                    <input class="mui-switch mui-switch-animbg" type="checkbox">
+                </li>
+                <li class="sold_price store_num">
+                    <span>库存:</span>
+                        <input class="store_price_input" type="number" value="{$goods['sku'][0]['stock']}" defalut_price="{$goods['sku'][0]['stock']}" placeholder="{$goods['sku'][0]['stock']}" >
+                </li>
+                <li>
+                    <div class="orange_btn save_btn">保存</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="switch_dailog_sure" style="display:none;position:fixed;top:0px;left:0px;width:100%;height:100%;background-color:rgba(0,0,0,0.6);">
+    <div class="switch_dailog_body" style="width:80%;background-color:white;margin:0 auto;margin-top:100px;border-radius:6px;padding-top:10px;">
+        <div class="switch_info" style="padding-left:1em;padding-right:1em;padding-bottom:1em;line-height:2em;font-size:14px;"></div>
+        <div class="btn_group" style="box-sizing:border-box;width:100%;display:flex;height:40px;justify-content:space-between;align-items:center;padding-left:1%;padding-right:1%;">
+            <div class="btn btn_cancel" style="box-sizing:border-box;width:49%;background-color:#da8f3e;color:white;cursor:pointer;border:none;">取消</div>
+            <div class="btn btn_sure" style="box-sizing:border-box;width:49%;background-color:#da8f3e;color:white;cursor:pointer;border:none;">确认</div>
+        </div>
+    </div>
+</div>
+<input class="goods_id_save" type="hidden" value="{$goods.id}">
+<script src="__CDN__/js/seller/price_cfg.js?20170929"></script>
+<style>
+.offshelf_dialog{display: none;}
+.offshelf_dialog .offshelf_dialog_bg{height: 100%; position: fixed; top: 0px; left: 0px; right: 0px; z-index: 1000; transition: none 0.2s ease; opacity: .7; background-color: rgba(0, 0, 0, 0.901961);}
+
+.offshelf_dialog .offshelf_dialog_box{text-align:center;border-radius:6px;background-color: #fff;width: 80%;position: fixed;left:50%;top:50%;margin-left:-40%;margin-top:-100px;z-index: 1001;}
+.offshelf_dialog .offshelf_dialog_box .offshelf_dialog_content{text-align:center;padding: 36px 12px;}
+.offshelf_dialog .offshelf_dialog_box .offshelf_dialog_content>img{width: 40%;}
+.offshelf_dialog .offshelf_dialog_box .offshelf_dialog_content p.dialog_text_main{font-size: 14px;margin-top: 10px;line-height: 24px;text-align: center;}
+
+.offshelf_dialog .close_icon_btn{cursor: pointer;width: 24px;height: 24px;font-size: 18px;line-height: 22px;text-align: center;border-radius: 50%;color: #fff;position: absolute;right: 8px;top: 8px;background-color: #e4bc91;}
+
+.sold_price input.sell_price{}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #ccc; opacity:1; 
+}
+
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #ccc;opacity:1;
+}
+
+input:-ms-input-placeholder{
+    color: #ccc;opacity:1;
+}
+
+input::-webkit-input-placeholder{
+    color: #ccc;opacity:1;
+}
+
+</style>
+
+
+<!--下架弹窗-->
+<div class="offshelf_dialog">
+    <div class="offshelf_dialog_bg"></div>
+    <div class="offshelf_dialog_box">
+        <a href="javascript:;" class="close_icon_btn">×</a>
+        <div class="offshelf_dialog_content">
+            <p class="dialog_text_main">
+                您输入的价格已低于成本价，请核对后重新输入；
+            </p>
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>

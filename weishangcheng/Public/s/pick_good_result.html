@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<script data-main="/js/seller/module-config.js" src="/js/seller/require.min.js"></script>
+	<link rel="stylesheet" href="/css/seller/pick_good_result.css">
+	<title>VUE</title>
+</head>
+<body>
+	<div id="answer_container">
+		<template v-if="fetched">
+			<section>
+				<div>
+					<template v-if="isSuccess">
+						<img src="__CDN__/img/pick_good_result/set_good_suc.png">
+					</template>
+					<template v-else>
+						<img src="__CDN__/img/pick_good_result/set_good_fail.png">
+					</template>
+				</div>
+				<div>
+					<p>{{isSuccess?"铺货成功!":"铺货失败!"}}</p>
+					<template v-if="!isSuccess">
+						<p>失败原因:{{failed_reason}}</p>
+					</template>
+				</div>
+			</section>
+			<div class="goon_pick_container">
+				<div class="goon_pick">继续选货</div>
+			</div>
+			<section class="instructor_container">
+				<div class="link_container">
+					<span></span>
+					<a href="">
+						<div><span>【点击查看】</span><span class="alink_text">如何在微信中找到自己的店铺?</span></div>
+					</a>
+				</div>
+				<div class="instructor_span"></div>
+				<div class="qr_container">
+					<img class="numb-img" src="__CND__/img/pick_good_result/numb_icon.jpg" alt="">
+					<img src="__CDN__/img/pick_good_result/qr_code.jpg">
+				</div>
+				<div class="instructor_span"></div>
+				<div class="instructor_help">
+					<p>步骤：</p>
+					<p>1、长按保存二维码图片；</p>
+					<p>2、打开微信扫一扫；</p>
+					<p>3、从相册选取保存的二维码；</p>
+					<p>4、扫码关注打开“我的店铺”。</p>
+				</div>
+			</section>
+
+			<!-- <div class="answerImg" v-if="isSuccess">
+				<img src="img/set_good_suc.png">
+			</div>
+			<div class="answerImg" v-else>
+				<img src="img/set_good_fail.png">
+			</div>
+			<div class="answerInfo">
+				<p class="result_info">{{isSuccess?"铺货成功!":"铺货失败!"}}</p>
+				<p v-if="!isSuccess" class="help_info">失败原因:{{failed_reason}}</p>
+			</div>
+			<div class="btn_orange" v-on:click="another_shop">继续选货</div>
+			<div class="down_container"> -->
+
+				<!-- <div class="alink_text_container">
+					<a class="alink_text" v-bind:href="help_url"><span class="font-color-orange">【点击查看】</span>如何在微信中找到自己的店铺?</a>
+				</div>
+				<div class="qr_code">
+					<img v-bind:src="qr_code">
+				</div>
+				<p class="help_info">使用微信扫一扫识别该二维码</p>
+				<p class="help_info">关注开店微信公众号</p> -->
+			</div>
+		</template>
+		<template v-else>
+			<div class="page_loading">
+				<p class="page_loading">铺货中...请稍后</p>
+				<img class="page_loading" src="__CDN__/img/pick_good_result/svg/loading.svg">
+			</div>
+		</template>
+	</div>
+	<script src="/js/seller/pick_good_result.js"></script>
+</body>
+</html>

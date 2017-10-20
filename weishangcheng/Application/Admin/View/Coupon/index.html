@@ -1,0 +1,47 @@
+<style>
+.status-bar{margin-left: 10px;position:relative;box-sizing:border-box;width:120px;height:13px;display: inline-block;border:1px solid #fc353a;border-radius:6px;color:#fff;background:#ffb7b7;text-align:center;overflow:hidden}
+.status-bar .status-progress{width:1%;position:absolute;top:0;left:0;height:100%;border-radius:12px;background:#ff5e5d}
+.status-bar .status-soldrate{position:absolute;top:0;left:0;height:100%;width:100%;line-height:100%}
+</style>
+<toolbar id="toolbar" class="toolbar">
+	<form class="search-box">
+		<notempty name="allShop">
+			<select name="shop_id" class="js-select2" style="margin-bottom: 0;width: auto;">
+				<option value="">全部店铺</option>
+				<foreach name="allShop" item="item">
+					<option value="{$item.id}" ><if condition="$item.id eq $_GET['shop_id']">selected</if>>{$item.name}</option>
+				</foreach>
+			</select>
+		</notempty>
+		<input type="text" name="name" value="{$name}" placeholder="优惠券名称">
+		<button type="button" data-name="search" class="btn btn-default" data-event-type="default">
+			<i class="icon-search"></i>
+		</button>
+	</form>
+</toolbar>
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-url="__ACTION__" data-toolbar="#toolbar">
+	<thead>
+		<tr>
+			<th data-width="40" data-checkbox="true"></th>
+			<th data-field="name" data-width="150">优惠券名称</th>
+            <th data-field="start_time" data-width="110">开始时间</th>
+            <th data-field="end_time" data-width="110">结束时间</th>
+            <th data-field="status" data-width="80">是否有效</th>
+            <th data-field="total" data-width="80">限领限购</th>
+            <th data-field="meet" data-width="80">订单商品满</th>
+            <th data-field="value" data-width="150" >面值</th>
+            <th data-field="pv" data-width="50">领取次数</th>
+		</tr>
+	</thead>
+</table>
+
+<!-- <div class="help-block">
+    活动中的商品请勿修改SKU信息，否则商品将自动失去本次活动资格
+</div> -->
+    
+<script type="text/javascript">
+function formatterProgress(val, row, index){
+	return row.status+'<div class="status-bar"><div class="status-progress" style="width:'+row.progress+'%;"></div><div class="status-soldrate">'+row.progress+'%</div></div>';
+}
+</script>

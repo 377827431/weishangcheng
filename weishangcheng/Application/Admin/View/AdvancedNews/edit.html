@@ -1,0 +1,77 @@
+<link rel="stylesheet" type="text/css" href="/css/weixin.css">
+<link rel="stylesheet" type="text/css" href="/css/appmsg.css">
+<div class="clearfix">
+    <div class="menu_preview_area senior_graphics_area">
+        <div class="mobile_menu_preview senior_graphics_preview">
+            <div class="mobile_hd tc">高级图文</div>
+            <div class="mobile_bd">
+                <div class="appmsg_content">
+                </div>
+                <div class="add_graphics">
+                    <a href="javascript:void(0);" class="add_graphics_btn" title="">
+                        <i class="icon14_menu_add"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="senior_graphics_edit">
+        <form class="form-horizontal">
+            <fieldset>
+                <div class="control_line">
+                    <label><span class="must"></span>标题：</label>
+                    <input type="text" placeholder="请输入标题…" class="graphics_title" maxlength="64">
+                    <span id="title-error" class="help-inline error-message">这是必填字段</span>
+                </div>
+                <div class="control_line">
+                    <label>摘要：</label>
+                    <textarea class="graphics_textarea" maxlength="120"></textarea>
+                </div>
+                <div class="control_line">
+                    <label><span class="must"></span>链接地址：</label>
+                    <input type="text" class="graphics_link" placeholder="请输入链接地址（以http://开头）">
+                    <span id="link-error" class="help-inline error-message">请输入链接地址</span>
+                </div>
+                <div class="control_line">
+                    <label><span class="must"></span>封面图：</label>
+                    <input class="hide graphics_img" type="text" name="logo" value="" readonly="readonly">
+                    <img id="shop_logo" src="" class="img-polaroid btn-up" alt="logo" style="width: 64px; height: 64px;">
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+<div class="form-actions text-center">
+   <button type="button" class="btn btn-primary" id="senior_graphics_btn">保存</button>
+</div>
+
+<script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="/ueditor/ueditor.all.min.js"></script>
+<script type="text/javascript" src="/js/senior_graphics.js"></script>
+
+<div style="display: none;" id="editor" class="edui-default"></div>
+<script>
+$(function(){
+    var editor = UE.getEditor('editor',{isShow: false})
+    $('#shop_logo').on('click', function(){
+        var $img = $(this);
+        var $input_url = $img.prev();
+        editor.removeListener('beforeInsertImage');
+        editor.addListener('beforeInsertImage', function (t, list) {
+            $input_url.val(list[0]['src']);
+            $img.attr('src', list[0]['src']);
+            //设置预览的图片
+            Senior.setImg(list[0]['src']);
+        });
+        
+        editor.getDialog("insertimage").open();
+    });
+
+
+    Senior.init({$data});
+});
+</script>
+
+
+

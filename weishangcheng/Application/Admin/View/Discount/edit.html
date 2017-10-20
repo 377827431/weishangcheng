@@ -1,0 +1,166 @@
+<style>
+.app-design{display:inline-block;width: 100%}
+.app-design .app-sidebar{position:relative;float:left;width:484px;font-size:14px}
+.app-design .app-sidebar+.app-sidebar{margin-left:20px}
+.app-design .app-sidebar .app-sidebar-inner{padding:12px 10px;min-height:28px;background:#f8f8f8;border-radius:3px;border:1px solid #d1d1d1}
+.app-design .app-sidebar .app-sidebar-inner+.app-sidebar-inner{margin-top:14px}
+.app-design .app-sidebar .control-group:last-of-type{margin-bottom:0}
+.app-design .control-label{width:90px}
+.app-design .controls{margin-left:100px}
+.app-design .controls input[type="text"]{width:300px}
+.app-design select{width: 315px}
+.app-design .app-content{width: 100%;background-color: #fff;border-radius: 3px;padding: 18px 0;border: 1px solid #ccc;}
+.app-design+.app-design{margin-top:14px}
+.app-design .app-sidebar .app-sidebar-inner p .checkbox.inline{padding-top:0}
+.app-content.table{padding:0;border-left:none;margin-bottom:0}
+.app-content.table th, .app-content.table input, .app-content.table td{text-align:center}
+.app-design .controls .input-append input[type="text"]{width:273px}
+.control-group.error .control-label, .control-group.error .help-block, .control-group.error .help-inline{position:absolute}
+#shopModal .checkbox{width:155px}
+#shopModal .checkbox.inline+.checkbox.inline{margin-left:0}
+</style>
+<form action="__ACTION__" class="form-horizontal" data-validate="true" data-submit="ajax" method="post" data-success="back">
+    <div class="app-design">
+        <div class="app-sidebar">
+            <div class="app-sidebar-inner">
+                <p>活动信息</p>
+                <div class="app-content" style="height:135px">
+                    <div class="control-group ">
+                        <label class="control-label must">活动名称</label>
+                        <div class="controls">
+                            <input type="text" name="title" class="required" value="{$data.title}" maxlength="16" placeholder="不超过16个字符">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label must">活动开始</label>
+                        <div class="controls">
+                            <div class="input-append date" data-format="yyyy-MM-dd hh:mm:ss">
+                                <input type="text" name="start_time" value="{$data.start_time}" required="required" readonly="readonly">
+                                <span class="add-on"><i class="icon-th icon-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label must">活动结束</label>
+                        <div class="controls">
+                            <div class="input-append date" data-format="yyyy-MM-dd hh:mm:ss">
+                                <input type="text" name="end_time" value="{$data.end_time}" required="required" readonly="readonly">
+                                <span class="add-on"><i class="icon-th icon-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="app-sidebar">
+            <div class="app-sidebar-inner">
+                <p>活动限制</p>
+                <div class="app-content" style="height:135px">
+                    <div class="control-group ">
+                        <label class="control-label must">库存设置</label>
+                        <div class="controls">
+                            <select name="pay_stock">
+                                <option value="1">下单减库存(恶拍风险)</option>
+                                <option value="0">付款减库存(超卖风险)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group ">
+                        <label class="control-label must">付款超时</label>
+                        <div class="controls">
+                            <select name="pay_timeout">
+                                <option value="10">10分钟未付款自动关闭</option>
+                                <option value="15">15分钟未付款自动关闭</option>
+                                <option value="20">20分钟未付款自动关闭</option>
+                                <option value="30">30分钟未付款自动关闭</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group ">
+                        <label class="control-label must">优惠限制</label>
+                        <div class="controls">
+                            <select name="single">
+                                <option value="0" selected="selected">不许用任何优惠(包括积分)</option>
+                                <option value="1">仅可使用积分抵扣</option>
+                                <option value="2">不限制(不推荐)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="app-design">
+        <div class="app-sidebar" style="width:inherit">
+            <div class="app-sidebar-inner">
+                <p>折扣商品 <span style="font-size:12px">(活动期间请勿修改商品SKU属性)</span></p>
+                <table class="app-content table table-bordered input-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align:left">活动时商品名称</th>
+                            <th style="width:40px">限购</th>
+                            <th style="width:100px">规格型号(SKU)</th>
+                            <foreach name="agentList" item="agent">
+                            <th class="must" style="width:70px">{$agent.title}</th>
+                            </foreach>
+                            <th class="must" style="width:65px">参与库存</th>
+                        </tr>
+                    </thead>
+                    <tbody id="goodsList"></tbody>
+                    <tbody><tr><td colspan="{:count($agentList)+4}" class="label-str"><a href="javascript:;" class="js-add">+添加</a></td></tr></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="form-actions">
+      <button type="button" class="btn btn-back">返回</button>
+      <button type="submit" class="btn btn-primary">保存</button>
+    </div>
+</form>
+<script>
+$(function(){
+	var $goodsList = $('#goodsList');
+	$('.js-add').on('click', function(){
+		var kw = prompt('请输入商品ID');
+		if(!kw){return false}
+		
+		$.ajax({
+			url: '__URL__/goods?kw='+kw,
+			dataType: 'json',
+			success: function(data){
+				var html = '',
+				list = data.list,
+				agents = data.agent, price = 0;
+				for(var i=0; i<list.length; i++){
+					var products = list[i].product, j=0;
+					for(var productId in products){
+						var product = products[productId];
+						if($('#product-'+productId).length > 0){
+							return false;
+						}
+						
+						html += '<tr id="product-'+productId+'">';
+						if(j==0){
+							j++;
+							html += '<td rowspan="'+list[i]['rowspan']+'"><input type="text" name="goods['+list[i].id+'][title]" value="'+list[i].title+'" style="text-align:left" placeholder="'+list[i].title+'"></td>'+
+							'<td rowspan="'+list[i]['rowspan']+'"><input type="text" name="goods['+list[i].id+'][quota]" data-rule-range="0,100" placeholder="不限制"></td>'
+						}
+						html += '<td class="label-str">'+product.spec+'</td>';
+						
+						for(var h=0; h<agents.length; h++){
+							price = product[agents[h].price_field];
+							html += '<td title="原价'+product[agents[h].price_field]+'"><input type="text" name="goods['+list[i].id+']['+product.id+']['+agents[h].price_field+']" class="js-discount js-td-error" placeholder="'+price+'" required="required" data-rule-range="-'+price.bcsub(0.01, 2)+',9.9"></td>'
+						}
+						
+                        html += '<td><input type="text" name="goods['+list[i].id+']['+product.id+'][stock]" data-rule-range="1,'+product.stock+'" required="required" value="'+product.stock+'" placeholder="最少1件"></td>';
+						html += '</tr>';
+					}
+				}
+				
+				$goodsList.append(html);
+			}
+		});
+		return false;
+	});
+});
+</script>

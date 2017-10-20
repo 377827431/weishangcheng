@@ -1,0 +1,65 @@
+.page-trade-order-detail .step-region,.page-trade-order-detail .content-region{position:relative;border:1px solid #e5e5e5;margin-bottom:15px;background-color:#fff;width:100%;}
+.page-trade-order-detail .info-region,.page-trade-order-detail .state-region,.page-trade-order-detail .refund{vertical-align:top}
+.page-trade-order-detail .info-region{width: 280px;padding:15px 30px;border-right:1px solid #e5e5e5}
+.page-trade-order-detail .info-region h3,.page-trade-order-detail .state-region h3,.page-trade-order-detail .refund h3{font-size:14px;font-weight:bold;margin-bottom:10px}
+.page-trade-order-detail .info-region .info-goods{zoom:1;margin:10px 0}
+.page-trade-order-detail .info-region .info-goods:after{content:"";display:table;clear:both}
+.page-trade-order-detail .info-region .info-goods .ui-centered-image{float:left}
+.page-trade-order-detail .info-region .info-goods .info-goods-content{margin-left:70px}
+.page-trade-order-detail .info-region .secured-title{float:right;font-size:12px;font-weight:normal;color:#f60}
+.page-trade-order-detail .info-region .promotion-app{position:absolute;left:15px;bottom:15px;width:290px;background:#fffae6;zoom:1;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
+.page-trade-order-detail .info-region .promotion-app:after{content:"";display:table;clear:both}
+.page-trade-order-detail .info-region .promotion-app .promotion-app-qrcode,.page-trade-order-detail .info-region .promotion-app .promotion-app-content{float:left;height:80px;border:1px solid #e5e5e5;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
+.page-trade-order-detail .info-region .promotion-app .promotion-app-qrcode{width:80px;background:#eee  url("/v2/image/youzan-wsc-qrcode-2.png") no-repeat;background-size:cover}
+.page-trade-order-detail .info-region .promotion-app .promotion-app-content{width:210px;margin-left:-1px;padding:10px}
+.page-trade-order-detail .info-region .promotion-app .promotion-app-content p{font-size:14px;line-height:30px}
+.page-trade-order-detail .state-region{padding:15px 30px;width:380px;border-right:1px solid #e5e5e5}
+.page-trade-order-detail .refund{position:relative}
+.page-trade-order-detail .state-region .state-title{position:relative;font-size:14px;font-weight:bold;margin-bottom:10px}
+.page-trade-order-detail .state-region .state-title .icon{position:absolute;left:-40px;width:28px;height:28px;border:2px solid #07d;border-radius:28px;line-height:24px;text-align:center;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;font-family:serif}
+.page-trade-order-detail .state-region .state-title .icon.info{color:#07d;border-color:#07d}
+.page-trade-order-detail .state-region .state-title .icon.success{color:#55BD47;border-color:#55BD47}
+.page-trade-order-detail .state-region .state-desc{margin-bottom:30px;color:#666}
+.page-trade-order-detail .state-region .state-desc em{color:#f60}
+.page-trade-order-detail .state-region .state-desc ul{margin:10px 4px}
+.page-trade-order-detail .state-region .state-desc ul li::before{content:' · '}
+.page-trade-order-detail .state-region .state-action .ui-btn+.ui-btn{margin-left:20px}
+.page-trade-order-detail .state-remind-region{position:absolute;width:488px;right:20px;bottom:20px}
+.page-trade-order-detail .info-table{margin-top:10px;width:100%}
+.page-trade-order-detail .info-table th{text-align:right;color:#999;width:64px}
+.page-trade-order-detail .info-table th,.page-trade-order-detail .info-table td{color:#999;padding:0 0 10px 0;vertical-align:top;font-weight:normal}
+.page-trade-order-detail .refund .info-table th{padding:0;text-align:left}
+.page-trade-order-detail .refund .info-table td{padding:0;text-align:right}
+.info-table textarea.leave_message{height:80px;resize:none;margin:0px 0px 10px;font-size:12px}
+.ui-step{padding:14px 0 8px 0;zoom:1}
+.ui-step:after{content:"";display:table;clear:both}
+.ui-step li{float:left;position:relative;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;text-align:center}
+.ui-step li::before,.ui-step li::after{position:absolute;left:0;top:36px;display:block;content:' ';width:50%;height:4px;background:#999}
+.ui-step li::after{left:130px}
+.ui-step li:first-child::before{width:0}
+.ui-step li:last-child::after{width:0}
+.ui-step .ui-step-title{color:#999;font-size:12px;font-weight:bold;line-height:18px}
+.ui-step .ui-step-number{position:relative;display:inline-block;width:20px;height:20px;margin:10px 0;line-height:22px;background:#999;color:#fff;border-radius:100%;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
+.ui-step .ui-step-meta{color:#ccc}
+.ui-step li.ui-step-done::before,.ui-step li.ui-step-done::after,.ui-step li.ui-step-done .ui-step-number{background:#80CCFF}
+.ui-step li.ui-step-done .ui-step-number{color:transparent}
+.ui-step li.ui-step-done .ui-step-number::after{position:absolute;left:1px;width:17px;height:20px;line-height:20px;content:'√';color:#fff;font-family:serif}
+.ui-step li.ui-step-done .ui-step-title{color:#80CCFF}
+.ui-step-2 li{width:50%}
+.ui-step-3 li{width:33.33333%}
+.ui-step-4 li{width:24.9999%}
+.ui-step-5 li{width:20%}
+.ui-step-6 li{width:16.6666%}
+.ui-step-style-2 li::before,.ui-step-style-2 li::after{top:17px;height:3px;background:#e4e4e4}
+.ui-step-style-2 li .ui-step-number{background:#fff;border:1px solid #e4e4e4;width:16px;height:16px}
+.ui-step-style-2 li.ui-step-done::before,.ui-step-style-2 li.ui-step-done::after{background:#55BD47}
+.ui-step-style-2 li.ui-step-done .ui-step-number{border-color:#55BD47;background:#55BD47}
+.ui-step-style-2 li.ui-step-done .ui-step-number::after{display:none}
+.ui-step-style-2 li.ui-step-done .ui-step-title,.ui-step-style-2 li.ui-step-done .ui-step-meta{color:#55BD47}
+.ui-step-style-2 li.ui-step-current::after{background:#e4e4e4}
+.ui-step-style-2 li.ui-step-current .ui-step-number{width:30px;height:30px;background:#fff;margin:2px 0 1px 0}
+.ui-step-style-2 li.ui-step-current .ui-step-number::after{display:inline-block;content:'√';color:#55BD47;width:26px;height:28px;line-height:30px;font-size:16px}
+h1,h2,h3{line-height:normal;margin:0}
+.state-action .ui-star textarea{margin-top:12px;width:554px;height:100px;resize:none}
+.pay_mode_label label.radio.inline{font-size:12px;padding-top:0px}
+.page-trade-order-detail .dashed-line{border-top:1px dashed #e5e5e5}

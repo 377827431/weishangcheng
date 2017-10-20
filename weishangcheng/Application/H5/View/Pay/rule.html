@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <include file="_layout/mall.head.html" />
+    <style type="text/css">
+    body{background-color:#68cef8}
+    .rule-agent{margin-bottom: 8px;position:relative;}
+    .rule-img{width:100%}
+    .rule-btn{width: 23.125%;position: absolute;bottom: 6%;right: 8%;}
+    </style>
+</head>
+<body class="body-fixed-bottom">
+    <div class="container rule-container">
+        <div class="content">
+          <div class="rule-agent">
+            <img class="rule-img" src="__CDN__/img/rule/rule-vip.jpg">
+            <if condition="$user['agent_level'] eq 0">
+            <img class="rule-btn" data-level="4" src="__CDN__/img/rule/rule-btn.jpg">
+            </if>
+          </div>
+          <div class="rule-agent">
+            <img class="rule-img" src="__CDN__/img/rule/rule-member.jpg">
+            <if condition="($user['agent_level'] eq 0) OR ($user['agent_level'] gt 3)">
+            <img class="rule-btn" data-level="3" src="__CDN__/img/rule/rule-btn.jpg">
+            </if>
+          </div>
+          <div class="rule-agent">
+            <img class="rule-img" src="__CDN__/img/rule/rule-employee.jpg">
+            <if condition="($user['agent_level'] eq 0) OR ($user['agent_level'] gt 2)">
+            <img class="rule-btn" data-level="2" src="__CDN__/img/rule/rule-btn.jpg">
+            </if>
+          </div>
+        </div>
+    </div>
+    <include file="_layout/mall.footer.html" />
+    <script type="text/javascript">
+    var user = {:json_encode($user)};
+    require(['pay', 'jquery'], function(pay){
+        var $btn_wxpay = $('.rule-btn');
+        $btn_wxpay.on('click', function(){
+            $btn_wxpay.attr('disabled', 'disabled');
+            var level = $(this).data('level');
+            $btn = $(this);
+            
+            var rule = $btn.data('rule');
+            if(!!rule){
+                pay.callpay(rule, function(res){
+                    if(res.errcode == 0){
+                    	user.agent_level = level;
+                        paySuccess(rule.tid);
+                        $btn.remove();
+                    }
+                });
+                return false;
+            }
+            
+            $.ajax({
+                url: '/h5/pay/payagent',
+                type: 'post',
+                data:{level:level},
+                dataType: 'json',
+                success: function(data){
+                    $btn.data('rule', data);
+                    $btn.trigger('click');
+                },
+                complete: function(){
+                    $btn_wxpay.removeAttr('disabled');
+                }
+            });
+            
+            return false;
+        })
+    });
+
+    function editPersonal(){
+        require(['view/personal/edit'], function(view){
+            view.show(user, function(data){
+                $.ajax({
+                    url: '/h5/personal/save',
+                    data: {data:data},
+                    type: 'post',
+                    dataType: 'json',
+                    success: function(){
+                        user = data;
+                    }
+                });
+            });
+        });
+    }
+    
+    // 支付成功
+    function paySuccess(tid){
+        //充值成功后发送提醒消息
+        $.ajax({
+            url: '/h5/pay/agetnMessage',
+            data: {tid:tid},
+            type: 'post'
+        });
+
+        alert('请立即完善个人资，以免账号被封无法找回会员身份！');
+        editPersonal();
+    }
+    </script>
+</body>
+</html>

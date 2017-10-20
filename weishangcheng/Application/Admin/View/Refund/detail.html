@@ -1,0 +1,110 @@
+<style>
+.refund-container{padding:0 15px;max-height:470px}
+.refund-container .table{padding:0;margin:0;}
+.refund-container .table .refund-title{max-width:220px;display:inline-block;float:left;}
+.refund-container .table .refund-t-title{width:298px;}
+.refund-container .table .refund-t-num{width:30px;text-align:center}
+.refund-container .table .refund-t-price{width:60px;text-align:center}
+.refund-container .table .refund-t-refund_num{width:80px;text-align:center;vertical-align:middle}
+.refund-container .table .refund-real_pay{width:60px;text-align:center}
+.refund-container .table .refund-t-status{width:55px;text-align:center}
+.refund-container .refund-list{max-height:150px;overflow-y:scroll}
+.refund-container .table-refund th {width:65px;padding: 8px 0;}
+</style>
+<div class="modal-backdrop fade in"></div>
+<div class="modal hide fade" aria-hidden="true" style="width:800px;margin-left:-400px" data-backdrop="false">
+	<div class="modal-header ">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3><span class="label label-warning" style="font-size: 24.5px;padding: 10px 4px;">{$trade.status_str}</span> - {$trade.tid}</h3>
+	</div>
+	<div class="modal-body refund-container">
+		<div class="refund-table-header">
+			<table class="table">
+				<thead>
+				   <tr>
+					   <th class="refund-t-title">产品</th>
+					   <th class="refund-t-price">单价</th>
+					   <th class="refund-t-num">数量</th>
+                       <th class="refund-real_pay">实付款</th>
+					   <th class="refund-t-refund_num">退换数量</th>
+					   <th class="refund-t-status">退换状态</th>
+				   </tr>
+			   </thead>
+			</table>
+		</div>
+		<div class="refund-list">
+			<table class="table" style="margin:0">
+			   <tbody class="js-orders">
+					<foreach name="trade['orders']" key="index" item="item">
+					<tr data-index="{$index}" data-oid="{$item.oid}">
+						<td class="refund-t-title"><div class="refund-title ellipsis">{$item.title}</div><span style="color:#f60">{$item.spec}</span></td>
+						<td class="refund-t-price">{$item.price}</td>
+						<td class="refund-t-num">{$item.quantity}</td>
+                        <td class="refund-real_pay">{$item['payment']}</td>
+						<td class="js-refund-num refund-t-refund_num" style="padding:0 8px">{$item['refund']['refund_quantity']}</td>
+						<td class="refund-t-status">{$item['refund']['status_str']}</td>
+					</tr>
+					</foreach>
+				</tbody>
+		   </table>
+	   </div>
+	   <table class="table table-refund">
+			<tr>
+				<th>支付总额：</th>
+				<td>{$trade.paid_fee}元</td>
+				<th>累计退款：</th>
+				<td><span class="js-total_refund">{$trade.refunded_fee}/{$trade.total_refund_fee}</span>元</td>
+				<th>订单邮费：</th>
+				<td>{$trade.total_postage}元</td>
+			</tr>
+			<tr>
+				<th style="vertical-align: middle;">*退款原因：</th>
+				<td>
+					<select style="width:220px;margin-bottom:0" class="js-reason" name="refund_reason" disabled="disabled">
+						<option value="">请选择</option>
+						<foreach name="reason" key="id" item="item">
+						<option value="{$id}">{$item['title']}</option>
+						</foreach>
+					</select>
+				</td>
+				<th style="vertical-align: middle;">*退款总额：</th>
+				<td><input type="text" value="0.00" max="0" style="width:100px" class="js-refund_fee" name="refund_fee" disabled="disabled" placeholder="请输入退款数量"></td>
+				<th style="vertical-align: middle;">*邮费补偿：</th>
+				<td><input type="text" value="0.00" max="{$max_postage}" placeholder="最高{$max_postage}元" min="0" style="width:100px" name="refund_post" class="js-refund_post" disabled="disabled"></td>
+			</tr>
+			<tr>
+				<th>*退款说明：</th>
+				<td colspan="5" class="js-remark">无退款</td>
+			</tr>
+			<tr class="js-images"></tr>
+            <tr>
+                <th style="vertical-align:top">退货地址</th>
+                <td colspan="5">
+                    <p>
+                        <input type="text" class="js-receiver_name" placeholder="收货人" style="width: 100px"> -
+                        <input type="text" class="js-receiver_mobile" placeholder="手机号" style="width:120px">
+                        <label class="checkbox inline" style="float: right;margin-right: 18px;"><input type="checkbox" class="js-refund_type">无需上传退货运单号</label>
+                        <a class="js-express_no" href="https://m.kuaidi100.com/result.jsp?nu=" target="_blank" style="float:right;margin:5px 20px"></a>
+                    </p>
+                    <input type="text" class="js-receiver_address" class="js-receiver_address" placeholder="省 市 区/县 详细地址" style="width:655px">
+                </td>
+            </tr>
+            <tr>
+                <th>*卖家备注：</th>
+                <td colspan="5" class="js-seller-remark"><textarea style="margin: 0px 0px 10px;width:655px;height:59px;"disabled="disabled"class="js-refund_sremark"placeholder="最多128个字符"maxlength="128"></textarea></td>
+            </tr>
+			<tr class="js-agree-result hide"></tr>
+	   </table>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn" data-dismiss="modal">关闭</button>
+		<span class="js-action"></span>
+	</div>
+	<script id="refund_refuse" type="text/html">
+			<th style="vertical-align:top">拒绝原因</th>
+			<td colspan="5">
+				<textarea name="refund_sremark" placeholder="5~200字符"style="margin: 0px; width: 627px; height: 40px;"maxlength="200"></textarea>
+			</td>
+		</script>
+	<script id="trade_refund_orders" type="text/plain">{:json_encode($trade['orders'])};</script>
+</div>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="招募文案" />
+    <style>
+		p.ptitle{font-size:14px;font-weight:bold;line-height:46px;}
+		p.zhaomu_title::after{content:" (字数不易过多)";color:grey;font-size:12px;font-weight:normal;}
+		input{border:none;outline:none;background-color:rgba(0,0,0,0);}
+		div.title{border-bottom:1px solid #ccc;padding-bottom:10px;}
+		div.artical textarea{width:100%;border-radius: 6px;resize:none;box-sizing:border-box;height:500px;}
+		a.half_btn{width:100%;margin:0 auto;line-height:46px;background-color:#da8f3e;height:46px;text-align:center;color:white;font-size:14px;}
+    </style>
+
+</head>
+<body style="background-color:white;width:92%;box-sizing:border-box;margin-left:4%;padding-top:30px;height:100%;"> 
+	<div class="artical">
+		<textarea style="padding:5px 8px;" disabled>{$recruit.recruit_content}</textarea>
+	</div>
+	
+		<a class="half_btn save_btn" style="cursor:pointer;position:fixed;bottom:0px;left:0px;" href="{$url}">我要成为推广员</a>
+</body>
+</html>

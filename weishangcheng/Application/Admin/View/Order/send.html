@@ -1,0 +1,180 @@
+<div id="sellerSendModal" class="form-horizontal modal hide fade send-modal modal-middle" aria-hidden="true" style="width: 650px;">
+	<div class="modal-header ">
+	    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	    <h3 id="myModalLabel">商品发货</h3>
+	</div>
+	<div class="modal-body">
+		<input type="hidden" id="js-tid" value="{$trade.tid}">
+		<table id="" class="table" data-toggle="table">
+	       <thead>
+	           <tr>
+	               <th><input type="checkbox" checked="checked" id="select_all_product"></th>
+	               <th>产品</th>
+	               <th style="width:60px">数量</th>
+	               <th style="width:120px">物流</th>
+	               <th style="width:120px">快递单号</th>
+	           </tr>
+	       </thead>
+	       <tbody>
+	       	<foreach name="orders" item="product">
+	       	<tr>
+	       		<td class="item-checkbox">
+	       			<if condition="$product['status'] eq 'send'">
+	       			<input type="checkbox" checked="checked" disabled="disabled" value="{$product.oid}">
+	       			<else/>
+	       			<input type="checkbox" checked="checked" value="{$product.oid}" class="js-checkbox">
+	       			</if>
+	       		</td>
+	            <td>{$product.title}<span style="color:#f60"> {$product.spec}</span></td>
+	            <td>
+	            <if condition="$product['status'] eq 'send'">
+	            	{$product.num}
+	            <else/>
+	            	<input type="text" value="{$product.num}" style="width:20px;text-align:center" data-max="{$product.num}" class="js-num">
+	            </if>
+	            </td>
+	            <td>{$product.express_name}</td>
+	            <td>{$product.express_no}</td>
+	           </tr>
+	       	</foreach>
+		</tbody>
+	   </table>
+	   <div>
+		   <div class="control-group">
+				<label class="control-label">收货人</label>
+				<div class="controls" style="padding-top: 5px;">
+					{$trade.receiver_name}，{$trade.receiver_mobile}
+				</div>
+			</div>
+		   	<div class="control-group">
+				<label class="control-label">收货地址</label>
+				<div class="controls" style="padding-top: 4px;">
+					{$trade.receiver_province} {$trade.receiver_city} {$trade.receiver_county}，
+					{$trade.receiver_detail}
+				</div>
+			</div>
+			<div class="control-group">
+		           <label class="control-label">发货方式</label>
+		           <div class="controls">
+		               <label class="radio inline">
+		                   <input type="radio" name="shipping_type" value="express" checked="" onclick="changeExpressType(&quot;express&quot;)">快递发货
+		               </label>
+		               <label class="radio inline">
+		                   <input type="radio" name="shipping_type" value="selffetch" onclick="changeExpressType(&quot;selffetch&quot;)">上门自提
+		               </label>
+						<label class="radio inline">
+		                   <input type="radio" name="shipping_type" value="virtual" onclick="changeExpressType(&quot;virtual&quot;)">无需物流
+		               </label>
+		           </div>
+		    </div>
+			<div class="control-group express_info">
+				<label class="control-label must">物流公司</label>
+				<div class="controls">
+					<select name="express_id" class="required" style="width:160px">
+						<option value="">请选择物流公司</option>
+						<foreach name="express_list" item="express" key="exp_id">
+						<if condition="$exp_id gt 10">
+						<option value="{$exp_id}">{$express.name}</option>
+						</if>
+						</foreach>
+					</select>
+					<input type="text" maxlength="20" name="express_no" placeholder="快递单号" class="required">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer">
+	    <button type="button" class="btn btn-primary js-ok" style="width: 100px;">发货</button>
+	</div>
+	<script type="text/javascript">
+	//切换发货方式
+	function changeExpressType(type){
+		var $express_type = type;
+		if($express_type == 'express'){
+			$(".express_info").show().find('select, input').removeClass('ignore');
+		}else{
+			$(".express_info").hide().find('select, input').addClass('ignore');
+		}
+	}
+	
+	(function() { 
+		var $sellerSendModal = $('#sellerSendModal');
+		$sellerSendModal.modal();
+		
+		$sellerSendModal.find('.js-ok').on('click', function(){
+			var tid = $("#js-tid").val()
+			var $checkboxs = $sellerSendModal.find('table>tbody>tr .js-checkbox:checked');
+			var data = {products:{}};
+			var reg = /^\+?[1-9][0-9]*$/;
+			data.shipping_type = $("input[name='shipping_type']:checked").val();
+			if(data.shipping_type == "express"){
+				data.express_id = $("select[name='express_id'] option:selected").val();
+				data.express_no = $("input[name='express_no']").val()
+				if(data.express_id == ""){
+					alert("请选择物流公司！");
+					return false;
+				}
+				if(data.express_no == ""){
+					alert("请填写物流单号！");
+					return false;
+				}else if(data.express_no.length < 6){
+					alert("物流单号长度必须为6位以上！");
+					return false;
+				}
+			}
+			
+			var total = 0;
+			for(var i=0; i<$checkboxs.length; i++){
+				var $checkbox = $checkboxs.eq(i);
+				var $tr = $checkbox.parent().parent();
+				var oid = $checkbox.val();
+				var $num = $tr.find('.js-num');
+				var num = $num.val();
+				var max = $num.data('max');
+				if(!reg.test(num)){
+					alert("发货数量必须为大于0的整数！");
+					return false;
+				}
+				if(num > max){
+					alert("发货数量大于订单数量！");
+					return false;
+				}
+				total++;
+				data.products[oid] = num;
+			};
+			
+			if(total == 0){
+				alert('请勾选要发货的产品');
+				return false;
+			}
+
+			 $.ajax({
+					url: '__ACTION__?tid='+tid,
+					type: 'post',
+					data: data,
+					dataType:'json',
+					success: function(order){
+						$sellerSendModal.trigger('send.success', [order]);
+						$sellerSendModal.modal('hide');
+			 		}
+				});
+			 
+			return false;
+		});
+		
+		$sellerSendModal.on('hidden', function(){
+			$sellerSendModal.remove();
+		});
+		
+		//全选反选
+		$('#select_all_product').on('click', function(event){
+			$sellerSendModal.find('table>tbody>tr>td>.js-checkbox').prop('checked', this.checked);
+		});
+	})();
+	</script>
+</div>
+
+
+
+
+	

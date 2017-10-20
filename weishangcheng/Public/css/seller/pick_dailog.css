@@ -1,0 +1,13 @@
+.pick_mask{position:fixed;top:0px;width: 100%;height: 100%;background-color: rgba(0,0,0,.8);z-index:10;display:none;}
+.dailog_body{box-sizing:border-box;width:90%;margin-left:5%;margin-top:-170px;border-radius:12px;background-color: #fff;padding:22px 0px 24px;position: fixed;top: 50%;}
+div.result_img{width:180px;height:155px;margin:0 auto;}
+.pick_result_dailog[data-pick-result="success"] div.result_img{background: url(/img/pick_good_result/new_set_good_sus.png) no-repeat;-webkit-background-size: 100% 100%;background-size: 100% 100%;}
+.pick_result_dailog[data-pick-result="failed"] div.result_img{background: url(/img/pick_good_result/new_set_good_fail.jpg) no-repeat;-webkit-background-size: 100% 100%;background-size: 100% 100%;}
+.pick_result_dailog[data-pick-result="waiting"] div.result_img{background-color:pink;}
+div.result_info{width:100%;text-align:center;}
+div.result_info p:first-child{font-size:20px;color:#dd8d39;font-family: "微软雅黑";line-height:36px;}
+div.result_info p:last-child{font-size:16px;color:#dd8d39;font-family:"微软雅黑";line-height:24px;}
+div.result_info p:last-child::before{content:"失败原因 : ";}
+div.goon_pick{width:90%;height:46px;margin:10px auto 0;background-color: #e4bc91;border-radius:25px;line-height:44px;text-align:center;color:#fff;font-size:18px;font-family:"微软雅黑";}
+div.close_icon{cursor:pointer;box-sizing:border-box;width:24px;height:24px;font-size:18px;line-height:22px;text-align:center;border-radius:50%;color:#fff;position:absolute;right:8px;top:8px;background-color: #e4bc91;font-family:"微软雅黑";}
+.pick_result_dailog[data-pick-result="success"] p.failed_reason{display:none;}

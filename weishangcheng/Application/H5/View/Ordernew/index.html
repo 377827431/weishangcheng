@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<include file="_layout/mall.head.html" title="我的订单" />
+<literal>
+<style>
+.tabber{border-top:none}
+.tabber.tabber-n4 button, .tabber.tabber-n5 a {width:<?php if($isLB==1){echo "20%";}else{echo "16.66%";}?>;}
+.opt-btn{display:inline-block;float:right;height:36px;position:relative;top:-1px;}
+.opt-btn .btn+.btn{margin-left: 5px;}
+.opt-btn .btn:last-child{color: #fff;background-color: #da8f3e;border-color: #da8f3e;}
+#order-list-container{padding-bottom: 15px;}
+.name-card.name-card-3col .sum-desc{margin-left:68px;position:relative;width:100%}
+.name-card.name-card-3col .sum-desc .pull-right{margin-right:-8px}
+.tabber{position:fixed;top:0;right:0;left:0;z-index:100;height:40px;overflow-y:hidden; overflow-x:auto;}
+::-webkit-scrollbar{width:0;height:0}
+</style>
+<style type="text/css">
+        div.Payment_popups{
+            display:flex;
+            position:fixed;
+            width:100%;
+            height:100%;
+            background-color:rgba(0,0,0,0.7);
+            top:0px;
+            left:0px;
+            z-index:99999;
+        }
+        div.Payment_popups_box{
+            width:100%;
+            height:100%;
+            justify-content:center;
+            align-items:center;
+            color:white;
+        }
+        .close_dc{
+            display:block;
+            position:relative;
+            top:6%;
+            left:74%;
+            margin-left:10px;
+            width:25px;
+            height:25px;
+            z-index: 99999;
+
+        }
+        .close_dc img{
+            width:100%;
+            height:100%;
+        }
+        .Payment_popups_box_zf,
+        .Payment_popups_box_bz
+        {
+            width:70%;
+            margin-left:15%;
+        }
+        .Payment_popups_box_zf{
+            width:50%;
+            margin-left:25%;
+        }
+        .Payment_popups p{width:100%;text-align:center;font-size:14px;}
+        .Payment_popups p.yangdonglei{height:30px;display:flex;align-items:center;width:100%;justify-content:center;font-size:14px;}
+
+        a.btn-in-order-list.zfbzf{
+            color: #fff;
+            background-color: #da8f3e;
+            border-color: #da8f3e;
+        }
+    </style>
+</literal>
+</head>
+<body class="body-fixed">
+    <div class="container" style="padding-top:41px">
+        <div class="content clearfix ">
+            <div id="nav_order_status" class="tabber tabber-red tabber-n5 tabber-double-11 top-fix clearfix">
+                <div style="display: flex;-webkit-animation-duration:2s">
+                    <a href="javascript:;" data-status="all">全部</a>
+                    <a href="javascript:;" data-status="topay">待付款</a>
+                    <a href="javascript:;" data-status="tosend">待发货</a>
+                    <a href="javascript:;" data-status="send">待收货</a>
+                    <a href="javascript:;" data-status="torate">待评价</a>
+                    <if condition="$isLB neq 1">
+                    <a href="javascript:;" data-status="torefund">退换货</a>
+                    </if>
+                </div>
+            </div>
+            <div class="js-order-list"></div>
+            <div class="x-pullfresh-more"></div>
+        </div>
+        <include file="_layout/mall.copyright.html" />
+        <include file="_layout/mall.footer.html" />
+    </div>
+
+    <!-- 弹窗 -->
+    <div class="Payment_popups" style="display:none;">
+            <div class="Payment_popups_box" style="position: relative;">
+                <div class="close_dc"><img src="/img/close_dc.png"></div>
+                <p class="yangdonglei" style="margin-bottom: 6px;font-size:16px;color:#ffd800;position:relative;left:-15px;"><img style="width:20px;height:20px;margin-right:10px;" class="Payment_popups_icon" src="/img/zfb_icon.png"/><span class="wx_or_zhifubao_span">扫码付款</span></p>
+                <p style="font-size: 14px; margin-top: 0px; margin-bottom: 6px;color:#ffd800;"><span class="data_value" style="font-size: 24px; font-weight: bold;">180.00</span>元</p>
+                <img id="ydl_payment_popups_img" onerror="reload_img(this.src)" class="Payment_popups_box_zf"  src="/img/wx_qr.png"/>
+                <img class="Payment_popups_box_bz" style="margin-top:20px" src="/img/wx_bz.png"/>
+            </div>
+        </div>
+    <script type="text/javascript">
+    require(['buyer/order/list'], function(view){
+        var active = window.location.hash, $container = $('.js-order-list');
+        if(!active || active == '#'){
+            active = view.getActive('all')
+        }else{
+            active = active.substr(1);
+        }
+        $(".close_dc").click(function(){
+            $(".Payment_popups").hide();
+        })
+        $('#nav_order_status').on('click', 'a', function(){
+            var $this = $(this), status = $this.data('status');
+            if($this.hasClass('active')){
+                return false
+            }
+            $this.addClass('active').siblings().removeClass('active');
+
+            view.doRefresh({
+                url: '__MODULE__/ordernew/search',
+                data: {status: status, size: 20},
+                dataType: "json",
+                // cacheKey: status,
+                container: $container
+            });
+            return false;
+        }).find('a[data-status="'+active+'"]').trigger('click');
+        $("body").on("click",".wxzf",function(){
+            var tid = $(this).parent().attr("data-tid");
+            $.ajax({
+                url:"__MODULE__/ordernew/getPayQr",
+                data:{tid:tid},
+                dataType:"json",
+                type:"post",
+                success:function(data){
+                    $(".Payment_popups_box span.data_value").text(data.payment);
+                    $(".Payment_popups_box_zf").attr("src",data.pay_qr);
+                    $(".Payment_popups span.wx_or_zhifubao_span").text("扫码付款");
+                    $(".Payment_popups_box_bz").attr("src",data.explain);
+                    $(".Payment_popups").show();
+                }
+            });
+        })
+        $("body").on("click",".zfbzf",function(){
+            var tid = $(this).parent().attr("data-tid");
+            var zfb = 'zfb';
+            $.ajax({
+                url:"__MODULE__/ordernew/getPayQr",
+                data:{tid:tid,wx_or_zfb:zfb},
+                dataType:"json",
+                type:"post",
+                success:function(data){
+                    $(".Payment_popups_box span.data_value").text(data.payment);
+                    $(".Payment_popups_box_zf").attr("src",data.pay_qr);
+                    $(".Payment_popups span.wx_or_zhifubao_span").text("截屏保存扫码付款");
+                    $(".Payment_popups_box_bz").attr("src",data.explain);
+                    $(".Payment_popups").show();
+                }
+            });
+        })
+        $(".close_dc").click(function(){
+            $(".Payment_popups").hide();
+        })
+    });
+    </script>
+</body>
+</html>

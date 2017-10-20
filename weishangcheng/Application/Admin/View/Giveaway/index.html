@@ -1,0 +1,66 @@
+<toolbar id="toolbar">
+	<form class="search-box" novalidate="novalidate">
+		<input type="text" name="title" value="" placeholder="活动名称">
+		<button type="button" data-name="search" class="btn btn-default" data-event-type="default">
+			<i class="icon-search"></i>
+		</button>
+	</form>
+</toolbar>
+
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-url="__URL__" data-toolbar="#toolbar">
+    <thead>
+		<tr>
+			<th data-width="40" data-checkbox="true"></th>
+			<th data-width="150" data-field="title">活动名称</th>
+			<th data-width="150" data-field="active_time" data-align="center">活动时间</th>
+			<th data-width="60" data-field="status" data-align="center" data-formatter="fomat_status">活动状态</th>
+			<th data-width="60" data-field="give_num" data-align="center">已赠送</th>
+			<th data-width="60" data-field="num" data-align="center">已领取</th>
+			<th data-field="product_title">赠送产品</th>
+		</tr>
+	</thead>
+</table>
+
+<script type="text/javascript">
+function fomat_status(status, row, index){
+	if(status == 1){
+		return "进行中";
+	}else{
+		return "已结束";
+	}
+}
+$(function(){
+	$('#table').on('finish', function(e, gridview, params){
+		var rows = $('#table').bootstrapTable('getSelections');
+		if(rows.length == ""){
+			alertMsg("请勾选活动！");
+			return false;
+		}
+		var ids = "";
+		for(i = 0;i < rows.length;i++){
+			ids += rows[i].id + ',';
+		}
+		ids = ids.substring(0, ids.length-1);
+		
+		$.ajax({
+			type : "POST",
+			url : "__URL__/finish",
+			data : {ids : ids},
+			dataType : "json",
+			success : function(){
+				setTimeout(function(){
+					window.location.reload();
+				}, 1500);
+			},
+			error : function(){
+				setTimeout(function(){
+					window.location.reload();
+				}, 1500);
+			}
+		});
+		
+		return false;
+	})
+});
+</script>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" />
+    <style type="text/css">
+    .block-item select{opacity:0;position:absolute;;top:0;right:0;bottom:0;left:0;width:100%;height:100%}
+	</style>
+</head>
+<body class="body-fixed">
+    <div class="container ">
+        <div class="content ">
+            <div class="search-bar top-fix">
+			    <form id="search_form" class="search-form ignore" method="GET">
+			        <div class="search-content">
+			            <input type="search" id="searchkw" class="search-input" placeholder="手机号/姓名" name="kw" maxlength="11">
+			            <span class="search-icon"></span>
+			        </div>
+			    </form>
+			</div>
+            <ul class="block block-list">
+                <li class="block-item">
+                    <div class="block-dot">{$my.key}</div>
+                    <div class="block-info">
+                        <div class="block-title">{$my.name}<span class="block-tag">{$my.card_id}</span></div>
+                        <div class="block-content">{$my.nickname}<span class="pull-right">{$my.mobile}</span></div>
+                    </div>
+                </li>
+            </ul>
+            
+        	<ul class="block block-list js-list"></ul>
+        	<!--底部结束-->
+            <div id="right-icon" class="js-right-icon no-text" style="bottom:100px">
+                <div class="js-right-icon-container right-icon-container clearfix" style="width: 50px;">
+                    <a id="global-back" href="javascript:win.back();" class="icon new s1">
+                        <p class="icon-img"></p>
+                        <p class="icon-txt">购物车</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <include file="_layout/mall.footer.html" />
+</body>
+<script>
+var agentList = {$agentList};
+require(["jquery", "h5/pullrefresh"], function($, pullfresh){
+	var $container = $('.js-list'),
+		$form = $('#search_form'),
+		kw = '';
+	
+	var showHTML = function(parameters, list){
+		var html = '';
+		if(list.length==0 && parameters==1){ //在什么情况下显示没有查找数据
+			html += '<li class="block-item">';
+		    html += '<div style="padding-top:60px;" class="empty-list list-finished">';
+    		html +=	'<div><h4>暂无好友信息？</h4><p class="font-size-12">请重试或</p></div>';
+    		html +=	'<div><a style="padding:8px 30px;" class="tag tag-big tag-orange" href="__MODULE__/personal/">返回个人中心</a></div></div>';
+    		html += '</li>';
+		}else{
+			for(var i=0; i<list.length; i++){
+				html += '<li class="block-item" data-mid="'+list[i].id+'">';
+				html += 	'<div class="block-dot">';
+				html += 		'<img src="'+list[i].headimgurl+'">';
+				html += 	'</div>';
+				html += 	'<div class="block-info">';
+				html += 	'<div class="block-title">'+list[i].name+'<span class="block-tag">'+list[i].agent_title+'</span></div>';
+				html += 		'<div class="block-content">'+list[i].nickname+'<span class="pull-right">'+list[i].mobile+'</span></div>';
+				html += 	'</div>';
+				
+				/* if(list[i].agent_level == 0 || list[i].agent_level > 2){
+					html += '<select class="js_agent_select"><option value="" style="display:none"></option><optgroup label="邀请好友升级为">';
+					for(var j=2; j<agentList.length; j++){
+						if(agentList[j].level == list[i].agent_level){
+							break;
+						}
+						html += '<option value="'+agentList[j].level+'">'+agentList[j].title+'</option>';
+					}
+					html += '</optgroup></select>';
+				} */
+				html += '</li>';
+			}
+		}
+		
+		if(parameters == 1){ // 覆盖原有html元素
+			$container.html(html);
+		}else{ // 向页面追加数据
+			$container.append(html);
+		}
+	};
+	
+	// 下拉刷新控件初始化
+	pullfresh.doRefresh({
+		url: "__MODULE__/team/friends",
+		data: {size:20,card: '{$card_id}'},
+		cache: true,
+		container: $container,
+		dataType : 'json',
+		success : function(list, page){
+			showHTML(page, list);
+			return list.length == 20;
+		}
+	});
+	
+	/* // 邀请好友升级
+	$container.on('change', '.js_agent_select', function(){
+		var $this = $(this),
+			data = $this.parent().data(),
+			agent_level = $this.val();
+		$this.val('');
+		$.ajax({
+			url: '__CONTROLLER__/invite?id='+data.mid+'&agent_level='+agent_level,
+			dataType: 'json'
+		});
+		return false;
+	}); */
+});
+</script>
+</html>

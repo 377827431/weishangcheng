@@ -1,0 +1,126 @@
+<div id="setOutTradeNoModal" class="modal hide fade modal-middle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">编辑外部订单号</h3>
+  </div>
+  <div class="modal-body" style="padding:0;margin-top:-1px;">
+    <table class="table table-bordered input-table" style="margin-bottom: -1px;border-radius: 0;">
+        <tr>
+            <th style="width:180px">下单账号</th>
+            <th style="width: 150px;">外部订单号</th>
+            <th>异常信息</th>
+        </tr>
+        <foreach name="list" item="item">
+         <tr>
+            <td>
+                <select{$item['status'] != 'error' && $item['status'] != 'success' ? ' disabled="disabled"' : ''}>
+                    <foreach name="loginIdList" item="loginId">
+                    <option{$item['buyer_login_id'] == $loginId ? ' selected="selected"':''} value="{$loginId}">{$loginId}</option>
+                    </foreach>
+                </select>
+            </td>
+            <td>
+                <input type="text" value="{$item['out_tid']}" {$item['status'] != 'error' && $item['status'] != 'success' ? 'readonly="readonly"':''} placeholder="16位订单号">
+            </td>
+            <td class="error" style="line-height: inherit;position:relative">{$item['error_msg']}
+            <span style="position:absolute;right:5px;bottom:5px">
+                <a href="javascript:;" class="js-plus"><i class="icon-plus"></i></a>
+            </span>
+            </td>
+        </tr>
+        </foreach>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    <button class="js-save btn btn-primary">保存</button>
+  </div>
+  <script class="js-out_tid_tpl" type="text/html">
+	<tr>
+    	<td>
+        	<select>
+            	<option value="">请选择</option>
+             	<foreach name="loginIdList" item="loginId">
+                <option value="{$loginId}">{$loginId}</option>
+                </foreach>
+            </select>
+        </td>
+        <td><input type="text" value="" placeholder="16位订单号"></td>
+        <td class="error" style="line-height: inherit;position:relative">
+			<span style="position:absolute;right:5px;bottom:5px">
+                <a href="javascript:;" class="js-trash"><i class="icon-trash"></i></a>&nbsp;&nbsp;&nbsp;
+                <a href="javascript:;" class="js-plus"><i class="icon-plus"></i></a>
+            </span>
+        </td>
+    </tr>
+  </script>
+  <script type="text/javascript">
+  (function(){
+	  $('body').unbind('out_trade_no_change');
+	  
+	  var $modal = $('#setOutTradeNoModal'),
+	  tpl = $modal.find('.js-out_tid_tpl').html(),
+	  $tbody = $modal.find('tbody');
+	  $modal.modal({backdrop: false});
+	  
+	  $modal.on('hidden', function(){
+		  $modal.remove();
+	  });
+	  
+	  
+	  // 保存
+	  $modal.find('.js-save').on('click', function(){
+		  var $btn = $(this);
+		  var $tr = $modal.find('tr:gt(0)');
+		  var parameters = {tid: {$_REQUEST['tid']}, out_trade_no: {}};
+		  for(var i=0; i<$tr.length; i++){
+			  var $select = $tr.eq(i).find('select'),
+			  loginId = $select.val(),
+			  $input = $tr.eq(i).find('input'),
+			  outTid = $input.val();
+			  
+			  
+			  
+			  // 校验数据
+			  if(!!parameters.out_trade_no[outTid]){
+				  $input.focus();
+				  return alert('第' + (i+1) + '行订单号重复'), false;
+			  }else if(loginId == '' && outTid != ''){
+				  $select.focus();
+				  return alert('请选择下单账号：第' + (i+1) + '行'), false;
+			  }else if(loginId != '' && outTid == ''){
+				  return alert('请输入1688订单号：第' + (i+1) + '行'), false;
+			  }else if(!/^\d{16}$/.test(outTid)){
+				  $input.focus();
+				  return alert('第' + (i+1) + '行订单号'+outTid+'无效'), false;
+			  }
+			  parameters.out_trade_no[outTid] = loginId;
+		  }
+		  
+		  $btn.attr('disabled', 'disabled');
+		  $.ajax({
+			  url: '/order/setOutTradeNo',
+			  type: 'post',
+			  data: parameters,
+			  dataType: 'json',
+			  success: function(data){
+				  $('body').trigger('out_trade_no_change', data);
+				  $modal.modal('hide');
+			  },
+			  error: function(){
+				  $btn.removeAttr('disabled');
+			  }
+		  });
+		  return false;
+	  });
+	  
+	  $modal.on('click', '.js-plus', function(){
+		  $tbody.append(tpl);
+		  return false;
+	  }).on('click', '.js-trash', function(){
+		  $(this).parents('tr:first').remove();
+		  return false;
+	  });
+  })();
+  </script>
+</div>

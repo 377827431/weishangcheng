@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="会员等级设置" />
+    <!--<link rel="stylesheet" href="/css/seller/member_lv.css">-->
+    <link rel="stylesheet" href="/css/seller/vip_card.css">
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <!--<input type="hidden" id="project_id" value="{$project_id}">
+            <input type="hidden" id="old_level" value="">
+            <div class="level_list">
+                <ul>
+                    <foreach name="list" key="vk" item="vi">
+                        <li level="{$vi.level}">
+                            <span class="level_nick">{$vi.title}</span>
+                            <div class="member_ctrol">
+                                <span class="view_icon"></span><span class="edit_icon"></span><span class="delete_icon"></span>
+                            </div>
+                            <div class="dropdown_block">
+                                <span class="level">{$vi.level}</span>
+                                <span class="discut">{$vi.discount}</span>
+                                <span class="expire">{$vi.expire_time}</span>
+                                <span class="pirce_value">{$vi.price}</span>
+                                <span class="auto_order">{$vi.auto_trade}</span>
+                                <span class="auto_price">{$vi.auto_payment}</span>
+                                <span class="auto_score">{$vi.auto_score}</span>
+                            </div>
+                        </li>
+                    </foreach>
+                </ul>
+            </div>
+            <div class="add_btn_con">
+                <div class="add_member_level">添加会员等级</div>
+            </div>
+            <div class="edit_member_lv_dialog" date-from-where="">
+                <div class="dialog_mask"></div>
+                <div class="dialog_body">
+                    <ul>
+                        <li><span>会员头衔</span><input class="member_nick" type="text" placeholder="请输入会员头衔"></li>
+                        <li class="member_level_li">
+                            <span>会员等级</span>
+                            <select name="select">
+                            </select>
+                        </li>
+                        <li><span>有效天数</span><input class="empire_date" type="text" placeholder="请输入会员有效天数"></li>
+                        <li><span>会员权益</span><input class="discut" type="text" placeholder="折扣"></li>
+                        <li><span>价格</span><input class="value" type="text" placeholder="会员价格"></li>
+                        <li><span>自动升级订单笔数</span><input class="auto_order_num" type="text" placeholder="自动升级订单笔数"></li>
+                        <li><span>自动升级消费金额</span><input class="auto_price" type="text" placeholder="自动升级消费金额"></li>
+                        <li><span>自动升级积分数</span><input class="auto_score" type="text" placeholder="自动升级积分数"></li>
+                    </ul>
+                    <div class="submit_member">保存</div>
+                    <div class="cancel_member">取消</div>
+                </div>
+            </div>-->
+            <p class="page_title">会员卡</p>
+            <a href="/seller/member/add" class="add_member_link">＋添加会员卡</a>
+            <ul class="vip_card_list">
+                <foreach name="list" item="value">
+                <li>
+                    <a href="/seller/member/edit?id={$value.id}">
+                        <div class="vip_card">
+                        <div class="place_holder"></div>
+                        <div class="vip_card_bg_container">
+                            <img class="vip_card_bg" src="{$value.background}">
+                        </div>
+                        <div class="card_items">
+                            <div class="card_item_line1">
+                                <img src="{$shop.logo}" alt="">
+                                <span class="vip_shop_name">{$shop.name}</span>
+                                <span class="vip_card_lv">{$value.level}级会员卡</span>
+                            </div> 
+                            <div class="card_item_line2">
+                                <div>
+                                    <p class="vip_card_name">{$value.title}卡</p>
+                                </div>
+                            </div>
+                            <div class="card_item_line3 reflect">
+                                <ul>
+                                    <if condition="$value.discount neq ''">
+                                    <li class="on"><div><div class="vip_right discut">{$value.discount}</div></div></li>
+                                    <else />
+                                    <li class=""><div><div class="vip_right discut"></div></div></li>
+                                    </if>
+                                    <!-- <li class="on"><div><div class="vip_right salary">佣金</div></div></li> -->
+                                    <!-- <li class="on"><div><div class="vip_right post_free">包邮</div></div></li>
+                                    <li class="on"><div><div class="vip_right youhuiquan">优惠券</div></div></li>
+                                    <li class="on"><div><div class="vip_right store">积分<div></div></li> -->
+                                </ul>
+                            </div>
+                            <div class="card_item_line4">
+                                <if condition="$value.expire_time eq 0">
+                                <div><div class="expire_day">永久</div></div>
+                                <else />
+                                <div><div class="expire_day">{$value.expire_time}天</div></div>
+                                </if>
+                            </div>   
+                        </div>
+                        </div>
+                    </a>
+                </li>
+            </foreach>
+            </ul>
+        </div>
+    </div>
+    <script>
+        require(['jquery'],function($){
+            // function fetchDailogData(){
+            //     var level_nick = $(".edit_member_lv_dialog input.member_nick").val();
+            //     var level = $(".member_level_li select").val();
+            //     var empire_date = $('.edit_member_lv_dialog input.empire_date').val();
+            //     var discut = $(".edit_member_lv_dialog input.discut").val();
+            //     var member_value = $(".edit_member_lv_dialog input.value").val();
+            //     var auto_order_num = $(".edit_member_lv_dialog input.auto_order_num").val();
+            //     var auto_price = $(".edit_member_lv_dialog input.auto_price").val();
+            //     var auto_score = $(".edit_member_lv_dialog input.auto_score").val();
+            //     var ajax_param = {
+            //         level_nick:level_nick,
+            //         level:level,
+            //         empire_date:empire_date,
+            //         discut:discut,
+            //         member_value:member_value,
+            //         auto_order_num:auto_order_num,
+            //         auto_price:auto_price,
+            //         auto_score:auto_score
+            //     };
+            //     return ajax_param;
+            // }
+            // function clearDailog(){
+            //     $("div.edit_member_lv_dialog input.member_nick").val("");
+            //     $('.edit_member_lv_dialog input.empire_date').val("");
+            //     $(".edit_member_lv_dialog input.discut").val("10.0");
+            //     $(".edit_member_lv_dialog input.value").val("");
+            //     $(".edit_member_lv_dialog input.auto_order_num").val("");
+            //     $(".edit_member_lv_dialog input.auto_price").val("");
+            //     $(".edit_member_lv_dialog input.auto_score").val("");
+            //     $(".edit_member_lv_dialog .member_level_li select").html("");
+            // }
+            // function loadOptions(option_list){
+            //     option_list = option_list||[
+            //         {key:"1",default:true},
+            //         {key:"2",default:false},
+            //         {key:"3",default:false},
+            //         {key:"4",default:false}
+            //     ];
+            //     var html = "";
+            //     for(var i = 0;i<option_list.length;i++){
+            //         html += '<option ';
+            //         if(option_list[i].default){
+            //             html += "selected = selected";
+            //         }
+            //         html +=' value="'+ option_list[i].key +'">等级'+ option_list[i].key +'</option>';
+            //     }
+            //     return html;
+            // }
+            // function createMemberItem(param){
+            //     var msg = "";
+            //     var result=true;
+            //     var html = "";
+            //     //等级昵称不重复
+            //     $(".level_list ul li").each(function(){
+            //         if($(this).children('span.level_nick').text() == param.level_nick){
+            //             msg = "会员头衔重复";
+            //             result = false;
+            //         }
+            //     })
+            //     //构造html结构
+            //     html += '<li>';
+            //     html += '<span class="level_nick">'+param.level_nick+'</span>';
+            //     html += '<div class="member_ctrol"><span class="edit_icon"></span><span class="delete_icon"></span><span class="view_icon"></span></div>';
+            //     html += '</li>';
+            //     return {
+            //         msg:msg,
+            //         result:result,
+            //         html:html
+            //     }
+            // }
+            // //点编辑
+            // $('.level_list').on('click','span.edit_icon',function(){
+            //     var level = $(this).parents('li').attr('level');
+            //     $("#old_level").val(level);
+            //     var id = $("#project_id").val()+level;
+            //     $(".edit_member_lv_dialog").attr("date-from-where","edit");
+            //     clearDailog();
+            //     $.ajax({
+            //         url: '/seller/member/edit',
+            //         type: 'GET',
+            //         dataType: 'json',
+            //         data: {id: id},
+            //         success:function(data){
+            //             $("div.edit_member_lv_dialog input.member_nick").val(data.data.title);
+            //             $('.edit_member_lv_dialog input.empire_date').val(data.data.expire_time);
+            //             $(".edit_member_lv_dialog input.discut").val(data.data.discut);
+            //             $(".edit_member_lv_dialog input.value").val(data.data.price);
+            //             $(".edit_member_lv_dialog input.auto_order_num").val(data.data.auto_trade);
+            //             $(".edit_member_lv_dialog input.auto_price").val(data.data.auto_payment);
+            //             $(".edit_member_lv_dialog input.auto_score").val(data.data.auto_score);
+            //             var html = loadOptions(data.levels);
+            //             $(".edit_member_lv_dialog .member_level_li select").html(html);
+            //             $('.edit_member_lv_dialog').show();
+            //         }
+            //     })
+            //     /*var html = loadOptions();
+            //     $(".edit_member_lv_dialog .member_level_li select").html(html);
+            //     $('.edit_member_lv_dialog').show();*/
+
+            // })
+            // //点查看
+            // $('.level_list').on('click','span.view_icon',function(){
+            //     var $target = $(this).parents("li").children(".dropdown_block");
+            //     $('.level_list li .dropdown_block').not($target[0]).hide();
+            //     $target.toggle();
+            // })
+            // //点删除
+            // $('.level_list').on('click','span.delete_icon',function(){
+            //     var level = $(this).parents("li").attr("level");
+            //     var id = $("#project_id").val()+level;
+            //     if(confirm("确认删除")){
+            //         $.ajax({
+            //             url: '/seller/member/delete',
+            //             type: 'POST',
+            //             dataType: 'json',
+            //             data: {id: id},
+            //             success:function(data){
+            //                 toast.show("删除成功!");
+            //                 setTimeout(function(){
+            //                     window.location.reload(true);
+            //                 },1500);
+            //             }
+            //         })
+            //     }else{
+            //         return false;
+            //     }
+            // })
+            // //点新增弹出弹窗
+            // $('.add_member_level').click(function(){
+            //     $(".edit_member_lv_dialog").attr("date-from-where","add");
+            //     if($(".level_list ul li").length >= 9){
+            //         toast.show("会员等级不能超过9");
+            //         return false;
+            //     }
+            //     clearDailog();
+            //     $.ajax({
+            //         url: '/seller/member/add',
+            //         type: 'POST',
+            //         dataType: 'json',
+            //         success:function(data){
+            //             var html = loadOptions(data);
+            //             $(".edit_member_lv_dialog .member_level_li select").html(html);
+            //             $('.edit_member_lv_dialog').show();
+            //         }
+            //     })
+            // })
+            // //新增会员保存
+            // $('.edit_member_lv_dialog .dialog_body div.submit_member').on('click',function(){
+            //     var from_where = $('.edit_member_lv_dialog').attr('date-from-where');
+            //     var dailog_data = fetchDailogData();
+            //     // 数据合法性验证
+            //     if(dailog_data.level_nick==""){
+            //         toast.show("会员头衔不能为空");
+            //         return false;
+            //     }
+            //     if(dailog_data.level_nick.length > 8){
+            //         toast.show("会员头衔最多8位");
+            //         return false;
+            //     }
+            //     var reg_decimal = /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/;
+            //     console.log(dailog_data.member_value);
+            //     if($.trim(dailog_data.member_value) != ""){
+            //         if(!reg_decimal.test(dailog_data.member_value) || parseFloat(dailog_data.member_value) < parseFloat(1)){
+            //             toast.show("价格要至少要1.00");
+            //             return false;
+            //         }
+            //     }
+            //     if($.trim(dailog_data.auto_price) != ""){
+            //         if(!reg_decimal.test(dailog_data.auto_price)){
+            //             toast.show("自动升级金额为2位小数");
+            //             return false;
+            //         }
+            //     }
+
+            //     var reg_discut = /^[0-9]+(\.[0-9]{1})?$/;
+            //     if($.trim(dailog_data.discut)!=""){
+            //         if(!reg_discut.test(dailog_data.discut) || parseFloat(dailog_data.discut)< 0.1 || parseFloat(dailog_data.discut)> parseFloat(10)){
+            //             toast.show("折扣范围在0.1~10(不填代表无折扣)");
+            //             return false;
+            //         }
+            //     }
+            //     var reg_empire_date = /^[0-9]+$/;
+            //     if($.trim(dailog_data.empire_date) != 0){
+            //         if(!reg_empire_date.test(dailog_data.empire_date)){
+            //             toast.show("有效天数为整数");
+            //             return false;
+            //         }
+            //     }
+            //     if($.trim(dailog_data.auto_score) != ""){
+            //         if(!reg_empire_date.test(dailog_data.auto_score)){
+            //             toast.show("自动升级积分数为整数");
+            //             return false;
+            //         }
+            //     }
+            //     if($.trim(dailog_data.auto_order_num) != ""){
+            //         if(!reg_empire_date.test(dailog_data.auto_order_num)){
+            //             toast.show("自动升级订单数为整数");
+            //             return false;
+            //         }
+            //     }
+            //     //昵称不重复，发送ajax数据，成功后添加节点
+            //     //此处发送ajax，提交ajax_param
+            //     // $(_temp.html).appendTo($('div.level_list ul'));
+            //     if(from_where == "edit"){
+            //         dailog_data.id = $("#project_id").val()+$("#old_level").val();
+            //         $.ajax({
+            //             url: '/seller/member/cardedit',
+            //             type: 'POST',
+            //             dataType: 'json',
+            //             data: {data: dailog_data},
+            //             success:function(data){
+            //                 $('.edit_member_lv_dialog').hide();
+            //                 window.location.reload(true);
+            //             }
+            //         })
+            //     }else{
+            //         $.ajax({
+            //             url: '/seller/member/cardinsert',
+            //             type: 'POST',
+            //             dataType: 'json',
+            //             data: {data: dailog_data},
+            //             success:function(data){
+            //                 $('.edit_member_lv_dialog').hide();
+            //                 window.location.reload(true);
+            //             }
+            //         })
+            //     }
+            // })
+            // //点取消
+            // $('.edit_member_lv_dialog .dialog_body div.cancel_member').on('click',function(){
+            //     $('.edit_member_lv_dialog').hide();
+            // })
+
+        })
+    </script>
+</body>
+</html>

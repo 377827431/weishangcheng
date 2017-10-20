@@ -1,0 +1,104 @@
+<toolbar id="toolbar">
+	<form class="search-box">
+		<input type="text" name="nickname" value="{$nickname}" placeholder="会员昵称">
+		<button type="button" data-name="search" class="btn btn-default" data-event-type="default">
+			<i class="icon-search"></i>
+		</button>
+	</form>
+</toolbar>
+
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-url="__URL__/black_list" data-toolbar="#toolbar" data-page-size="20" data-page-list="[5, 10, 25, 50, All]">
+    <thead>
+		<tr>
+			<th data-width="40" data-checkbox="true"></th>
+			<th data-width="100" data-field="nick">会员昵称</th>
+			<th data-width="150" data-field="start_time">开始时间</th>
+			<th data-width="150" data-field="end_time">结束时间</th>
+			<th data-width="150" data-field="dis_daycount">间隔天数(天)</th>
+			<th data-width="150" data-field="enabled">是否解除</th>
+			<th data-field="remark">备注</th>
+		</tr>
+	</thead>
+</table>
+<script type="text/javascript">
+function formatter_remark(val, row, index){
+	if(val != null && val !=""){
+		return '<textarea readonly="readonly">'+val+'</textarea>';
+	}else{
+		return '';
+	}
+}
+
+$(function(){
+
+	$("button[data-name='black_delete']").click(function(){
+		var rows = $('#table').bootstrapTable('getSelections'); // 当前页被选中项(getAllSelections 所有分页被选中项)
+		if(rows.length == 0){ 
+			alertMsg('请勾选要解除黑名单的会员', 'warning');
+			return; 
+		}
+		var ids = [];
+		for(i=0;i<rows.length;i++){
+			ids.push(rows[i]['id']);
+		}
+		alertConfirm({
+			title: '提示',
+			content: '确定要从黑名单中解除吗？',
+			okValue: '确定',
+			cancelValue: '取消',
+			ok: function(){
+					$.ajax({
+		                url:'__URL__/black_delete',
+		                type:'post',
+		                dataType:'json',
+						waitting: '正在解除...',
+		                data: {'ids':ids.join(',')},
+		                success:function(data){
+		                	alertMsg('解除成功,用户可登录！'); 
+		                	window.location.reload();
+		                }
+		            })
+				},
+			cancel: function(){},
+			backdrop: true
+		});
+		
+	})
+	
+	$("button[data-name='black_del']").click(function(){
+		var rows = $('#table').bootstrapTable('getSelections'); // 当前页被选中项(getAllSelections 所有分页被选中项)
+		if(rows.length == 0){ 
+			alertMsg('请勾选要删除的数据', 'warning');
+			return; 
+		}
+		var ids = [];
+		for(i=0;i<rows.length;i++){
+			ids.push(rows[i]['id']);
+		}
+		alertConfirm({
+			title: '提示',
+			content: '确定要删除吗？',
+			okValue: '确定',
+			cancelValue: '取消',
+			ok: function(){
+					$.ajax({
+		                url:'__URL__/black_del',
+		                type:'post',
+		                dataType:'json',
+						waitting: '正在删除中...',
+		                data: {'ids':ids.join(',')},
+		                success:function(data){
+		                	alertMsg('删除成功！'); 
+		                	window.location.reload();
+		                }
+		            })
+				},
+			cancel: function(){},
+			backdrop: true
+		});
+		
+	})
+	
+});
+</script>

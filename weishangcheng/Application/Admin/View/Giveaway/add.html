@@ -1,0 +1,106 @@
+<div id="productModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width:800px;margin-left:-400px;">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">添加赠品</h3>
+  </div>
+  <div class="modal-body">
+    <form class="form-horizontal edit-form js-submit-form" data-submit="ajax" data-validate="true" method="post" action="__URL__/add">
+		<div class="form-group">
+			<div class="form-item">
+				<div class="control-group">
+				    <label class="control-label must">活动名称</label>
+				    <div class="controls">
+				      <input type="text" name="title" placeholder="50个字符以内" maxlength="50" required="required">
+				      <input type="hidden" name="product_id" class="js-product_id">
+				    </div>
+				</div>
+				<div class="control-group">
+				    <label class="control-label must">活动开始时间</label>
+				    <div class="controls">
+				      <div class="input-append date" data-format="yyyy-MM-dd hh:mm:ss">
+						<input type="text" name="start_time" value="" required="required" readonly="readonly">
+						<span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
+					  </div>
+				    </div>
+				</div>
+				<div class="control-group">
+				    <label class="control-label must">活动结束时间</label>
+				    <div class="controls">
+				      <div class="input-append date" data-format="yyyy-MM-dd hh:mm:ss">
+						<input type="text" name="end_time" value="" required="required" readonly="readonly">
+						<span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
+					  </div>
+				    </div>
+				</div>
+			</div>
+			<div class="form-item">
+				<div class="control-group">
+				    <label class="control-label must">领取有效期</label>
+				    <div class="controls">
+						<input type="number" name="expiration_day" value="1" required="required" data-rule-digits="digits" max="30" min="1"> 天
+				    </div>
+				</div>
+				<div class="control-group">
+				    <label class="control-label must">领取限制</label>
+				    <div class="controls">
+						<input type="number" name="buy_quota" value="1" required="required" data-rule-digits="digits" min="1"> 次/人
+				    </div>
+				</div>
+				<div class="control-group">
+				    <label class="control-label must">赠品数量</label>
+				    <div class="controls">
+						<input type="number" name="stock" value="" required="required" data-rule-digits="digits" max="1000" min="1"> 件
+				    </div>
+				</div>
+			</div>
+		</div>
+	</form>
+	<div>
+		<div id="productToolbar" class="toolbar">
+			<form class="search-box">
+				<input type="text" name="title" value="" placeholder="产品名称">
+				<button type="button" data-name="search" class="btn btn-default" data-event-type="default">
+					<i class="icon-search"></i>
+				</button>
+			</form>
+		</div>
+		<table id="productTable" class="table table-hover" data-url="__MODULE__/api/products" data-toolbar="#productToolbar" data-click-to-select="true">
+		    <thead>
+				<tr>
+					<th data-width="40" data-radio="true"></th>
+					<th data-width="400" data-field="title">产品名称</th>
+					<th data-width="150" data-field="spec">规格型号</th>
+					<th data-field="stock" data-align="center">剩余库存</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    <button type="button" class="btn btn-primary js-save">保存</button>
+  </div>
+</div>
+<script type="text/javascript">
+(function(){
+	var $modal = $('#productModal'),
+		$productTable = $('#productTable')
+		$form = $modal.find('.js-submit-form');
+	$productTable.gridView();
+	$modal.find('.js-save').on('click', function(){
+		if(!$form.valid()){
+			return false;
+		}
+		var rows = $productTable.bootstrapTable('getSelections');
+		if(rows.length == 0){
+			alertMsg('请选择赠送产品');
+			return false;
+		}
+		$modal.find('.js-product_id').val(rows[0].id);
+		$form.submit();
+		return false;
+	});
+})();
+</script>
+
+

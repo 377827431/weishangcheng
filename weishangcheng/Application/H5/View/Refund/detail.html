@@ -1,0 +1,124 @@
+
+	<style>
+		.modal h4{text-align: center;
+    padding: 15px 0;
+    font-size: 16px;
+    line-height: 20px;}
+		.form .block-item>label{width: 100%;}
+		.form .block-item>label.label-right{text-align:right;    padding-right: 10px;}
+		.form .label-right input{text-align:right;padding: 0;}
+		.form .block-item{    margin-left: 10px;}
+		.form .block-item select{position:absolute;left:0;right:0;bottom:0;top:0;opacity:0;}
+		.form input[type="file"]{position:absolute;left:0;right:0;bottom:0;top:0;opacity:0;}
+		.form .refund-imgs{width:90%;padding: 10px 10px 5px 0;color:#888}
+		.form .refund-imgs img{width:24px;height:24px;margin-right:10px;}
+		.form input.input-express{border-bottom: 1px solid rgb(0, 136, 204);padding: 0px;width: 110px;display: inline-block;text-align:center;}
+	</style>
+
+<div id="refund_modal">
+	<div class="js-cancel modal-backdrop"></div>
+	<div class="modal">
+		<h4>退货退款</h4>
+		<div class="js-cancel cancel-img"></div>
+		<div class="block form" style="margin:0;">
+			<notempty name="refund['receiver_address']">
+			<div class="block-item">
+				<label>退货地址：{$refund['receiver_address']}</label>
+			</div>
+			</notempty>
+			<if condition="$can_change_express">
+			<div class="block-item">
+				<label style="padding-right:10px">我已把“货物”和“外包装”(包括赠品)给快递小哥了，并且已确认快递单上的收货人和收货地址与上面的“退货地址”一致，快递小哥给我的快递单号为
+				<input class="js-express input-express" type="text" value="{$refund.refund_express}" placeholder="在此输入">
+				，小哥还说一般商家收到货品后就会给我退款！
+				</label>
+			</div>
+			<elseif condition="$refund['refund_express']"/>
+			<div class="block-item">
+				<label style="width:50%">退回快递单号</label>
+				<label style="width:50%" class="label-right">{$refund['refund_express']}</label>
+			</div>
+			</if>
+			<div class="block-item">
+				<label style="width:50%">{$data['is_received']['text']}</label>
+				<label style="width:50%" class="label-right">{$data['refund_type']['text']}</label>
+			</div>
+			<div class="block-item">
+				<label style="width:80%">卖家决定退给我<i style="color:#888;font-size:10px;">(包含运费)</i></label>
+				<label style="width:20%" class="label-right">{$data['refund_fee']}元</label>
+			</div>
+			<div class="block-item">
+				<label style="width:100%;padding-right:10px">我的理由是：{$data.reason}。{$data.refund_remark}</label>
+			</div>
+			<div class="block-item">
+				<label class="refund-imgs" id="refund_image_list">
+				<foreach name="data['refund_images']" item="src">
+					<img src="{$src}" data-src="{$src}">
+				</foreach>
+				</label>
+				<label class="label-right" style="width:32px;padding: 10px 10px 5px 10px;position: relative;">
+					<img src="__CDN__/img/mall/camera.png" style="width:24px;height:24px;">
+				</label>
+			</div>
+		</div>
+		<if condition="$can_change_express">
+		<div class="action-container clearfix">
+			<div class="half-button">
+				<button type="button" id="cancel_refund" class="btn btn-block">取消申请</button>
+			</div>
+			<div class="half-button">
+				<button type="button" id="save_refund" class="btn btn-block btn-red">上传快递单号</button>
+			</div>
+		</div>
+		</if>
+	</div>
+	<script>
+	(function(){
+		var $modal = $('#refund_modal'),
+		$express = $modal.find('.js-express');
+		//$express.css('width', $modal.width() - $express.offset().left - 20);
+
+		$modal.find('.js-cancel').on('click', function(){
+			$modal.remove();
+			return false;
+		});
+		
+		// 保存
+		$('#save_refund').on('click', function(){
+			var express_no = $express.val();
+			if(express_no.length < 8){
+				return toast.show('请输入快递单号'), false
+			}
+
+			$.ajax({
+				url: '__CONTROLLER__/express',
+				type: 'post',
+				data: {refund_id: '{$refund.refund_id}', refund_express: express_no},
+				dataType: 'json',
+				success: function(){
+					window.location.reload();
+				}
+			});
+			return false;
+		});
+
+	    // 取消退款
+		$('#cancel_refund').on('click', function () {
+		    if (!confirm('取消后系统不再支持您退款，确定取消吗？')) {
+		        return false
+		    }
+
+		    $.ajax({
+		        url: '__CONTROLLER__/cancel',
+		        type: 'post',
+		        data: { refund_id: '{$data.refund_id}' },
+		        dataType: 'json',
+		        success: function () {
+		            window.location.reload();
+		        }
+		    });
+		    return false;
+		});
+	})();
+	</script>
+</div>

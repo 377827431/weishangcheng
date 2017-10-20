@@ -1,0 +1,66 @@
+<toolbar id="toolbar" class="toolbar">
+	<form class="form-horizontal">
+		<div class="filter-groups">
+			<div class="control-group">
+				<label class="control-label">代理手机号</label>
+				<div class="controls" style="position: relative;">
+					<input type="text" name="mobile" style="width:160px">
+					<label class="checkbox inline" style="position: absolute;right: 0;top: 0;border-left: 1px solid #ddd;bottom: 0;padding-right: 10px;">
+						<input type="checkbox" checked="checked" value="success" name="status" style="margin-left: -10px;">仅成功
+					</label>
+				</div>
+			</div>
+		</div>
+		<div class="filter-groups">
+			<div class="control-group">
+				<label class="control-label" style="width: 120px;">操作时间</label>
+				<div class="controls" style="margin-left:125px;">
+					<div class="input-append date" data-format="yyyy-MM-dd hh:mm:ss">
+						<input type="text" name="start_date" value="{$start_date}">
+						<span class="add-on"><i class="icon-th"></i></span>
+					</div>
+					至
+					<div class="input-append date" data-format="yyyy-MM-dd hh:mm:ss">
+						<input type="text" name="end_date" value="{$end_date}" >
+						<span class="add-on"><i class="icon-th"></i></span>
+					</div>
+					<input type="button" id="btn_export" value="导出" class="btn" style="margin-left:50px">
+					<input type="submit" value="搜索" class="btn btn-primary">
+				</div>
+			</div>
+   		</div>
+	</form>
+</toolbar>
+
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-toolbar="#toolbar" data-url="__URL__" data-unique-id="tid">   
+    <thead>
+		<tr>
+			<th data-width="150" data-field="nickname">代理姓名</th>
+			<th data-width="100" data-field="once_amount" data-align="center">充值金额</th>
+			<th data-field="self_amount" data-align="center">赠送货款</th>
+			<th data-field="parent1" data-align="center" data-formatter="formater_parent">一级代理收益</th>
+			<th data-field="parent2" data-align="center" data-formatter="formater_parent">二级代理收益</th>
+			<th data-field="parent3" data-align="center" data-formatter="formater_parent">三级代理收益</th>
+			<th data-field="status_str" data-width="80" data-align="center">状态</th>
+			<th data-field="created" data-width="135">操作时间</th>
+		</tr>
+	</thead>
+</table>
+<script>
+function formater_parent(val, row, index){
+	return !val ? null : '<a href="__MODULE__/member?mid='+val.id+'" target="parent">'+val.money+val.agent_title+'</a>';
+}
+$(function(){
+	$('#btn_export').on('click', function(){
+		var url = '__URL__/export';
+		var array = $('#toolbar form').serializeArray();
+		for(var i=0; i<array.length; i++){
+			url += (i == 0 ? '?' : '&') + array[i].name + '=' + array[i].value;
+		}
+
+		window.open(url);
+		return false;
+	});
+});
+</script>

@@ -1,0 +1,27 @@
+<toolbar id="toolbar" class="toolbar">
+</toolbar>
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-pagination="false" data-url="__ACTION__" data-toolbar="#toolbar" >
+    <thead>
+		<tr>
+			<th data-width="40" data-checkbox="true"></th>
+			<th data-field="title">分组名称</th>
+			<th data-field="card_id">关联会员卡</th>
+			<th data-field="settlement_type">佣金结算时间</th>
+			<th data-field="reward_type">佣金结算方式</th>
+		</tr>
+	</thead>
+</table>
+<script>
+    function formatter_action(val, row, index) {
+        return '<a href="javascript:;" class="js-commision" data-type="first">升级</a> - <a href="javascript:;" class="js-commision" data-type="second">补货</a>';
+    }
+
+    $('#table').on('click', '.js-commision', function () {
+        var $this = $(this), type = $this.data('type'), id = $this.parent().parent().data('uniqueid');
+        $.get('__CONTROLLER__/commision?id=' + id + '&type=' + type, function (html) {
+            $('body').append(html);
+        });
+        return false;
+    });
+</script>

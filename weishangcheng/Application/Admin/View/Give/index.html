@@ -1,0 +1,29 @@
+<form class="form-horizontal text-center" method="post" action="__URL__/import" enctype="multipart/form-data" target="_balank">
+	<div class="" style="background-color:#fff;padding: 5px 15px;">
+	  <input type="file" name="file_stu" title="请选择excel文件"/>
+	  <button class="btn btn-primary" type="submit">导入</button>
+	</div>
+</form>
+<table class="table" style="background-color:#fff;">
+	<tr>
+		<th>业务数据</th>
+	</tr>
+	<!--foreach name="express_list" item="item">
+	<tr>
+		<td>{$item.id}</td>
+		<td>{$item.name}</td>
+		<td>{$item.code}</td>
+	</tr>
+	</foreach-->
+</table>
+<script type="text/javascript">
+$(function(){
+	$('input[name="file_stu"]').change(function(event) {
+		var exlName = $(this).val()
+		if ( exlName == '' ) {
+			exlName = '请选择'
+		};
+		$(this).closest('label').find('span').text(exlName);
+	});
+});
+</script>

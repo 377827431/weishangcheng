@@ -1,0 +1,55 @@
+<form id="editModal" method="post" action="__ACTION__" data-validate="true" data-submit="ajax" class="form-horizontal">
+	<div class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+	  <div class="modal-header">
+	    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	    <h3>{$data['id'] ? '修改' : '添加'}菜单</h3>
+	  </div>
+	  <div class="modal-body">
+	  	<input type="hidden" name="id" value="{$data.id}">
+		<div class="control-group">
+			<label class="control-label">频道名称</label>
+			<div class="controls">
+				<input type="text" name="name" value="{$data.name}" placeholder="" />
+			</div>
+		</div>
+		<div class="control-group">
+        	<label class="control-label must">创建时间</label>
+   				<div class="controls">
+   					<div class="input-append date" data-format="yyyy-MM-dd hh:mm:ss">
+   						<input type="text" name="created" value="{$data.created}" required="required">
+   						<span class="add-on"><i class="icon-th icon-calendar"></i></span>
+   					</div>
+   				</div>
+        </div>
+		<div class="control-group">
+			<label class="control-label">样式路径</label>
+			<div class="controls">
+				<input type="text" name="template" value="{$data.template}" placeholder="" />
+			</div>
+		</div>
+	  </div>
+	  <div class="modal-footer">
+	  	<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+	  	<button type="submit" class="btn btn-primary" aria-hidden="true">保存</button>
+	  </div>
+  </div>
+</form>
+<script type="text/javascript">
+(function(){
+	var list = {:json_encode($list)},
+		$plist = $('#plist');
+	$('#menu_group').on('change', function(){
+		var options = '<option value="0">一级菜单</option>',
+		    gid = parseInt(this.value),
+		    selected = $plist.data('selected');
+		for(var i=0; i<list.length; i++){
+			if(list[i].gid != gid){
+				continue;
+			}
+			options += '<option value="'+list[i].id+'"'+(list[i].id == selected ? ' selected' : '')+'>'+ list[i].split + list[i].title+'</option>';
+		}
+		$plist.html(options);
+		return false;
+	}).trigger('change');
+})();
+</script>

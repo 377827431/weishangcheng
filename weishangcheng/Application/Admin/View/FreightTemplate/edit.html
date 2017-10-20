@@ -1,0 +1,483 @@
+<style>
+.form-item-left{width:40%}
+.form-item-right{width:60%}
+.table td,.table th{text-align:center}
+.table input[type="text"]{text-align:center}
+.form-horizontal .control-label{width:80px}
+.form-horizontal .controls{margin-left:100px}
+#expressModal .radio.inline,#expressModal .checkbox.inline{margin-left:10px;width:100px}
+.checked-express{width:750px;float:left}
+.checked-express span{margin-right:5px}
+#addressModal{width: 720px;margin-left:-360px}
+#addressModal .modal-body{padding:0 15px}
+#addressModal ul{margin:0}
+#addressModal li{border-bottom:1px dashed #d9d9d9;height:33px;line-height:33px}
+#addressModal dl{margin: 7px 0 0 0;}
+#addressModal label{font-size:12px}
+#addressModal dt{float:left;width:80px}
+#addressModal dd{float:left;width:110px}
+#addressModal dt label{font-weight:bold}
+.remote-area{color:red}
+.table{margin-bottom:0}
+#table_case tbody:first-of-type .delete-case, #table_case tbody+tbody .add-case, #table_case tbody:last-of-type tr:last-of-type{display:none}
+.ui-page-loading{min-height:initial}
+.area-name{cursor:pointer}
+.area-name:hover{color:#08c}
+.table td.out-area{border-left:none;width:30px;text-align:center}
+.out-area label{margin:0}
+</style>
+<div id="page_loading" class="ui-page-loading"></div>
+<div class="form-horizontal edit-form">
+  <div class="form-group">
+      <div class="control-group">
+        <label class="control-label must">模板名称</label>
+        <div class="controls">
+          <input class="js-name" type="text" maxlength="15" value="{$data.name}" style="width:452px" placeholder="最多15个字符">
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label">发货地区</label>
+        <div class="controls">
+            <select id="province_id" data-city="#city_id" data-selected="{$data.province_id}">
+                <option value="">请选择</option>
+            </select>
+            <select id="city_id" data-county="#county_id" data-selected="{$data.city_id}" style="width:120px"><option value="">请选择</option></select>
+	        <select id="county_id" data-selected="{$data.send_place}" data-selected="{$data.county_id}" style="width:120px"><option value="">请选择</option></select>
+        </div>
+      </div>
+      <div class="control-group" style="padding-right:20px">
+        <label class="control-label must">运费方案</label>
+        <div class="controls">
+           <table id="table_case" class="table table-bordered"></table>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary js-btn-save">保存</button>
+      <button type="button" class="btn">取消</button>
+    </div>
+</div>
+
+<!-- 快递公司 -->
+<div id="expressModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-body">
+    <fieldset>
+        <label style="border-bottom: 1px dashed #e5e5e5;font-weight:bold;">指定普通快递</label>
+        <foreach name="expressList" item="express">
+        <if condition="$express['group'] eq 0">
+        <label class="checkbox inline"><input type="checkbox" value="{$express.id}"> {$express.name}</label>
+        </if>
+        </foreach>
+    </fieldset>
+    <fieldset style="margin-top:15px">
+        <label style="border-bottom: 1px dashed #e5e5e5;font-weight:bold;">指定特快快递</label>
+        <foreach name="expressList" item="express">
+        <if condition="$express['group'] eq 1">
+        <label class="checkbox inline"><input type="checkbox" value="{$express.id}"> {$express.name}</label>
+        </if>
+        </foreach>
+    </fieldset>
+    <fieldset style="margin-top:15px">
+        <label style="border-bottom: 1px dashed #e5e5e5;font-weight:bold;">货到付款</label>
+        <label class="checkbox inline"><input type="checkbox" value="1"> 货到付款</label>
+    </fieldset>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    <button class="btn btn-primary js-ok">确定</button>
+  </div>
+</div>
+
+<!-- 配送地区 -->
+<div id="addressModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>为指定地区设置运费</h3>
+  </div>
+  <div class="modal-body">
+    <ul>
+        <li>
+            <dl>
+                <dt><label class="checkbox inline"><input type="checkbox"> 江浙沪</label></dt>
+                <dd><label class="checkbox inline"><input type="checkbox" value="江苏省"> 江苏省</label></dd>
+                <dd><label class="checkbox inline"><input type="checkbox" value="浙江省"> 浙江省</label></dd>
+                <dd><label class="checkbox inline"><input type="checkbox" value="上海"> 上海</label></dd>
+	       </dl>
+        </li>
+        <li>
+           <dl>
+                <dt><label class="checkbox inline"><input type="checkbox"> 华东</label></dt>
+                <dd><label class="checkbox inline"><input type="checkbox" value="福建省"> 福建省</label></dd>
+                <dd><label class="checkbox inline"><input type="checkbox" value="安徽省"> 安徽省</label></dd>
+                <dd><label class="checkbox inline"><input type="checkbox" value="山东省"> 山东省</label></dd>
+           </dl>
+        </li>
+        <li>
+           <dl>
+                <dt><label class="checkbox inline"><input type="checkbox"> 华南</label></dt>
+                <dd><label class="checkbox inline"><input type="checkbox" value="广东省"> 广东省</label></dd>
+                <dd><label class="checkbox inline remote-area"><input type="checkbox" value="广西壮族自治区"> 广西</label></dd>
+                <dd><label class="checkbox inline remote-area"><input type="checkbox" value="海南省"> 海南省</label></dd>
+           </dl>
+        </li>
+        <li>
+           <dl>
+                <dt><label class="checkbox inline"><input type="checkbox"> 华中</label></dt>
+                <dd><label class="checkbox inline"><input type="checkbox" value="江西省"> 江西省</label></dd>
+                <dd><label class="checkbox inline"><input type="checkbox" value="河南省"> 河南省</label></dd>
+                <dd><label class="checkbox inline"><input type="checkbox" value="湖北省"> 湖北省</label></dd>
+                <dd><label class="checkbox inline"><input type="checkbox" value="湖南省"> 湖南省</label></dd>
+           </dl>
+        </li>
+        <li>
+           <dl>
+                <dt><label class="checkbox inline"><input type="checkbox"> 华北</label></dt>
+                <dd><label class="checkbox inline"><input type="checkbox" value="北京"> 北京</label></dd>
+                <dd><label class="checkbox inline"><input type="checkbox" value="天津"> 天津</label></dd>
+                <dd><label class="checkbox inline"><input type="checkbox" value="河北省"> 河北省</label></dd>
+                <dd><label class="checkbox inline"><input type="checkbox" value="山西省"> 山西省</label></dd>
+                <dd><label class="checkbox inline remote-area"><input type="checkbox" value="内蒙古自治区"> 内蒙古</label></dd>
+           </dl>
+        </li>
+        <li>
+           <dl>
+                <dt><label class="checkbox inline"><input type="checkbox"> 东北</label></dt>
+                <dd><label class="checkbox inline"><input type="checkbox" value="辽宁省"> 辽宁省</label></dd>
+                <dd><label class="checkbox inline"><input type="checkbox" value="吉林省"> 吉林省</label></dd>
+                <dd><label class="checkbox inline"><input type="checkbox" value="黑龙江省"> 黑龙江省</label></dd>
+           </dl>
+        </li>
+        <li>
+           <dl>
+                <dt><label class="checkbox inline"><input type="checkbox"> 西北</label></dt>
+                <dd><label class="checkbox inline"><input type="checkbox" value="陕西省"> 陕西省</label></dd>
+                <dd><label class="checkbox inline remote-area"><input type="checkbox" value="甘肃省"> 甘肃省</label></dd>
+                <dd><label class="checkbox inline remote-area"><input type="checkbox" value="青海省"> 青海省</label></dd>
+                <dd><label class="checkbox inline remote-area"><input type="checkbox" value="宁夏回族自治区"> 宁夏</label></dd>
+                <dd><label class="checkbox inline remote-area"><input type="checkbox" value="新疆维吾尔自治区"> 新疆</label></dd>
+           </dl>
+        </li>
+        <li>
+           <dl>
+                <dt><label class="checkbox inline"><input type="checkbox"> 西南</label></dt>
+                <dd><label class="checkbox inline"><input type="checkbox" value="重庆"> 重庆</label></dd>
+                <dd><label class="checkbox inline"><input type="checkbox" value="四川省"> 四川省</label></dd>
+                <dd><label class="checkbox inline"><input type="checkbox" value="贵州省"> 贵州省</label></dd>
+                <dd><label class="checkbox inline"><input type="checkbox" value="云南省"> 云南省</label></dd>
+                <dd><label class="checkbox inline remote-area"><input type="checkbox" value="西藏自治区"> 西藏</label></dd>
+           </dl>
+	   </li>
+    </ul>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    <button class="btn btn-primary js-ok">确定</button>
+  </div>
+</div>
+
+<script src="/js/address.js"></script>
+<script type="text/javascript" src="//cdn.bootcss.com/select2/4.0.3/js/select2.min.js"></script>
+<link rel="stylesheet" href="//cdn.bootcss.com/select2/4.0.3/css/select2.min.css">
+<script>
+Address.bind("#province_id");
+var expressList = {:json_encode($expressList, JSON_UNESCAPED_UNICODE)};
+$(function(){
+	var $form = $('.edit-form');
+	expressList[0] = {id: 1, name: '货到付款'},
+	$expressModal = $('#expressModal');
+
+	// 添加快递公司
+	$form.on('click', '.js-add-express', function(){
+		var $this = $(this),
+			$list = $this.children(),
+			list = [];
+		for(var i=0; i<$list.length; i++){
+			list.push($list.eq(i).data('id'));
+		}
+
+		$expressModal.find('input').each(function(){
+			this.checked = list.indexOf(this.value * 1) > -1;
+		});
+
+		$expressModal.modal('show');
+		$expressModal.find('.js-ok').unbind('click').on('click', function(){
+			var $checkedList = $expressModal.find(':checked'),
+				html = '';
+
+			$checkedList.each(function(i){
+				var data = expressList[this.value];
+				html += '<span data-id="'+data.id+'">'+data.name+'</span>';
+			});
+
+			$this.html(html);
+			$expressModal.modal('hide');
+		});
+		return false;
+	});
+
+	// 快递公司
+	$expressModal.on('change', 'input', function(){
+		if(!this.checked){
+			return false;
+		}
+
+		var selector = this.value == 10 ? 'input' : 'input[value="10"]';
+		$(this).parent().siblings().find(selector).prop('checked', false);
+		return false;
+	});
+
+	$form.on('change', '.freight-item input',function(){
+		var value = this.value;
+		if(value == '' || isNaN(value) || value < 0){
+			value = '';
+		}else{
+			value = parseFloat(value);
+		}
+		this.value = value;
+		return false;
+	});
+
+	// 指定地区
+	var $addressModal = $('#addressModal');
+	var $checkboxs = $addressModal.find('input');
+	$form.on('click', '.js-set-area', function(){
+		var $this = $(this);
+		var list = $this.text().split('、');
+		$checkboxs.each(function(){
+			this.checked = list.indexOf(this.value) > -1;
+		});
+		
+		$addressModal.modal('show');
+		$addressModal.find('.js-ok').unbind('click').on('click', function(){
+			$addressModal.modal('hide');
+			var html = '', area = [], $checked = $addressModal.find('dd :checked');
+			if($checked.length > 0){
+				$checked.each(function(){area.push(this.value)})
+			}
+
+			if($this.hasClass('area-name')){
+				if(area.length == 0){
+					$this.parents('tr:first').remove();
+				}else{
+					$this.html(area.join('、'));
+				}
+			}else{
+				var html = '<tr class="freight-item">'+
+        	            '<td class="text-left js-set-area area-name">'+area.join('、')+'</td>'+
+        	            '<td style="width:30px;border-left:none;vertical-align: middle;"><a href="javascript:;" class="js-delete-area">删除</td>'+
+                        '<td class="input"><input type="text" data-field="payment" placeholder="不限制"></td>'+
+                        '<td class="input"><input type="text" data-field="start"></td>'+
+                        '<td class="input"><input type="text" data-field="postage"></td>'+
+                        '<td class="input"><input type="text" data-field="plus"></td>'+
+                        '<td class="input"><input type="text" data-field="postage_plus"></td>'+
+        	        	'</tr>';
+	        	$this.parents('tr:first').before(html);
+			}
+			return false;
+		});
+		return false;
+	}).on('click', '.js-freight_type', function(){
+		var $this = $(this),
+		type = $this.data('type') == 0 ? 1 : 0;
+
+		$this.data('type', type);
+		$this.html(type == 0 ? '首重(公斤)' : '首件');
+		$this.parent().nextAll(':eq(1)').html(type == 0 ? '续重(公斤)' : '续件');
+		return false;
+	});
+
+	// 首重(公斤)	首费(元)	续重(公斤)	续费(元)
+	$addressModal.on('change', 'input', function(){
+		var checked = this.checked,
+			$parent = $(this).parents('dl:first');
+		if(this.value == 'on' || this.value == ''){ //dt全选
+    		$parent.find('input').prop('checked', checked);
+		}else{
+			var childCount = $parent.children().length - 1;
+			var checkedCount = $parent.find('dd :checked').length;
+			$parent.find('dt input').prop('checked', childCount == checkedCount);
+		}
+		return false;
+	});
+
+	// 删除指定地区
+	$form.on('click', '.js-delete-area',function(){
+		$(this).parents('tr:first').remove();
+		return false;
+	});
+
+	// 保存
+	$('.js-btn-save').on('click', function(){
+		var data = {
+			id: '{$data.id}',
+			name: $form.find('.js-name').val(),
+			send_place: $('#county_id').val(),
+			templates: [],
+			type: -1
+		};
+
+		if(data.name == ''){
+			return alert('请输入运费模板名称'), false;
+		}
+
+		var $templateContainer = $('.js-template-container');
+
+		for(var i=0; i<$templateContainer.length; i++){
+			var $tbody = $templateContainer.eq(i),
+			template = {
+				type: 0,
+				express: [],
+				'default': {payment: 0, start: 1, postage: 0, plus: 1, postage_plus: 0, order: 1},
+				specials: []
+			};
+
+			// 指定快递公司
+			var $checkedExpress = $tbody.find('.checked-express span');
+			if($checkedExpress.length == 0){
+				return alert('请选择快递公司'), false;
+			}
+			$checkedExpress.each(function(ii){
+				template.express.push($checkedExpress.eq(ii).data('id'));
+			});
+
+			// 运费类型：重量/件数
+			template.type = $tbody.find('.js-freight_type').data('type');
+			if(data.type == -1){
+				data.type = template.type;
+			}
+
+			// 指定地区
+			var $freightList = $tbody.find('.freight-item');
+			for(var j=0; j<$freightList.length; j++){
+				var temp = {payment: 0, start: 1, postage: 0, plus: 1, postage_plus: 0, order: 1};
+				var $input = $freightList.eq(j).find('input');
+				for(var h=0; h<$input.length; h++){
+					var value = $input.eq(h).val(), field = $input.eq(h).data('field');
+					if(value == '' || isNaN(value) || value < 0){
+						if(field == 'payment'){
+							value = 0
+						}else{
+							$input.eq(h).focus();
+							return false;
+						}
+					}
+					
+					temp[field] = parseFloat(value);
+				}
+
+				if(j == 0){
+					template['default'] = temp;
+				}else{
+					temp.areas = $freightList.eq(j).find('.js-set-area').text().split('、');
+					template.specials.push(temp);
+				}
+			};
+
+			// 非指定地区是否允许下单
+			template['default'].order = $tbody.find('.js-order').data('order');
+			data.templates.push(template);
+		}
+
+		$.ajax({
+			url: '__ACTION__',
+			data: data,
+			type: 'post',
+			dataType: 'json',
+			success: function(){
+				if(window.history.length == 0){
+					window.location.href = '__URL__';
+				}else{
+					window.history.back();
+				}
+			}
+		});
+		return false;
+	});
+	
+	// 添加方案
+	$form.on('click', '.add-case,.delete-case,.js-order', function(){
+		var $this = $(this);
+		if($this.hasClass('add-case')){
+			add_case({$default})
+		}else if($this.hasClass('delete-case')){
+			$this.parents('tbody:first').remove();
+		}else{
+			var order = $this.data('order');
+			$this.data('order', order == 1 ? 0 : 1);
+			$this.html(order == 1 ? '禁单' : '允许');
+		}
+		return false;
+	});
+	
+	var list = {$list};
+	for(var i=0; i<list.length; i++){
+		add_case(list[i]);
+	}
+	$('#page_loading').fadeOut();
+});
+
+function add_case(data){
+	var $table = $('#table_case'), index = $table.children('.js-template-container').length;
+	if(index > 2){
+		alert('最多支持3种方案');
+		return;
+	}
+	
+	var html = ''+
+    '<tbody class="js-template-container">'+
+        '<tr style="background-color:#f8f8f8">'+
+            '<td colspan="7" class="text-left">'+
+                '<a href="javascript:;" class="checked-express ellipsis js-add-express" title="编辑指定快递">';
+                	for(var i=0; i<data.express.length; i++){
+                		html += '<span data-id="'+data.express[i]+'">'+expressList[data.express[i]].name+'</span>'
+                	}
+        html +='</a>'+
+         	   '<a href="javascript:;" role="button" class="pull-right add-case">+ 添加方案</a>'+
+        	   '<a href="javascript:;" role="button" class="pull-right delete-case">- 移除方案</a>'+
+            '</td>'+
+        '</tr>'+
+        '<tr>'+
+            '<th colspan="2" class="text-left">运送到</th>'+
+            '<th style="width:60px" title="请注意积分商品订单总额可能为0元">订单满(元)</th>'+
+            '<th style="width:80px"><a class="js-freight_type" data-type="'+data.type+'" href="javascript:;">'+(data.type == 1 ? '首件' : '首重(公斤)')+'</a></th>'+
+            '<th style="width:80px">首费(元)</th>'+
+            '<th style="width:80px">'+(data.type == 1 ? '续件' : '续重(公斤)')+'</th>'+
+            '<th style="width:80px">续费(元)</th>'+
+        '</tr>'+
+        '<tr class="freight-item">'+
+            '<td class="text-left">非指定地区</td>'+
+            '<td class="out-area"><a href="javascript:;" class="js-order" data-order="'+data.default.order+'">'+(data.default.order ? '允许' : '禁单')+'</a></td>'+
+            '<td>不限制</td>'+
+            '<td class="input"><input type="text" data-field="start" value="'+data.default.start+'"></td>'+
+            '<td class="input"><input type="text" data-field="postage" value="'+data.default.postage+'"></td>'+
+            '<td class="input"><input type="text" data-field="plus" value="'+data.default.plus+'"></td>'+
+            '<td class="input"><input type="text" data-field="postage_plus" value="'+data.default.postage_plus+'"></td>'+
+        '</tr>';
+        if(data.specials && data.specials.length > 0){
+        	for(var i=0; i<data.specials.length; i++){
+            	var special = data.specials[i];
+            	html += '<tr id="freight_item_" class="freight-item">'+
+                            '<td class="text-left js-set-area area-name">'+special.areas.join('、')+'</td>'+
+                            '<td style="width:30px;border-left:none;vertical-align: middle;"><a href="javascript:;" class="js-delete-area">删除</td>'+
+                            '<td class="input"><input type="text" data-field="payment" value="'+(special.payment > 0 ? special.payment : '')+'" placeholder="不限制"></td>'+
+                            '<td class="input"><input type="text" data-field="start" value="'+special.start+'"></td>'+
+                            '<td class="input"><input type="text" data-field="postage" value="'+special.postage+'"></td>'+
+                            '<td class="input"><input type="text" data-field="plus" value="'+special.plus+'"></td>'+
+                            '<td class="input"><input type="text" data-field="postage_plus" value="'+special.postage_plus+'"></td>'+
+                        '</tr>'
+            }
+        }
+html += '<tr style="background-color:#f8f8f8">'+
+            '<td colspan="7">'+
+                '<a href="javascript:;" class="js-set-area">+为指定地区设置运费</a>'+
+            '</td>'+
+        '</tr>'+
+        '<tr>'+
+            '<td colspan="7"></td>'+
+        '</tr>'+
+    '</tbody>';
+    
+	$table.append(html);
+}
+</script>

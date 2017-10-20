@@ -1,0 +1,104 @@
+<toolbar id="toolbar">
+	<form class="search-box">
+        <input type="text" name="login_id" placeholder="卖家主旺旺账号" style="width:150px">
+        <input type="text" name="kw" placeholder="商品ID或名称" style="width:100px">
+        <button type="button" data-name="search" class="btn btn-default" data-event-type="default">
+            <i class="icon-search"></i>
+        </button>
+	</form>
+</toolbar>
+
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-url="__ACTION__" data-toolbar="#toolbar" data-lazyload="true" data-page-size="20">
+	<thead>
+		<tr>
+			<th data-formatter="formatter_info">商品信息</th>
+			<th data-formatter="formatter_price" data-align="center">进/建/售</th>
+			<th data-width="95" data-field="login_id" data-formatter="formatter_wangwang">联系卖家</th>
+			<th data-width="85" data-field="last_sync" data-align="right">最后同步</th>
+			<th data-width="80" data-formatter="formatter_action" data-align="center">操作</th>
+		</tr>
+	</thead>
+</table>
+
+<style>
+.table .goods-image{display:inline-block;float:left}
+.table .goods-image img{width:64px; height:64px}
+.table .goods-info{margin-left: 10px;float:left}
+.table .goods-title{font-size:14px;}
+.table .label{margin-right:5px;}
+</style>
+<script>
+function formatter_info(val, row){
+	var html = '<a class="goods-image" target="_blank" href="https://detail.1688.com/offer/'+row.id+'.html"><img data-original="'+row.pic_url+'"></a>';
+	html += '<div class="goods-info">';
+	html += '<p class="goods-title"><a href="https://detail.1688.com/offer/'+row.id+'.html" target="_blank">'+row.subject+'</a></p>';
+	html += '<p><span class="label label-warning">'+row.relation+'</span>';
+	if(row.min_order_quantity > 1){
+		html += '<span class="color-gray">起订'+row.min_order_quantity+'</span>';
+	}
+	html += '<span class="color-gray">'+row.unit+'</span>';
+	if(row.status != 'published'){
+		html += '<span class="label label-important">不可上架</span>';
+	}
+	html += '</p></div>';
+	
+	return html;
+}
+
+function formatter_wangwang(val, row){
+	var login_id = encodeURI(val);
+	return '<a target="_blank" href="https://amos.alicdn.com/getcid.aw?v=3&uid='+login_id+'&site=cnalichn&groupid=0&s=1&charset=UTF-8">'+
+		   '<img border="0" src="https://amos.alicdn.com/realonline.aw?v=2&uid='+login_id+'&site=cntaobao&s=1&charset=utf-8" alt="点击这里给我发消息"/></a>'
+}
+
+function formatter_action(val, row){
+	var action = [];
+	action.push('<a class="js-alibaba" data-id="'+row.id+'">详情</a>');
+	if(!row.goods_id){
+		action.push('<a href="__MODULE__/goods/add?tao_id='+row.id+'">上架</a>');
+	}else{
+		action.push('<a href="__MODULE__/goods/edit?id='+row.goods_id+'">同步</a>');
+	}
+
+	return action.join(' - ');
+}
+
+function formatter_price(val, row){
+	return row.price;
+}
+
+$(function(){
+	var $toolbar = $('#toolbar'), $btnAuth = $toolbar.find('button[data-name="auth"]');
+	if($btnAuth.length > 0){
+		$btnAuth.before('<a class="btn btn-default" href="{$auth_url}"> 重新授权“<?php echo session('user.shop_name'); ?>”</a>');
+		$btnAuth.remove();
+	}
+	
+	var $table = $('#table');
+	$table.on('click', '.js-alibaba',function(){
+		var id = $(this).data('id');
+		$.get('__URL__/detail?tao_id='+id, function(html){
+			$('body').append(html);
+		});
+		return false;
+	});
+	
+	var $btnSync = $toolbar.find('button[data-name="sync"]');
+	<if condition="$can_sync">
+	$btnSync.on('click', function(){
+		$.ajax({
+			url: '__CONTROLLER__/sync',
+			type: 'post',
+			dataType: 'json',
+			success: function(){
+				$btnSync.attr('disabled', 'disabled');
+			}
+		});
+		return false;
+	});
+	<else/>
+	$btnSync.attr('disabled', 'disabled');
+	</if>
+});
+</script>

@@ -1,0 +1,69 @@
+<toolbar id="toolbar">
+<form class="search-box">
+	<select name="appid" style="margin-bottom: 0;width: auto;">
+        <foreach name="applist" item="item">
+        	<option value="{$item.appid}">{$item.name}</option>
+        </foreach>
+   </select>
+</form>
+</toolbar>
+
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-url="__URL__" data-toolbar="#toolbar">
+    <thead>
+		<tr>
+			<th data-width="40" data-checkbox="true"></th>
+			<th data-width="80" data-field="rule">规则</th>
+			<th data-width="250" data-field="keyword" data-formatter="formatterKeyword">关键词</th>
+			<th data-field="content" data-formatter="formatterContent">回复</th>
+		</tr>
+	</thead>
+</table>
+
+<style>
+.reply_type{width:65px;display:inline-block;color:#08c}
+</style>
+<script>
+function formatterKeyword(keywords, row, index){
+	var html = '';
+	for(var i=0; i<keywords.length; i++){
+		html += '<span class="label" style="margin-right:10px;'+(keywords[i].full_match == 0 ? 'border-left:1px solid red;' : '')+'">'+keywords[i].keyword+'</span>';
+	}
+	return html;
+}
+
+function formatterContent(contents, row, index){
+	var html = '';
+	for(var i=0; i<contents.length; i++){
+		html += '<div><span class="reply_type">' + (i+1) + '.';
+		switch(contents[i].type){
+		case 'news':
+			html += '图　　文</span> ' + contents[i]['content'][0].title;
+			break;
+		case 'senior':
+			html += '高级图文</span> ' + contents[i].title;
+			break;
+		case 'text':
+			html += '文　　本</span> ' + contents[i].content;
+			break;
+		case 'link':
+			html += '链　　接</span> ' + contents[i].content;
+			break;
+		case 'voice':
+			html += '语　　音</span> ' + contents[i].title;
+			break;
+		case 'video':
+			html += '视　　频</span> ' + contents[i].title;
+			break;
+		}
+		html += '</div>';
+	}
+	return html;
+}
+
+$(function(){
+	$('#toolbar select').on('change', function(){
+		return $('#toolbar form').trigger('submit'), false;
+	});
+});
+</script>

@@ -1,0 +1,82 @@
+<toolbar id="toolbar">
+	<form class="form-horizontal">
+		<input type="text" class="hidden" name="data[id]">
+		<div class="control-group span6">
+			<label class="control-label">姓名</label>
+			<div class="controls">
+				<input type="text" name="data[nick]" data-search="true" placeholder="最多8个字符" maxlength="8">
+			</div>
+		</div>
+		<div class="control-group span6">
+			<label class="control-label">登陆账号</label>
+			<div class="controls">
+				<input type="text" name="data[username]" data-search="true" placeholder="最多16个字符" maxlength="16">
+			</div>
+		</div>
+		<div class="control-group span6">
+			<label class="control-label">角色</label>
+			<div class="controls">
+				<select name="data[role]" data-search="true">
+					<option value="">全部</option>
+					<foreach name="role_list" item="item">
+					<option value="{$item.id}">{$item.name}</option>
+					</foreach>
+				</select>
+			</div>
+		</div>
+		<div class="control-group span6">
+			<label class="control-label">店铺</label>
+			<div class="controls">
+				<select name="data[shop_id]" data-search="true">
+					<option value="">全部</option>
+					<foreach name="shop" item="item">
+					<option value="{$item.id}">{$item.name}</option>
+					</foreach>
+				</select>
+			</div>
+		</div>
+	</form>
+</toolbar>
+
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-url="__URL__" data-toolbar="#toolbar" data-side-pagination="client">
+    <thead>
+		<tr>
+			<th data-width="40" data-align="center" data-checkbox="true"></th>
+			<th data-width="200" data-field="shop_name">店铺</th>
+			<th data-width="150" data-field="nick">姓名</th>
+			<th data-width="150" data-field="username">登陆账号</th>
+			<th data-width="100"  data-field="status" data-formatter="fomat_status">状态</th>
+			<th data-field="role_name">角色</th>
+		</tr>
+	</thead>
+</table>
+
+<script type="text/javascript">
+//格式化数据
+function fomat_status(val, row, index){
+	if(val == 1){
+		return '启用';
+	}else if(val == 0){
+		return '禁用';
+	}else{
+		return '未知';
+	}
+}
+
+$(function(){
+	$('#table').on('role', function(e, gridview, params){
+		if(gridview.currentRow == null){
+			alertMsg('请先选择要授权的用户');
+			return false;
+		}
+		params.data.id = gridview.currentRow.id;
+	}).on('password', function(e, gridview, params){
+		if(gridview.currentRow == null){
+			alertMsg('请先选择要修改密码的用户');
+			return false;
+		}
+		params.data.id = gridview.currentRow.id;
+	});
+});
+</script>

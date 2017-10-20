@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="推广员管理" />
+    <link rel="stylesheet" href="__CDN__/css/seller/keyshop.css?20170901">
+    <style>
+        i.id::before{content:"ID:";}
+        i.tel::before{content:"电话号:";}
+        i.inventor::before{content:"邀请方：";}
+        i.intime::before{content:"加入时间：";}
+        .order-log-container>ul>li .ware_box a.ware_thumb>img {
+            border-radius:35px;
+        }
+        .order-tab-container ul li{width:50%;}
+    </style>
+</head>
+<body>
+<div class="container" style="padding-top: 98px;">
+    <div class="content">
+        <div class="order-tab-container" id="order-tab-container">
+            <ul class="clearfix">
+                <li class="all_log active" href="#all_log" data-status="all">全部</li>
+                <li class="created_log" href="#created_log" data-status="created">加入时间</li>
+            </ul>
+        </div>
+        <div class="order_opeation clearfix">
+            <div class="search_goods_box">
+                <input type="text" value="{$search_title}" name="" placeholder="搜索输入ID、昵称或手机号" />
+                <a href="javascript:;" class="search_goods_btn"><i></i></a>
+            </div>
+        </div>
+        <div id="log-container">
+            <div class="order-log-container" id="all_log">
+                <ul class="js-list">
+
+                </ul>
+            </div>
+            <div class="order-log-container" id="created_log">
+                <ul class="js-list">
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" class="search_title" value="{$search_title}" />
+
+<script type="text/javascript">
+    /*下拉加载更多*/
+    require(['seller/agent_list']);
+    require(["jquery"], function($){
+        $('body').on('click','.order_opeation .search_goods_btn',function(){
+            var self = $(this);
+            var search_val = $.trim(self.siblings('input').val());
+            window.location.href = '/seller/agent/manager'+'?title=' + search_val;
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

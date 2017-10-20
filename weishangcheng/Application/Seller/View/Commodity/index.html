@@ -1,0 +1,934 @@
+<script type="text/plain">
+需要向页面传输字段说明：
+$search = array('title' => '搜索的关键字', 'status' => '选中哪个状态(如sales)');
+</script>
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <include file="_layout/mall.head.html" title="商品管理" />
+    <link rel="stylesheet" href="__CDN__/css/seller/keyshop.css?20171009">
+    <link rel="stylesheet" href="__CDN__/css/shop.homepage.css?20170901">
+</head>
+<!--分享二维码弹窗-->
+<div id="share_code_body">
+    <div class="share_code_body" style="background-color:transparent; width:auto !important; margin-top: 0px !important;">
+        <span class="close_icon" style="background:none;color:white;top:-40px;right:0%;font-size:25px;width:40px;height:40px;font-family:'宋体';text-align:center;line-height:40px;">×</span>
+        <?php if($iswx!=1){?>
+        <?php }?>
+        <img class="share_logo" src="{$qr_url}" style="width: auto;display:block;margin:0 auto;">
+        <!-- <img class="share_logo" src="{$qr_url}" alt="" style="display:block;margin:0 auto;width:80%;border-radius:8px;position:absolute;top:0px;left:10%;opacity:0;"> -->
+        <div class="share_code_btn_text" style="margin:0 auto;margin-top:10px;padding:10px 0px;text-align:center;color:white;background-color:#e4bc91;font-size:15px;border-radius:8px;">截图保存图片</div>
+        <?php if($iswx!=1){?>
+        <?php }?>
+    </div>
+</div>
+
+<body>
+    <div class="container">
+        <div class="content" style="padding-top:97px">
+            <div id="nav_status" class="tabber tabber-red tabber-n4 tabber-double-11 top-fix clearfix">
+                <a href="javascript:;" class="js-count-sales" data-status="sales">出售中({$top_count['sales']})</a>
+                <a href="javascript:;" class="js-count-sold" data-status="sold">已售罄({$top_count['sold']})</a>
+                <a href="javascript:;" class="js-count-shelf" data-status="shelf">已下架({$top_count['shelf']})</a>
+                <a href="javascript:;" data-status="all">全部商品</a>
+            </div>
+            <div class="goods_opeation clearfix">
+                <form id="searchForm" class="search_goods_box">
+                    <input class="js-kw" type="text" value="{$search.title}" name="title" placeholder="搜索商品标题" />
+                    <button type="submit" class="search_goods_btn">
+                        <i></i>
+                    </button>
+                </form>
+            </div>
+            <div class="all-log-container" style="padding-bottom: 120px;">
+                <div class="js-list seller-goods-list"></div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="promoters_set" value="{$card['promoters']}">
+    <!-- <div class="comission_unset_dailog" style="display:none;">
+    <div class="comisson_body">
+        <p>您还未设置推广员，请先在店铺中心 - 推广员中打开。</p>
+        <div>
+            <a class="to_open_comission" >去打开</a>
+            <a class="close_comission_dailog" href="javascript:void(0);">稍后设置</a>
+        </div>
+        <input class="good_id_input" type="hidden">
+    </div>
+</div> -->
+    <!--下架弹窗-->
+    <div class="offshelf_dialog" data-display="" data-id="">
+        <div class="offshelf_dialog_bg"></div>
+        <div class="offshelf_dialog_box">
+            <div class="offshelf_dialog_content">
+                <img src="/img/seller/offshelf.png" />
+                <p class="dialog_text_main">确认将该商品下架吗？</p>
+            </div>
+            <div class="offshelf_dialog_footer">
+                <a href="javascript:;" class="yes_btn footer_btn">确认</a>
+                <a href="javascript:;" class="no_btn footer_btn">取消</a>
+            </div>
+        </div>
+    </div>
+    <!--判断是不是 采源宝端-->
+    <input type="hidden" id="cyb" value="" />
+
+
+
+    <!--采源宝端弹窗-->
+    <style>
+        .cyb_fx_box {
+            width: 100%;
+            background: #fff;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 600;
+            display: none;
+            height: 100%;
+        }
+
+        .share_text_box {
+            width: 95%;
+            margin: 20px auto;
+            font-size: 14px;
+            color: #2C2C2C !important;
+            /*position: absolute;*/
+            /*top: 0px;
+	    left: 0px;*/
+            /*  z-index: 1000;*/
+        }
+
+        .textarea_border {
+            border: 1px solid #BABABA;
+        }
+
+        .share_text_box p {
+            font-size: 14px !important;
+            margin-bottom: 15px;
+        }
+
+        .textarea_border textarea {
+            width: 95%;
+            outline: none;
+            margin: 0 auto;
+            border: none;
+            display: block;
+            resize: none;
+            margin: 10px auto;
+            color: #2c2c2c !important;
+            overflow-y: auto;
+        }
+
+        .item_photo_container {
+            /*padding-left: 4%;
+	    padding-right: 4%;*/
+            margin: 0 auto;
+            background-color: white;
+            overflow-y: auto;
+            padding-bottom: 50px;
+            height: calc(100% - 276px);
+            /*  padding-bottom: 200px;*/
+        }
+
+        .item_photo_container ul {
+            width: 100%;
+            padding-top: 14px;
+            padding-bottom: 14px;
+        }
+
+        .item_photo_container ul li {
+            width: 25%;
+            height: 80px;
+            float: left;
+            display: table-row;
+            margin-bottom: 14px;
+            position: relative;
+        }
+
+        .item_photo_container ul li img {
+            display: block;
+            display: table-cell;
+            max-width: 90%;
+            max-height: 80px;
+            margin: 0 auto;
+        }
+
+        .item_photo_container ul li i {
+            cursor: pointer;
+            display: block;
+            position: absolute;
+            right: 8px;
+            top: 2px;
+            width: 20px;
+            height: 20px;
+            background-size: 100% 100%;
+            background: rgba(0, 0, 0, .6);
+            border-radius: 50%;
+            border: 1px solid #fff;
+        }
+
+        #share_submit {
+            width: 48%;
+            background: #e4bc91;
+            padding: 15px 0px;
+            text-align: center;
+            color: #fff;
+            font-size: 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #cancel_share {
+            width: 48%;
+            background: white;
+            padding: 15px 0px;
+            text-align: center;
+            color: #333;
+            font-size: 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 1px solid #e4bc91;
+        }
+
+        .sub_fix {
+            display: flex;
+            background-color: white;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            position: fixed;
+            bottom: 0px;
+            right: 0px;
+            box-sizing: border-box;
+            padding: 10px;
+        }
+
+        .dh_icon {
+            max-width: 70% !important;
+            position: relative;
+            top: .1rem;
+        }
+
+        .dh_on {
+            background: rgba(255, 115, 0, 1) !important;
+            border: none !important;
+        }
+
+        .batch_management {
+            width: 100%;
+            position: fixed;
+            bottom: 0px;
+            right: 0px;
+            z-index: 100;
+        }
+
+        .batch_on {
+            background-color: #fff;
+        }
+
+        .batch_management_box {
+            width: 92%;
+            height: 45px;
+            /* background: rgba(0, 0, 0, .5); */
+            margin: 10px auto;
+        }
+
+        .batch_management_left {
+            float: left;
+            line-height: 45px;
+            font-size:14px;
+        }
+        .batch_management_left span{
+            width: 20px;
+            height: 20px;
+            border: 1px solid #AFAFAF;
+            display: inline-block;
+            border-radius: 50%;
+            line-height: 45px;
+            margin-right: .6em;
+            position: relative;
+            top: .41rem;
+        }
+        .thumb_check{
+            width: 20px;
+            height: 20px;
+            border: 1px solid #AFAFAF;
+            display: inline-block;
+            border-radius: 50%;
+            position: absolute;
+            top: 3rem;
+            left: -.8rem;
+        }
+        .batch_management_right {
+            float: right;
+            line-height: 45px;
+        }
+        #batch_management_sale,
+        #batch_management_cancel,
+        #batch_management_delete{
+            border: 1px solid #D6D6D6;
+            border-radius: 3px;
+            padding: 0px 15px;
+            font-size: 14px;
+            height: 40px;
+            line-height: 40px;
+            color: #8F8F8F;
+        }
+       /* {
+            border: 1px solid #D6D6D6;
+            border-radius: 3px;
+            padding: 10px 15px;
+            font-size: 14px;
+            color: #8F8F8F;
+        } */
+        .icon_por{
+            width: 20px;
+            height: 20px;
+            position: relative;
+            top: .3rem;
+            left: -.3rem;
+        }
+        .leftDh{
+            transform: translate(20px);
+        }
+        .on_ck{
+            background: url("/img/seller/xz_ck.png") no-repeat;
+            background-size: cover;
+        }
+        .weui-mask {
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+        }
+        .weui-dialog {
+            position: fixed;
+            z-index: 5000;
+            width: 80%;
+            max-width: 300px;
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            background-color: #FFFFFF;
+            text-align: center;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .weui-dialog__bd {
+            padding: 0 1.6em 0.8em;
+            min-height: 40px;
+            font-size: 14px;
+            line-height: 2.5;
+            word-wrap: break-word;
+            word-break: break-all;
+            color: #000;
+        }
+        .weui-dialog__ft {
+            position: relative;
+            line-height: 48px;
+            font-size: 15px;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            overflow: hidden;
+        }
+        .weui-dialog__hd {
+            padding: 1.3em 1.6em 0.5em;
+        }
+        .weui-dialog__title {
+            font-weight: 400;
+            font-size: 18px;
+        }
+        .weui-dialog__btn {
+            display: block;
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            color: #ffffff;
+            text-decoration: none;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            position: relative;
+        }
+        .weui-dialog__btn_default {
+            color: #da8f3e;
+        }
+        @media(max-width:320px){
+            #batch_management_sale,
+            #batch_management_cancel,
+            #batch_management_delete{
+                font-size: 12px !important;
+            }
+        }
+    </style>
+    <!--分享弹窗-->
+    <div class="cyb_fx_box" type="0">
+        <div class="share_text_box">
+            <p class="color_#2C2C2C">分享文字</p>
+            <div class="textarea_border">
+                <textarea name="" rows="8" cols=""></textarea>
+            </div>
+            <div class="item_photo_container" id="item_photo_dc">
+                <ul class="tile__lists">
+
+                </ul>
+                <div style="clear: both;"></div>
+            </div>
+            <!--#e4bc91-->
+            <div class="sub_fix">
+                <div id="cancel_share">取消分享</div>
+                <div id="share_submit" onclick="share_method()">确认分享</div>
+            </div>
+        </div>
+    </div>
+    <!--/分享弹窗-->
+    <!-- 批量管理 -->
+    <div class="batch_management">
+        <div class="batch_management_box" style="display:none;">
+            <div class="batch_management_left">
+                <span list_k ="0"></span>全选
+            </div>
+            <div class="batch_management_right">
+                <button disabled id="batch_management_delete" href="javascript:void(0)" data-id="sc">
+                    <img class="icon_por" src="/img/seller/ljt1.png" alt="">
+                    <span display="2">删除</span>
+                </button>
+                <button disabled id="batch_management_sale" style="margin: 0 5px;" href="javascript:void(0)" data-id="xj">
+                    <img class="icon_por" src="" alt="">
+                    <span></span>
+                </button>
+                <button id="batch_management_cancel" href="javascript:void(0)" style="color:#8f8f8f !important;">
+                    取消
+                </button>
+            </div>
+        </div>
+        <a id="Submit_gl" class="btn btn-block" style="background-color:#da8f3e;color:white; width: 92%; margin: 20px auto; display: block; padding: 15px 10px;"
+            href="javascript:void(0)">批量管理</a>
+    </div>
+    <!-- /批量管理 -->
+    <!-- 批量下架弹窗 -->
+    <div class="js_dialog" id="iosDialog1" style="display:none">
+        <div class="weui-mask"></div>
+        <div class="weui-dialog">
+            <div class="weui-dialog__hd"><strong class="weui-dialog__title"><img style="width:50px; height:50px;" src="/img/seller/xj_icon_03.png" alt=""></strong></div>
+            <div class="weui-dialog__bd"></div>
+            <div class="weui-dialog__ft">
+                <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_default">取 消</a>
+                <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary" style="background: #da8f3e;">确 认</a>
+            </div>
+        </div>
+    </div>
+    <!-- /批量下架弹窗 -->
+</body>
+<script>
+    var bt_title;
+    require(['seller/my_commodity_list',"h5/pullrefresh"], function (view,pullfresh) {
+        var param = { status: '{$search.status}', title: '{$search.title}', size: 20 }, $container = $('.js-list'), $form = $('#searchForm');
+        if (!param.status) {
+            param.status = view.getActive('sales')
+        }
+        var doRefresh = function () {
+            view.doRefresh({
+                url: '__MODULE__/commodity',
+                data: param,
+                dataType: 'json',
+                cache: false,
+                // cacheKey: param.status,
+                container: $container
+            });
+        }
+        // 点击批量管理
+        $("#Submit_gl").on("click", function (e) {
+            var status = $("#nav_status a.active").attr("data-status");
+            if(status == "sales"){
+                $("#batch_management_sale").attr("data-id","xj");
+                $("#batch_management_delete img").attr("src","/img/seller/ljt1.png");
+                $("#batch_management_sale img").attr("src","/img/seller/down_xj1.png");
+                $("#batch_management_delete,#batch_management_sale").attr("disabled",true);
+                $("#batch_management_sale span").text("下架").attr("display","0").css("color","#8f8f8f");
+            }else if(status == "shelf"){
+                $("#batch_management_sale").attr("data-id","sj");
+                $("#batch_management_delete img").attr("src","/img/seller/ljt1.png");
+                $("#batch_management_sale img").attr("src","/img/seller/up_sj1.png");
+                $("#batch_management_delete,#batch_management_sale").attr("disabled",true);
+                $("#batch_management_sale span").text("上架").attr("display","1").css("color","#8f8f8f");
+            }
+            $(this).hide();
+            $(this).parent().addClass("batch_on");
+            if($(".goods-info span.on_ck").length == "0"){
+                $(".batch_management_left span").removeClass("on_ck").attr("list_k","0");
+            }
+            $(this).siblings(".batch_management_box").show();
+            $(".seller-goods-list .goods-info").animate({left:"20px"},300);
+            $(".thumb_check").show();
+        })
+        //点击单条多选
+        $("body").on("click",".thumb_check",function(e){
+            var list_k = $(this).attr("list_k");
+            var len = $(".thumb_check").length;
+            var cklen = $(".goods-info span.on_ck").length;
+            if(list_k == "0"){
+                if($("#batch_management_sale").attr("data-id") == "sj"){
+                    $(this).addClass("on_ck").attr("list_k","1");
+                    $("#batch_management_delete,#batch_management_sale").removeAttr("disabled");
+                    $("#batch_management_delete img").attr("src","/img/seller/ljt.png");
+                    $("#batch_management_sale img").attr("src","/img/seller/up_sj.png");
+                    return false;
+                }else{
+                    $(this).addClass("on_ck").attr("list_k","1");
+                    $("#batch_management_delete,#batch_management_sale").removeAttr("disabled");
+                    $("#batch_management_delete img").attr("src","/img/seller/ljt.png");
+                    $("#batch_management_sale img").attr("src","/img/seller/down_xj.png");
+                    return false;
+                }
+                // $(this).addClass("on_ck").attr("list_k","1");
+                // $("#batch_management_delete,#batch_management_sale").removeAttr("disabled");
+            }else{
+                if(cklen == 1){
+                    if($("#batch_management_sale").attr("data-id") == "sj"){
+                        $(this).removeClass("on_ck").attr("list_k","0");
+                        $(".batch_management_left span").removeClass("on_ck").attr("list_k","0");
+                        $("#batch_management_delete,#batch_management_sale").attr("disabled",true);
+                        $("#batch_management_delete img").attr("src","/img/seller/ljt1.png");
+                        $("#batch_management_sale img").attr("src","/img/seller/up_sj1.png");
+                        return false;
+                    }else{
+                        $(this).removeClass("on_ck").attr("list_k","0");
+                        $(".batch_management_left span").removeClass("on_ck").attr("list_k","0");
+                        $("#batch_management_delete,#batch_management_sale").attr("disabled",true);
+                        $("#batch_management_delete img").attr("src","/img/seller/ljt1.png");
+                        $("#batch_management_sale img").attr("src","/img/seller/down_xj1.png");
+                        return false;
+                    }
+                }else{
+                    if($("#batch_management_sale").attr("data-id") == "sj"){
+                        $(this).removeClass("on_ck").attr("list_k","0");
+                        return false;
+                    }else{
+                        $(this).removeClass("on_ck").attr("list_k","0");
+                        return false;
+                    }
+                }
+               
+                // $(this).removeClass("on_ck").attr("list_k","0");
+                // $("#batch_management_delete,#batch_management_sale").attr("disabled");
+            }
+           
+            // if(cklen == len){
+            //     $(".batch_management_left span").addClass("on_ck").attr("list_k","1");
+            // }else if(cklen == "0"){
+            //     $(".batch_management_left span").removeClass("on_ck").attr("list_k","0");
+            // }
+            return false;
+        })
+        //取消批量管理功能
+        $("#batch_management_cancel").on("click",function(){
+            $(".batch_management_box").hide();
+            $(".on_ck").attr("list_k","0").removeClass("on_ck");
+            $(".batch_management").removeClass("batch_on");
+            $("#Submit_gl").show();
+            $(".goods-info span.thumb_check").hide();
+            $(".seller-goods-list .goods-info").animate({left:"0px"},300);
+        })
+        //批量下架事件
+        $("#batch_management_sale,#batch_management_delete").on("click",function(){
+            var id = $(this).attr("id");
+            var display = $(this).find("span").attr("display");
+            var data_id = $(this).attr("data-id");
+            if(id == "batch_management_sale" && display == "0"){
+                $(".weui-dialog__btn_primary").addClass(data_id);
+                $(".weui-dialog__title img").attr("src","/img/seller/xj_icon_03.png");
+                $(".weui-dialog__bd").text("确定要将选中的商品下架?");
+                $("#iosDialog1").show();
+            }else if(id == "batch_management_delete" && display == "2"){
+                $(".weui-dialog__btn_primary").addClass(data_id);
+                $(".weui-dialog__title img").attr("src","/img/seller/sc_ljt_03.png");
+                $(".weui-dialog__bd").text("确定要删除选中的商品吗?");
+                $("#iosDialog1").show();
+            }else{
+                $(".weui-dialog__btn_primary").addClass(data_id);
+                $(".weui-dialog__title img").attr("src","/img/seller/sj_icon_03.png");
+                $(".weui-dialog__bd").text("确定要将选中的商品上架?");
+                $("#iosDialog1").show();
+            }
+           
+        })
+        //批量删除和下架上架的事件请求
+        $(".weui-dialog__btn_primary").on("click",function(){
+        var display = $("#batch_management_sale span").attr("display");
+            var that = $(this);
+            var idAyy = [];
+            if(that.is(".xj") || that.is(".sj")){
+                if($(".goods-info span.on_ck").length == "0" && display == "0"){
+                    $("#iosDialog1").hide();
+                    $(".weui-dialog__btn_primary").removeClass("xj sc");
+                    toast.show('至少选中一件商品才能使用批量下架功能');
+                    return false;
+                }else if($(".goods-info span.on_ck").length == "0" && display == "1"){
+                    $("#iosDialog1").hide();
+                    $(".weui-dialog__btn_primary").removeClass("xj sc");
+                    toast.show('至少选中一件商品才能使用批量上架功能');
+                    return false;
+                }
+                for(var i = 0; i < $(".goods-info span.on_ck").length; i++){
+                    idAyy.push($(".goods-info span.on_ck").parents(".goods-item").eq(i).attr("data-id"));
+                }
+                var id = idAyy.join(",");
+                $.ajax({
+                    type: "post",
+                    url: "/seller/commodity/toggleDisplay",
+                    data: {id: id,display:display},
+                    dataType: 'json',
+                    success: function (data) {
+                        $(".weui-dialog__btn_primary").removeClass("xj sc");
+                        $("#iosDialog1").hide();
+                        $('.js-count-sales').html("出售中(" + data.sales + ")");
+                        $('.js-count-sold').html("已售罄(" + data.sold + ")");
+                        $('.js-count-shelf').html("已下架(" + data.shelf + ")");
+                        pullfresh.doRefresh();
+                    }
+                });
+            }else{
+                if($(".goods-info span.on_ck").length == "0"){
+                    $("#iosDialog1").hide();
+                    $(".weui-dialog__btn_primary").removeClass("xj sc");
+                    toast.show('至少选中一件商品才能使用批量删除功能');
+                    return false;
+                }
+                for(var i = 0; i < $(".goods-info span.on_ck").length; i++){
+                    idAyy.push($(".goods-info span.on_ck").parents(".goods-item").eq(i).attr("data-id"));
+                }
+                var id = idAyy.join(",");
+                $.ajax({
+                    type: "post",
+                    url: "/seller/commodity/delete",
+                    data: {id: id},
+                    dataType: 'json',
+                    success: function (data) {
+                        $(".weui-dialog__btn_primary").removeClass("xj sc");
+                        $("#iosDialog1").hide();
+                        $('.js-count-sales').html("出售中(" + data.sales + ")");
+                        $('.js-count-sold').html("已售罄(" + data.sold + ")");
+                        $('.js-count-shelf').html("已下架(" + data.shelf + ")");
+                        pullfresh.doRefresh();
+                    }
+                });
+            }
+        })
+        //点击批量下架弹窗取消关闭
+        $(".weui-dialog__btn_default").on("click",function(){
+            if($(".weui-dialog__btn_primary").is(".xj")){
+                $(".weui-dialog__btn_primary").removeClass("xj")
+            }else{
+                $(".weui-dialog__btn_primary").removeClass("sc")
+            }
+            $(".weui-dialog__title img").attr("src","");
+            $(".weui-dialog__bd").text("");
+            $("#iosDialog1").hide();
+        })
+        //全选事件
+        $(".batch_management_left span").on("click",function(){
+            var list_k = $(this).attr("list_k");
+            if(list_k == "0"){
+                // var listimg =  $("img.icon_por").eq(0).attr("src");
+                // var listimg1 = $("#batch_management_sale img").attr("src")
+                if($("#batch_management_sale").attr("data-id") == "sj"){
+                    $(this).addClass("on_ck").attr("list_k","1");
+                    $(".thumb_check").addClass("on_ck").attr("list_k","1");
+                    $("#batch_management_delete,#batch_management_sale").removeAttr("disabled");
+                    $("#batch_management_delete img").attr("src","/img/seller/ljt.png");
+                    $("#batch_management_sale img").attr("src","/img/seller/up_sj.png");
+                    return false;
+                }else{
+                    $(this).addClass("on_ck").attr("list_k","1");
+                    $(".thumb_check").addClass("on_ck").attr("list_k","1");
+                    $("#batch_management_delete,#batch_management_sale").removeAttr("disabled");
+                    $("#batch_management_delete img").attr("src","/img/seller/ljt.png");
+                    $("#batch_management_sale img").attr("src","/img/seller/down_xj.png");
+                    return false;
+                }
+            }else{
+                if($("#batch_management_sale").attr("data-id") == "sj"){
+                    $(this).removeClass("on_ck").attr("list_k","0");
+                    $(".thumb_check").removeClass("on_ck").attr("list_k","0");
+                    $("#batch_management_delete,#batch_management_sale").attr("disabled",true);
+                    $("#batch_management_delete img").attr("src","/img/seller/ljt1.png");
+                    $("#batch_management_sale img").attr("src","/img/seller/up_sj1.png");
+                    return false;
+                }else{
+                    $(this).removeClass("on_ck").attr("list_k","0");
+                    $(".thumb_check").removeClass("on_ck").attr("list_k","0");
+                    $("#batch_management_delete,#batch_management_sale").attr("disabled",true);
+                    $("#batch_management_delete img").attr("src","/img/seller/ljt1.png");
+                    $("#batch_management_sale img").attr("src","/img/seller/down_xj1.png");
+                    return false;
+                }
+            }
+            return false;
+        })
+        //点击判断文字提示
+        // $("#nav_status a").click(function(){
+        //     var data_type =$(this).attr("data-status");
+        //     var list = $(".js-list").length;
+        //     if(data_type == "sold" && $(".seller-goods-list .goods-item").length == 0){
+        //         $(".list-finished").text(123);
+        //     }
+        // })
+        // 监听顶部选项卡改变后加载数据
+        $('#nav_status').on('click', 'a', function () {
+            var $this = $(this);
+            var status =  $this.attr("data-status");
+            listnum = 0;
+            if(status =="shelf"){
+                if($("#Submit_gl").is(":visible") != true){
+                    $(".batch_management").removeClass("batch_on");
+                    $(".batch_management_box").hide();
+                    $("#Submit_gl").show();
+                    $("#batch_management_sale img").attr("src","/img/seller/up_sj1.png");
+                    $("#batch_management_sale span").text("上架").attr("display","1").css("color","#8f8f8f");
+                }
+            }else if(status =="sales"){
+                if($("#Submit_gl").is(":visible") != true){
+                    $(".batch_management").removeClass("batch_on");
+                    $(".batch_management_box").hide();
+                    $("#Submit_gl").show();
+                    $("#batch_management_sale img").attr("src","/img/seller/down_xj1.png");
+                    $("#batch_management_sale span").text("下架").attr("display","0").css("color","#8f8f8f");
+                }
+               
+            }
+            if ($this.hasClass('active')) {
+                return false
+            }
+            $this.addClass('active').siblings().removeClass('active');
+            param.status = $this.data('status');
+
+            return doRefresh(), false;
+        }).find('a[data-status="' + param.status + '"]').trigger('click');
+
+        // 监听搜索
+        $form.on('submit', function () {
+            param.title = $(this).find('.js-kw').val();
+            return doRefresh(), false;
+        });
+        // 董超弹窗取消分享
+        $("#cancel_share").click(function () {
+            $(".textarea_border textarea").val("");
+            $(".item_photo_container ul li").remove();
+            $("div.cyb_fx_box").hide();
+        })
+
+        //关闭二维码
+        $('span.close_icon').on('click', function () {
+            $("#share_code_body").hide();
+            $('.share_logo').removeAttr("src");
+        })
+        //点击分享选中
+        require(["jquery"], function () {
+            $("body").on("click", ".item_photo_container ul li", function () {
+                var len = $(".dh_on").length;
+                console.log($(this).index())
+                if ($(this).index() == "0") {
+                    $(this).find("i").addClass("dh_on");
+                    return false;
+                } else if ($(this).find("i").is(".dh_on")) {
+                    $(this).find("i").removeClass("dh_on");
+                    return false;
+                } else {
+                    if (len > 8) {
+                        toast.show("只能选中9张图");
+                        return false;
+                    } else {
+                        $(this).find("i").addClass("dh_on");
+                    }
+                }
+
+            })
+        })
+
+        // //下载二维码
+        // $("#share_img").on('click',function(){
+        //     var img_road = $('.share_logo')[0].src;
+        //     $.ajax({
+        //         url:'/seller/index/downimg',
+        //         type:'post'
+        //         data:{road:img_road},
+        //         dataType:'json',
+        //         success:function(){
+
+        //         }
+        //     })
+        // });
+        //稍后设置佣金
+        $("a.close_comission_dailog").click(function () {
+            $("div.comission_unset_dailog").hide();
+        })
+        //去设置佣金
+        $("a.to_open_comission").click(function () {
+            var id = $("input.good_id_input").val();
+            window.location.href = "/seller/commision/promoters_set";
+        })
+
+        require(['alipan'], function (ali) {
+            //  	console.log();
+            if (ali.isAvaliable) {
+                $("#cyb").val(ali.isAvaliable); 
+                $("#share_code_body .share_code_btn_text").text("点击分享");
+                $("#share_code_body").click(function () {
+                    $(this).hide();
+                    ali.aliShare("", ['' + $('#share_code_body img.share_logo').eq(0).attr('src')]);
+                })
+                return false;
+            } else {
+                $("#cyb").val(ali.isAvaliable);
+                return false;
+            }
+        })
+
+
+    });
+    window.history.pushState("xxx", "xxx.html");
+    window.addEventListener("popstate", function () {
+        if ($(".cyb_fx_box").css("display") == 'none') {
+            window.location.href = "__MODULE__";
+        } else {
+            $(".cyb_fx_box").hide();
+        }
+    })
+
+</script>
+<!--
+<script>
+    // require(['seller/my_commodity_list']);
+    require(['jquery'],function($){
+        $('body').on('click','li.edit_good',function(){
+            var good_id = $(this).attr("data-id");
+            if($(".goods_off_shelf_box").attr("togget_id") == good_id){
+                $(".goods_off_shelf_box").toggle();
+                if($(".goods_off_shelf_box").is(":hidden")){
+                    $(this).find("span.checked_icon").toggleClass("checked",false);
+                }else{
+                    $(this).find("span.checked_icon").toggleClass("checked",true);
+                }
+            }else{
+                $("span.checked_icon").toggleClass("checked",false);
+                $(this).find("span.checked_icon").toggleClass("checked",true);
+                $(".goods_off_shelf_box").show();
+            }
+            $(".goods_off_shelf_box").attr("togget_id", good_id);
+            $(".goods_off_shelf_box").attr("data-title", $(this).attr('data-title'));
+            var edit_href = $(this).attr("data-href");
+            $("#edit_btn").attr("data-href", edit_href);
+            $(".reward").val($(this).attr('data-reward'));
+            $(".set_comission_dailog").hide();
+        });
+        $("#delete_btn").on('click',function(){
+            var good_id = $(".goods_off_shelf_box").attr("togget_id");
+            var good_title = $(".goods_off_shelf_box").attr("data-title");
+            if(confirm("确定要删除商品名为"+good_title+"的商品吗")){
+                 $.ajax({
+                     url: '/seller/commodity/delete',
+                     type: 'post',
+                     dataType: 'json',
+                     data: {id:good_id},
+                     success:function(){
+                         //删除成功
+                         toast.show("删除成功");
+                         window.location.reload(true);
+                     }
+                 })
+            }
+            return false;
+        })
+        //显示设置佣金设置弹窗事件
+        $("#comission_btn").on('click',function(){
+            if($(this).hasClass("disable_btn")){
+                toast.show("请在全店设置中打开佣金设置");
+                return false;
+            }
+            $('.set_comission_dailog').attr("togget_id",$(this).parents("div.goods_off_shelf_box").attr("togget_id"));
+            $('.set_comission_dailog').show();
+        })
+        //佣金设置弹窗保存按钮
+        $(".set_comission_dailog .sava_comission").click(function(){
+            var settlement_type = $('.settlement_type').val();
+            var agent_rate = $('.all_reward').val();
+            var comission = $(".reward").val();
+            var togget_id = $(".set_comission_dailog").attr("togget_id");
+            if(comission == ""){
+                toast.show("佣金不能为空");
+                return false;
+            }
+            if(isNaN(comission)){
+                toast.show("佣金必须为数字");
+                return false;
+            }
+            if(parseInt(comission)<0 || parseInt(comission)>50 || parseInt(comission)<=agent_rate){
+                toast.show("佣金必须为0~50之间,并且大于设置的全店佣金");
+                return false;
+            }
+            console.log({id: togget_id,comission:comission});
+            $.ajax({
+                url: '__MODULE__/commision/goods_save',
+                type: 'POST',
+                dataType: 'json',
+                data: {id: togget_id,comission:comission,settlement_type:settlement_type},
+                success:function(data){
+                    //成功
+                    toast.show("佣金设置成功");
+                }
+            });
+
+        })
+        //佣金设置弹窗关闭按钮
+        $(".set_comission_dailog .cancel_comission").click(function(){
+            $(".set_comission_dailog").hide();
+        })
+        //编辑商品跳转
+        $("#edit_btn").click(function(){
+            //页面跳转到商品编辑页
+            window.location.href = $(this).attr("data-href");
+        })
+//        分享按钮
+//        $("#share_btn").click(function(){
+//            console.log("分享弹窗");
+//        })
+
+        //        分享二维码事件
+        $('#to_share').on('click',function(){
+            var good_id = $(".goods_off_shelf_box").attr("togget_id");
+            $.ajax({
+                url: '__MODULE__/Qr/goods_qr',
+                type: 'post',
+                dataType: 'json',
+                data:{id:good_id},
+                success: function(data){
+                    $('.share_logo').attr('src', data);
+                    $('#share_code_body').fadeIn(300);
+                }
+            });
+        })
+        $('span.close_icon').on('click',function(){
+            $("#share_code_body").fadeOut(300);
+        })
+
+        //长按二维码
+        $(".qr_code_help_dailog_close").click(function(){
+            $('#qr_code_help_dailog').hide();
+        })
+        $('.trigger_share_dailog').click(function(){
+            $('#qr_code_help_dailog').show();
+            return false;
+        })
+    })
+</script>
+-->
+
+</html>

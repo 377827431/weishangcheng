@@ -1,0 +1,446 @@
+<link rel="stylesheet" href="/css/order_detail_new.css" />
+<div class="page-trade-order-detail">
+  <!-- 顶部状态 -->
+	<div class="step-region"></div>
+	<?php if( $ali_trade ) { ?>
+	<table class="content-region">
+		<tr>
+			<td class="info-region">
+				<h3>1688订单信息</h3>
+		  		<div class="dashed-line"></div>
+				<table class="info-table">
+				<tbody>
+					<foreach name="ali_trade" item="t">
+						<tr>
+							<switch name="t.status" >
+								<case value="success">
+									<th>1688订单：</th>
+									<td>{$t.out_tid}</td>
+								</case>
+								<case value="error">
+									<th>1688订单：</th>
+									<td>{$t.error_msg}</td>
+								</case>
+								<default />
+							</switch>
+							<th>联系卖家：</th>
+							<td>
+								<a target="_blank" href="https://amos.alicdn.com/getcid.aw?v=3&uid={$t.seller_nick|urlencode}&site=cnalichn&groupid=0&s=1&charset=UTF-8">
+									<img border="0" src="http://amos.alicdn.com/realonline.aw?v=2&uid={$t.seller_nick|urlencode}&site=cntaobao&s=1&charset=utf-8" alt="点击这里给我发消息" />
+								</a>
+							</td>
+						</tr>
+					</foreach>
+				</tbody>
+				</table>
+			</td>
+		</tr>
+	</table>
+	<?php } ?>
+  <table class="content-region">
+  	<tr>
+		<td class="info-region">
+		  <h3>买家信息</h3>
+		  <div class="dashed-line"></div>
+		  <table class="info-table">
+			<tbody>
+			  <tr>
+                <th>买家昵称：</th>
+                <td><a href="/member?mid={$data.buyer_id}" target="_blank">{$data.buyer_nick}</a></td>
+			  </tr>
+			  <tr>
+				<th>会员途径：</th>
+				<td>微信会员</td>
+			  </tr>
+			  <tr>
+				<th>关注状态：</th>
+				<td>{$data['buyer_subscribe'] ? '已' : '未'}关注微信公众号</td>
+			  </tr>
+			  <tr>
+				<th>支付方式：</th>
+				<td>{$data.pay_type_str}</td>
+			  </tr>
+			  <tr>
+				<th>支付总额：</th>
+				<td>{$payment}</td>
+			  </tr>
+			  <tr>
+				<th>配送方式：</th>
+				<td>{$data.shipping_type_str}</td>
+			  </tr>
+			  <notempty name="data['sign_time']">
+			  <tr>
+				<th>签收时间：</th>
+				<td>{$data.sign_time}</td>
+			  </tr>
+			  </notempty>
+			  <tr>
+				<th>收货信息：</th>
+				<td>
+					<div>{$data.receiver_name}, {$data.receiver_mobile}</div>
+					<div>{$data.receiver_province} {$data.receiver_city} {$data.receiver_county} {$data.receiver_detail}</div>
+				</td>
+			  </tr>
+			  <tr>
+				<th>买家留言：</th>
+				<td>{$data.buyer_remark}</td>
+			  </tr>
+			</tbody>
+		  </table>
+		</td>
+		<td class="state-region">
+		  <h3>订单信息</h3>
+		  <div class="dashed-line"></div>
+		  <table class="info-table">
+			<tbody >
+			  <th>订单状态：</th>
+			  <td>{$data.status_str}</td>
+			  <tr>
+			  	<th>系统提示：</th>
+				<td>{$data.status_desc}</td>
+			  </tr>
+			  <tr>
+				<th>订单编号：</th>
+				<td>{$data.tid}</td>
+			  </tr>
+			  <tr>
+				<th>下单时间：</th>
+				<td>{$data.created}</td>
+			  </tr>
+			  <tr>
+				<th>应付总额：</th>
+				<td>{$payment_desc}</td>
+			  </tr>
+			  <tr>
+				<th>支付时间：</th>
+				<td>{$data['pay_time']=='0000-00-00 00:00:00' ? '未支付' : $data.pay_time}</td>
+			  </tr>
+			  <notempty name="data['consign_time']">
+			  <tr>
+				<th>发货时间：</th>
+				<td>{$data.consign_time|default="0000-00-00 00:00:00"}</td>
+			  </tr>
+			  </notempty>
+			   <tr>
+				<th>卖家昵称：</th>
+				<td>{$data.seller_name}</td>
+			  </tr>
+			  <tr>
+				<th>卖家备注：</th>
+				<td><span class="js-seller-remark">{$data.seller_remark}</span> <a id="sellerRemark"><i class="icon-pencil"></i></a></td>
+			  </tr>
+			</tbody>
+		  </table>
+		  </td>
+		  <td class="refund">
+		  	<div style="position: absolute;top: 15px;left: 15px;right: 30px;">
+		  	  <h3>物流信息</h3>
+			  <div class="dashed-line"></div>
+			  <table class="info-table">
+			  	<foreach name="data['express']" item="express">
+			  	<tr>
+				  <th>{$express.name}：</th>
+				  <td>
+				  	<a href="http://www.kuaidi100.com/?nu={$express.no}" target="_blank">{$express.no}</a>
+				  </td>
+				 </tr>
+				 </foreach>
+			  </table>
+		  	</div>
+		  	<div style="position: absolute;top: 50%;left: 15px;right: 30px;">
+		  	  <if condition="$can_cancel eq 1">
+		  	  <a href="javascript:;" class="pull-right js-cancel-order" style="font-size:12px;color: #f89406;">取消订单</a>
+		      </if>
+			  <h3>售后信息</h3>
+			  <div class="dashed-line"></div>
+			  <div style="margin:10px 0 10px 10px;text-align:right">
+			  	<a href="javascript:;" data-tid="{$data.tid}" class="js-btn-cancel" style="color: #f89406;">{$data.refunded_desc}</a>
+			  </div>
+			  </div>
+		  </td>
+	  	</tr>
+	</table>
+  </div>
+	  
+ <div id="order_list">
+ 	<table class="ui-table-order">
+		<thead class="js-list-header-region tableFloatingHeaderOriginal" style="position: static; top: 0px; margin-top: 0px; left: 150px; z-index: 1; width: 849px;">
+			<tr class="widget-list-header">
+				<th colspan="2">商品</th>
+				<th style="width: 100px;">单价</th>
+				<th style="width: 100px;">数量(件)</th>
+				<th style="width: 100px;">调价金额</th>
+				<th style="width: 100px;">优惠(元)</th>
+				<th style="width: 100px;">小计(元)</th>
+				<th style="width: 100px;">上级收益</th>
+				<th style="width: 100px;">退款数量</th>
+				<th style="width: 100px;">退款金额</th>
+			</tr>
+		</thead>
+		<tbody class="widget-list-item">
+			<tr class="separation-row">
+				<td colspan="8"></td>
+			</tr>
+			<foreach name="data['orders']" item="item">
+			<tr class="content-row" data-oid="{$item.oid}">
+				<td class="image-cell"><img src="{$item.pic_url}"></td>
+				<td class="title-cell">
+					<p class="goods-title"><a href="/h5/goods?id={$item.goods_id}" target="_blank">{$item.title}</a></p>
+					<p>{$item.spec}</p>
+				</td>
+				<td>{$item['price']}</td>
+				<td>{$item.quantity}</td>
+				<td>{$item.adjust_fee}</td>
+				<td>{$item['payment']}</td>
+				<td>{$item.discount_fee}</td>
+				<td><a href="/member?mid={$item.tid}">{$item['commision']['total_diff']}</a>({$item['checkout']==1 ?'已结算' :'无结算'})</td>
+				<td>{$item['refund']['refund_quantity']}</td>
+				<td>{$item['refund']['refund_fee']}</td>
+			</tr>
+			</foreach>
+		</tbody>
+	</table>
+</div>
+
+<script type="text/javascript">
+var tid = '{$data.tid}';
+function refund(tid,callback, has_changed){
+	if(has_changed || $('#refund_container').length == 0){
+		$.get('__MODULE__/refund/detail?tid='+tid, function(html){
+			$('#refund_container').remove();
+			$('body').append('<div id="refund_container">'+html+'</div>');
+
+			var $container = $('#refund_container'), $modal = $container.find('.modal');
+			$modal.modal({keyboard: false}).on('hide', function(){
+				$container.remove();
+				if(has_changed){
+					callback();
+				}
+			});
+			ov.refund(tid, callback);
+		});
+		return;
+	}
+	
+	var $container = $('#refund_container'), $modal = $container.find('.modal');
+	
+	var $refundContainer = $container.find('.refund-list');
+	$container.find('.refund-table-header').css('margin-right', $refundContainer[0].offsetWidth - $refundContainer[0].clientWidth);
+	
+	var $script = $('#trade_refund_orders'),
+	orders = $script.html(),
+	order = {}, actions = [];
+	$script.remove();
+	orders = eval(orders);
+	// 必须控件
+	var $reason  = $modal.find('.js-reason'),
+	$refund_fee  = $modal.find('.js-refund_fee'),
+	$refund_post = $modal.find('.js-refund_post'),
+	$remark      = $modal.find('.js-remark'),
+	$sremark     = $modal.find('.js-refund_sremark'),
+	$images      = $modal.find('.js-images'),
+	$actions     = $modal.find('.js-action'),
+	$name        = $modal.find('.js-receiver_name'),
+	$mobile      = $modal.find('.js-receiver_mobile'),
+	$address     = $modal.find('.js-receiver_address'),
+	$type        = $modal.find('.js-refund_type'),
+	$expressNo   = $modal.find('.js-express_no'),
+	$refund_quantity = null;
+}
+$(function(){
+	//全选反选
+	$('body').on('click', '.all-checkbox', function(event){
+		$(this).closest('table').find('.item-checkbox').find('input[type="checkbox"]').trigger('click');
+	});
+	
+	var status = $('input[name="status"]').val();
+	if(status != 'cancel'){
+		init_state_css(status);
+	}
+	
+	// 退款
+	$('.js-btn-cancel').on('click', function(){
+		var tid = $(this).attr('data-tid');
+		 refund(tid);
+	});
+	
+	// 取消订单弹窗
+	$('.js-cancel-order').on('click', function(){
+		var $this = $(this);
+		var t = $this.data('popover');
+		if(t){
+			return false;
+		}
+		var content = '';
+		content += '<div class="text-center">';
+		content += '	<p>';
+		content += '		<select id="close_reason">';
+		content += '	        <option value="">请选择一个取消订单理由</option>';
+		content += '	        <option value="buyer_cancel">买家主动取消(-1%)</option>';
+		content += '	        <option value="no_stock">已经缺货无法交易</option>';
+		content += '	        <option value="10">无法联系上买家</option>';
+		content += '	        <option value="11">买家误拍或重拍了</option>';
+		content += '	        <option value="12">买家无诚意完成交易</option>';
+		content += '	    </select>';
+		content += '	</p>';
+		content += '	<button class="btn btn-primary btn-mini js-submit-cancel" onclick="cancel_order(\''+tid+'\', this)">提交</button>';
+		content += '</div>';
+		
+		$this.popover({
+			title: '取消订单： ' + tid,
+			placement: 'top',
+			html: true,
+			content: content,
+		}).popover('show');
+			
+		return false;
+	});
+	
+	$('#sellerRemark').on('click', function(){
+		var remark = $(this).siblings('.js-seller-remark').text();
+		$('#sellerRemarkModal').modal('show').find('.js-remark').val(remark);
+		return false;
+	});
+	
+	$('#sellerRemarkModal .btn-primary').on('click', function(){
+		 var $this = $(this);
+		 var remark = $this.prevAll('.js-remark').val();
+		 $.ajax({
+			 url: '__URL__/remark',
+			 type: 'post',
+			 dataType: 'json',
+			 data: {tid: tid, remark: remark},
+			 success: function(){
+				 $('#sellerRemark').siblings('.js-seller-remark').html(remark);
+			 }
+		 });
+	 });
+})
+
+// 取消订单
+function cancel_order(tid, ele){
+	var reason = $('#close_reason').val();
+	if(reason == ""){
+		alertMsg('请选择取消原因');
+		return;
+	}
+	
+	$(ele).parents('.popover').remove();
+	
+	$.ajax({
+		url: '__MODULE__/order/cancel',
+		type: 'post',
+		data: {tid: tid, reason: reason},
+		dataType: 'json',
+		success: function(){
+			window.location.reload();
+		}
+	});
+}
+
+//切换发货方式
+function changeExpressType(type){
+	var $express_type = type;
+	if($express_type == 'express'){
+		$(".express_info").show().find('select, input').removeClass('ignore');
+	}else{
+		$(".express_info").hide().find('select, input').addClass('ignore');
+	}
+}
+
+//顶部logo状态(订单未关闭)
+function init_state_css(state){
+	var html='<ul class="ui-step ui-step-4">'+
+			  '<li>'+
+				'<div class="ui-step-title">买家下单</div>'+
+				'<div class="ui-step-number">1</div>'+
+			  '</li>'+
+			  '<li>'+
+			    '<div style="position: absolute;left: -18px;top: 45px;color: #aaa;">待付款</div>'+
+				'<div class="ui-step-title"> 买家付款</div>'+
+				'<div class="ui-step-number">2</div>'+
+			  '</li>'+
+			  '<li>'+
+			    '<div style="position: absolute;left: -18px;top: 45px;color: #aaa;">待发货</div>'+
+				'<div class="ui-step-title">卖家发货</div>'+
+				'<div class="ui-step-number">3</div>'+
+			  '</li>'+
+			  '<li>'+
+			    '<div style="position: absolute;left: -18px;top: 45px;color: #aaa;">待签收</div>'+
+				'<div class="ui-step-title">交易完成</div>'+
+				'<div class="ui-step-number">4</div>'+
+			  '</li>'+
+			'</ul>';
+	$('.step-region').append(html);
+	$('.ui-step-4 li').eq(0).addClass('ui-step-done');
+	
+	//添加下单时间div
+	var html_create = '<div class="ui-step-meta">{$data.created}</div>';
+	var html_pay = '<div class="ui-step-meta">{$data.pay_time}</div>';
+	var html_send = '<div class="ui-step-meta">{$data.consign_time}</div>';
+	var html_sign = '<div class="ui-step-meta">{$data.sign_time}</div>';
+	
+	$('.ui-step-4 li').eq(0).append(html_create);
+	if('{$data.pay_time}' != '' && '{$data.pay_time}' != '0000-00-00 00:00:00'){
+		$('.ui-step-4 li').eq(1).addClass('ui-step-done');
+		$('.ui-step-4 li').eq(1).append(html_pay);
+	}
+	
+	if('{$data.consign_time}' != ''){
+		$('.ui-step-4 li').eq(2).addClass('ui-step-done');
+		$('.ui-step-4 li').eq(2).append(html_send);
+	}
+	
+	if('{$data.status}' == 'success'){
+		$('.ui-step-4 li').eq(3).addClass('ui-step-done');
+		$('.ui-step-4 li').eq(3).append(html_sign);
+	}
+}
+</script>
+
+<style>
+.ui-table-order{width:100%;font-size:12px;text-align:left;margin-bottom:0}
+.ui-table-order .separation-row{border:none;height:10px}
+.ui-table-order .separation-row td{padding:0}
+.ui-table-order .header-row{background:#fff;height:30px}
+.ui-table-order tr{border:1px solid #f2f2f2}
+.ui-table-order tr.widget-list-header{border-color:#e7e7eb}
+.ui-table-order .header-row td{padding:5px 10px}
+.ui-table-order th,.ui-table-order td{padding:10px;vertical-align:top;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
+.ui-table-order .header-row td{padding:5px 10px}
+.ui-table-order .remark-row.buyer-msg{background:#FDEEEE;color:#ED5050}
+.ui-table-order .remark-row.buyer-msg td, .ui-table-order .remark-row.seller-msg td{padding:5px 10px}
+.ui-table-order .content-row .image-cell{width:80px;text-align:center;}
+.ui-table-order .content-row .image-cell img{width:60px; height:60px;}
+.ui-table-order .title-cell .goods-title{max-height:40px;overflow:hidden;line-height:20px}
+.ui-table-order .price-cell,.ui-table-order .number-cell{text-align:right}
+.ui-table-order .price-cell{width:130px}
+.ui-table-order p{margin:0}
+.ui-table-order th, .content-row, .seller-msg{background-color:#fff}
+.send-modal{}
+.send-modal .control-label{width: 80px; text-align: left;}
+.send-modal .controls{margin-left: 80px;}
+.send-modal input[disabled]{border: none;background-color: #fff;box-shadow: none;padding-top: 6px;}
+.send-modal .control-group{margin-bottom: 0px;}
+.send-modal form{margin:0}
+.send-modal table{ margin-bottom: 10px; border-bottom: 1px solid #ddd;}
+/*弹窗中表格的样式*/
+.order-price-table {margin-bottom:0;}
+.order-price-table thead tr>th {background-color: #f5f5f5;}
+.c-gray{color:#999;}
+.final p{margin:0;}
+.express-row{background-color:#fff;}
+.express-row td{padding: 5px 10px;}
+.express-row .express_name{display:inline-block;width: 90px;}
+.express-row .express_no{display:inline-block;}
+</style>
+<div id="sellerRemarkModal" class="modal hide fade modal-middle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">卖家备注</h3>
+  </div>
+  <div class="modal-body text-center">
+   	<textarea class="js-remark" placeholder="最多可输入256个字符" maxlength="256" style="width: 507px; margin: 0px 0px 10px; height: 123px;"></textarea>
+   	<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true" style="width: 150px;">保存</button>
+  </div>
+</div>

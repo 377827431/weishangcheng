@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<include file="_layout/mall.head.html" />
+</head>
+<body class="body-fixed-bottom">
+	<div class="container">
+		<div class="content">
+			<div class="content-body">
+				<notempty name="banners">
+				<div class="scale_wh scale_4_3">
+			         <div class="scale_content">
+			         	<div class="js-banner swiper-container">
+							<div class="swiper-wrapper">
+								<foreach name="banners" item="item">
+								<div class="swiper-slide"><a href="{$item.url|default='javascript:;'}"><img src="{$item.img_url}"></a></div>
+								</foreach>
+					  		</div>
+						</div>
+			         </div>
+		      	</div>
+				</notempty>
+				<include file="_layout/mall.news.html" />
+				<!--商品列表-->
+				<section class="js-goods-container">
+					<div class="js-sort tabber tabber-n2 tabber-double-11 clearfix">
+						<a href="javascript:;" data-status="doing" class="active">正在抢购</a>
+					    <a href="javascript:;" data-status="waiting">即将开抢</a>
+					</div>
+                    <div class="batch-header"><div class="batch-title">限时限量 付邮费即可得</div><div class="batch-countdown"></div></div>
+                    <div>
+                        <div id="goods-list-doing" class="sc-goods-list sc-groupon-list">
+                            <div class="empty-list list-finished"><p class="font-size-12">正在加载中...</p></div>
+                        </div>
+                        <div id="goods-list-waiting" class="sc-goods-list sc-groupon-list" style="display:none">
+                            <div class="empty-list list-finished"><p class="font-size-12">正在加载中...</p></div>
+                        </div>
+                    </div>
+                    <div class="x-pullfresh-more"></div>
+				</section>
+			</div>
+		</div>
+		<include file="_layout/mall.copyright.html" />
+        <include file="_layout/mall.footer.html" />
+	</div>
+	<script type="text/javascript">
+	require(["buyer/goods_list_view", "buyer/search"], function(glv, searchbar){
+		var locationId = glv.locationId,
+			$sortList = $(".js-sort"),
+    		active = sessionStorage.getItem(locationId),
+    		size = 38;
+		if(!active) active = $sortList.find('.active').data('status');
+		if(!active) active = "doing";
+		
+		$sortList.on("click", "a", function(){
+			var $this = $(this), options = $this.data('pullrefresh'), status = $this.data("status"),
+			$container = $("#goods-list-"+status);
+			$this.addClass("active").siblings().removeClass("active");
+			$container.show().siblings().hide();
+			sessionStorage.setItem(locationId, status);
+			
+			if(!options){
+				var data = $.extend(0, searchbar.data, {status: status, size: size});
+				data.tag_id = 102;
+				options = {
+					url: "__MODULE__/search",
+					data: data,
+					cache: true,
+					container: $container,
+					template: 'progress'
+				}
+			}
+			glv.init(options);
+			$this.data('pullrefresh', options);
+			return false;
+		}).find("a[data-status='"+active+"']").trigger('click');
+		
+		// 固定顶部排序
+	    var fixedTop = $sortList.offset().top - $sortList.height() * 2;
+	    var fixed = false;
+	    window.addEventListener("scroll", function(){
+	        if(document.body.scrollTop >= fixedTop){
+	            if(!fixed){
+	                fixed = true;
+	                $sortList.css({position: "fixed", top: "44px"});
+	            }
+	        }else if(fixed){
+	            fixed = false;
+	            $sortList.css({position: ""});
+	        }
+	    }, false);
+	});
+
+	<if condition="count($banners) gt 1">
+	require(["swiper"], function(){
+		var mySwiper = new Swiper(".js-banner",{
+			autoplay : 5000,
+			loop : true,
+			autoplayDisableOnInteraction : false
+		});
+	});
+	</if>
+</script>
+</body>
+</html>

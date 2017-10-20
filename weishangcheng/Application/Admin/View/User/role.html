@@ -1,0 +1,20 @@
+<form method="post" action="__ACTION__" data-submit="ajax" data-validate="true" class="form-horizontal modal modal-small hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3>授权</h3>
+  </div>
+  <div class="modal-body role-list">
+    <input type="text" class="hidden" name="user_id" value="{$user_id}">
+    <foreach name="role_list" item="role">
+    <label class="checkbox inline"><input name="role_id[]" type="checkbox" value="{$role.id}" {:in_array($role['id'], $my_role) ? ' checked' : ''} />{$role.name}</label>
+    </foreach>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    <button type="submit" class="btn btn-primary" aria-hidden="true">保存</button>
+  </div>
+  <style>
+   .role-list .checkbox{width:100px}
+   .role-list .radio.inline+.radio.inline, .checkbox.inline+.checkbox.inline{margin-left:0}
+  </style>
+</form>

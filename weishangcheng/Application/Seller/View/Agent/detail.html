@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <include file="_layout/mall.head.html" title="推广员管理" />
+    <link rel="stylesheet" href="__CDN__/css/seller/style.css">
+</head>
+<body>
+<div id="bgbox">
+    <div id="facebox">
+        <img src="{$data['head_img']}" id="face">
+    </div>
+    <span id="writing">{$data['name']}</span>
+    <div id="textbox">
+        <span  id="idbox">{$data['id']}</span>
+    </div>
+    <span id="writingbox">加入时间：{$data['created']}</span>
+</div>
+<a href="#" class="linkbox">
+    <div class="pobox">
+        <div class="spacebox">
+            <img src="/img/seller/package.jpg" class="imgbox">
+            <span class="project">商品</span>
+        </div>
+        <span class="arrow"></span>
+    </div>
+</a>
+
+<div class="inbox">
+    <span class="scanf">累计交易金额：（元）</span>
+    <span class="rednum">{$data['sum']}</span>
+</div>
+<div class="inbox">
+    <span class="scanf">累计成交笔数：（笔）</span>
+    <span class="rednum">{$data['num']}</span>
+</div>
+
+<a href="#" class="linkbox">
+    <div class="pobox">
+        <div class="spacebox">
+            <img src="/img/seller/money.jpg" class="imgbox">
+            <span class="project">佣金</span>
+        </div>
+        <span class="arrow"></span>
+    </div>
+</a>
+<div class="inbox">
+    <span class="scanf">推广佣金：（元）</span>
+    <span class="orangenum">{$data['reward2']}</span>
+</div>
+<div class="inbox">
+    <span class="scanf">奖励佣金：（元）</span>
+    <span class="orangenum">{$data['reward1']}</span>
+</div>
+
+<a href="#" class="linkbox">
+    <div class="pobox">
+        <div class="spacebox">
+            <img src="/img/seller/people.jpg" class="imgbox">
+            <span class="project">招募</span>
+        </div>
+        <span class="arrow"></span>
+    </div>
+</a>
+<div class="inbox">
+    <span class="scanf">直接招募：（人）</span>
+    <span class="greennum">{$data['p_one']}</span>
+</div>
+<div class="inbox">
+    <span class="scanf">间接招募：（人）</span>
+    <span class="greennum">{$data['p_two']}</span>
+</div>
+<div class="inbox">
+    <span class="scanf">招募奖励：（元）</span>
+    <span class="greennum">{$data['reward2']}</span>
+</div>
+<div class="buttonbox" style="cursor:pointer;">
+    删&thinsp;除
+</div>
+<script>
+    require(["jquery"], function($){
+        $("div.buttonbox").click(function(){
+            var id = $("#idbox").text();
+             $.ajax({
+                 url:"/seller/agent/delete",
+                 type:'post',
+                 data:{"id":id},
+                 dataType:"json",
+                 success:function(data){
+                     window.location.href="#";
+                 }
+             });
+        })
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<form method="post" action="__ACTION__" data-validate="true" data-continue="true" data-submit="ajax" class="form-horizontal">
+  <input type="hidden" name="id" value="{$data.id}">
+  <div class="form-group">
+	  <div class="form-item">
+		  <div class="control-group" >
+		    <label class="control-label must">登录账号</label>
+		    <div class="controls">
+		      <input class="required" type="text" name="username" maxlength="15" value="{$data.username}" placeholder="最多8位数字" {$data['id'] ? ' disabled="disabled"' : ''}>
+		    </div>
+		  </div>
+	  	  
+	  	  <div class="control-group">
+		    <label class="control-label must">证件姓名</label>
+		    <div class="controls">
+		      <input type="text" name="card_name" required="required" value="{$data.card_name}" maxlength="13" placeholder="请输入真实姓名" {$data['id'] ? ' disabled="disabled"' : ''}>
+		    </div>
+	  	  </div>
+	  	  <div class="control-group">
+		    <label class="control-label must">身份证号</label>
+		    <div class="controls">
+		      <input type="text" name="card_no" required="required" value="{$data.card_no}" maxlength="13" placeholder="请输入18位身份证号" {$data['id'] ? ' disabled="disabled"' : ''}>
+		    </div>
+	  	  </div>
+		  <div class="control-group">
+		    <label class="control-label">店铺id</label>
+		    <div class="controls">
+		      <input type="text" name="shop_id"  value="{$data.shop_id}" placeholder="请输入审核人昵称" {$data['id'] ? ' disabled="disabled"' : ''}>
+		    </div>
+		  </div>
+	  </div>
+	  
+	  <div class="form-item">
+	  	  <div class="control-group">
+		  	<label class="control-label must">审核状态</label>
+		    <div class="controls">
+			    <select name="status" id="status" class="required" data-selected="{$data.status}">
+					<option value="0" {$data['status'] == 0 ? ' selected="selected"' : ''}>待审核</option>
+					<option value="1"{$data['status'] == 1 ? ' selected="selected"' : ''}>通过</option>
+					<option value="2"{$data['status'] == 2 ? ' selected="selected"' : ''}>未通过</option>
+				</select>
+		    </div>
+		  </div>
+		  <div class="control-group">
+		  	<label class="control-label">身份证图片</label>
+		  	<div class="controls">
+				<input class="hide" type="text" name="card_pic" readonly="readonly" data-msg-required="请上传logo" >
+				<img id="card" src="{$data.card_pic}" class="img-polaroid btn-up" alt="logo" style="width: 128px; height: 128px;" >
+			</div>
+		  </div>
+	  </div>
+  </div>
+	<div class="form-actions">
+	  <button type="submit" class="btn btn-primary">保存</button>
+	  <button type="button" class="btn btn-back">返回</button>
+	</div>
+</form>
+<script src="/js/address.js"></script>
+<script type="text/javascript">
+Address.bind("#province_id");
+</script>
+<script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="/ueditor/ueditor.all.min.js"></script>
+<div style="display: none;" id="editor" class="edui-default"></div>
+<script>
+$(function(){
+	var editor = UE.getEditor('editor',{isShow: false})
+	$('#card').on('click', function(){
+		var $img = $(this);
+		var $input_url = $img.prev();
+		editor.removeListener('beforeInsertImage');
+		editor.addListener('beforeInsertImage', function (t, list) {
+			$input_url.val(list[0]['src']);
+			$img.attr('src', list[0]['src']);
+        });
+		
+		editor.getDialog("insertimage").open();
+	});
+});
+</script>

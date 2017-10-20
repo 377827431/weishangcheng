@@ -1,0 +1,298 @@
+﻿<div id="commisionForm" class="modal hide fade form-horizontal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>设置商品佣金</h3>
+    </div>
+    <div class="modal-body">
+        <style>
+        .modal-body{padding:0}
+        .commision{border:none;margin-bottom:0}
+        .commision th{text-align:center;background-color:#eee}
+        .table-striped.commision > tbody > tr > td{background-color:#fff}
+        .commision .add,.commision .remove{width:16px;height:16px;line-height:16px;display:inline-block;text-align:center;border:2px solid #08c;border-radius:50%}
+        .commision .agent-select{}
+        .commision .agent-money{width:43px;min-width:50px;max-width:50px}
+        .commision .agent-money input{text-align:center}
+        .commision .td-action{text-align:center;vertical-align:middle;width:43px;min-width:50px;max-width:50px}
+        .commision  .radio.inline,.checkbox.inline{padding-top:0}
+        </style>
+        <div id="commision-table-thead" style="background-color: #eee;">
+            <table class="table table-striped table-bordered input-table commision">
+                <thead>
+                    <tr>
+                        <th colspan="2">如果下单人为</th>
+                        <th colspan="2">上一级推广佣金</th>
+                        <th colspan="2">上二级推广佣金</th>
+                        <th style="width:50px">操作</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div id="commision-table-tbody" style="max-height:150px;overflow-y:auto;border-bottom: 1px solid #ddd;">
+            <table class="table table-striped table-bordered input-table commision">
+                <tbody id="agentItems"></tbody>
+            </table>
+        </div>
+        <div id="commision-table-tfoot">
+            <table class="table table-striped table-bordered input-table commision">
+                <tbody>
+                    <tr>
+                        <td colspan="7" style="text-align:center"><a id="addItem" href="javascript:;">添加</a></td>
+                    </tr>
+                </tbody>
+                <tbody>
+                    <tr>
+                        <td>佣金提成方式</td>
+                        <td colspan="6">
+                            <label class="radio inline"><input type="radio" name="reward_type" value="0" class="js-reward_type"{$data['reward_type']==0 ? 'checked="checked"' : ''} /> 按成交额百分比</label>
+                            <label class="radio inline"><input type="radio" name="reward_type" value="1" class="js-reward_type"{$data['reward_type']==1 ? 'checked="checked"' : ''} /> 每成交1件提n元</label>
+                            <label class="radio inline"><input type="radio" name="reward_type" value="-1" class="js-reward_type"{$data['reward_type']==-1 ? 'checked="checked"' : ''} /> 按会员卡百分比</label>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody>
+                    <tr>
+                        <td>佣金到账时间</td>
+                        <td colspan="6" class="input">
+                            <select id="settlement_type">
+                                <foreach name="settlement_type" key="stid" item="item">
+                                    <option value="{$stid}"{$data['settlement_type']==$stid ? 'selected="selected"' : ''}>{$item['title']}</option>
+                                </foreach>
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <script>
+            var $modal = $('#commisionForm');
+            $modal.modal({ keyboard: false }).on('hidden', function () {
+                $modal.remove();
+            });
+
+            var agent_list = {$agent_list};
+            var t = {
+                $items: $('#agentItems'),
+                select: '',
+                init: function(list){
+                    for (var i=0;i<agent_list.length; i++) {
+                        t.select += '<option value="' + agent_list[i].id + '">' + agent_list[i].title + '</option>';
+                    }
+
+                    for(var bid in list){
+                        t.appendBuyer();
+                        var $tr = t.$items.children(':last');
+                        $tr.attr('data-id', bid);
+                        $tr.find('.js-buyer').val(bid);
+
+                        var btnAdd = $tr.find('.js-add-parent')[0];
+                        for(var i=0; i<list[bid].length; i++){
+                            var items = list[bid][i], $row = null;
+
+                            if(i == 0){
+                                $row = $tr
+                            }else{
+                                t.appendCondition(btnAdd);
+                                $row = t.$items.children(':last');
+                            }
+
+                            for(var bi in items){
+                                var data = bi.split('_'), p = data[0];
+                                $row.find('.js-p'+p+'-id').val(data[1]);
+                                $row.find('.js-p'+p+'-val').val(items[bi]);
+                            }
+                        }
+                    }
+
+                },
+                getExistsAgent: function(){
+                    var $children = t.$items.children(), exists = [];
+                    $children.each(function (i) {
+                        exists.push($children.eq(i).attr('data-id'));
+                    });
+                    return exists;
+                },
+                // 重新计算头部大小
+                resetTable: function(){
+                    var $thead = $('#commision-table-thead'), $tbody = $('#commision-table-tbody'), $tfoot = $('#commision-table-tfoot');
+                    var $td = $tbody.find('tr:eq(0)').children(), scrollWidth = $tbody[0].offsetWidth - $tbody[0].scrollWidth;
+                    var $th = $thead.find('th');
+                    $th.eq(0).css('width', $td.eq(0).outerWidth() + $td.eq(1).outerWidth());
+                    $th.eq(1).css('width', $td.eq(2).outerWidth() + $td.eq(3).outerWidth());
+                    $th.eq(2).css('width', $td.eq(4).outerWidth() + $td.eq(5).outerWidth());
+                    $th.eq(3).css('width', $td.eq(6).outerWidth());
+
+                    $thead.css('padding-right', scrollWidth);
+                },
+                appendBuyer: function(){
+                    var exists = t.getExistsAgent(t.$items);
+
+                    var xiadanren = '', first = '', id='';
+                    if (exists.indexOf("0") == -1) {
+                        xiadanren += '<option value="0">游客</option>';
+                        first = "0";
+                    }
+                    for (var i=0;i<agent_list.length; i++) {
+                        id = agent_list[i].id.toString();
+                        if (exists.indexOf(id) == -1) {
+                            xiadanren += '<option value="' + agent_list[i].id + '">' + agent_list[i].title + '</option>';
+                            if (first == '') {
+                                first = id;
+                            }
+                        }
+                    }
+                    if (xiadanren == '') {
+                        return false
+                    }
+
+                    html = '<tr data-id="' + first + '">' +
+                                '<td rowspan="1" class="input agent-select"><select class="js-buyer">' + xiadanren + '</select></td>' +
+                                '<td class="td-action"><a class="add js-add-parent">+</a></td>' +
+                                '<td class="input agent-select"><select class="js-p1-id">' + t.select + '</select></td>' +
+                                '<td class="input agent-money"><input type="text" class="js-p1-val" placeholder="佣金" /></td>' +
+                                '<td class="input agent-select"><select class="js-p2-id">' + t.select + '</select></td>' +
+                                '<td class="input agent-money"><input type="text" class="js-p2-val" placeholder="佣金" /></td>' +
+                                '<td class="td-action"><a class="remove js-remove">-</a></td>' +
+                            '</tr>';
+                    t.$items.append(html);
+                    t.resetTable();
+                },
+                appendCondition: function(ele){
+                    var $this = $(ele), $td = $this.parent(), $row = $td.prev(), rowspan = $row.attr('rowspan'), $tr = $td.parent(), id = $tr.attr('data-id');
+                    rowspan = parseInt(rowspan) + 1;
+
+                    html = '<tr data-id="' + id + '">' +
+                                '<td class="input agent-select"><select class="js-p1-id">' + t.select + '</select></td>' +
+                                '<td class="input agent-money"><input type="text" class="js-p1-val" placeholder="佣金" /></td>' +
+                                '<td class="input agent-select"><select class="js-p2-id">' + t.select + '</select></td>' +
+                                '<td class="input agent-money"><input type="text" class="js-p2-val" placeholder="佣金" /></td>' +
+                                '<td class="td-action"><a class="remove js-remove">-</a></td>' +
+                            '</tr>';
+                    $tr.after(html);
+                    $row.attr('rowspan', rowspan);
+                    $td.attr('rowspan', rowspan);
+                    t.resetTable();
+                },
+                deleteCondition: function(ele){
+                    var $tr = $(ele).parent().parent(), isFirstRow = $tr.children().length==7, id = $tr.attr('data-id'), $prev = $tr;
+
+                    while ($prev.length > 0) {
+                        var $next = $prev.prev();
+                        if ($next.length == 0 || $next.attr('data-id') != id) {
+                            var $td = $prev.children(), rowspan = parseInt($td.eq(0).attr('rowspan')) - 1;
+                            $td.eq(0).attr('rowspan', rowspan);
+                            $td.eq(1).attr('rowspan', rowspan);
+
+                            if(isFirstRow){
+                                $next = $tr.next();
+                                if ($next.attr('data-id') == id) {
+                                    $next.prepend($td.eq(1));
+                                    $next.prepend($td.eq(0));
+                                }
+                            }
+                            break;
+                        } else {
+                            $prev = $next;
+                        }
+                    }
+
+                    $tr.remove();
+                    t.resetTable();
+                },
+                changeBuyer: function(ele){
+                    var value = ele.value.toString(), $tr = $(ele).parent().parent(), oldId = $tr.attr('data-id');
+                    var exists = t.getExistsAgent();
+                    if (exists.indexOf(value) > -1) {
+                        alert('下单人已存在');
+                        this.value = oldId;
+                    } else {
+                        $tr.attr('data-id', ele.value);
+                        var $next = $tr.next();
+                        while ($next.length > 0 && $next.attr('data-id') == oldId) {
+                            $next.attr('data-id', ele.value);
+                            $next = $next.next();
+                        }
+                    }
+                },
+                getData: function(maxPercentage, minPrice){
+                    var param = {  reward_type: $modal.find('.js-reward_type:checked').val(), reward_value: {}, settlement_type: $('#settlement_type').val() }, $children = t.$items.children();
+
+                    if(parseInt(param.settlement_type) != 0 && parseInt(param.reward_type) != -1){
+                        for (var i = 0; i < $children.length; i++){
+                            var $tr = $children.eq(i), id = $tr.attr('data-id'), $p1 = $tr.find('.js-p1-id'), $pv1 = $tr.find('.js-p1-val'), $p2 = $tr.find('.js-p2-id'), $pv2 = $tr.find('.js-p2-val');
+                            if(!param.reward_value[id]){
+                                param.reward_value[id] = [];
+                            }
+
+                            var data = {}, pk1 = '1_'+$p1.val(), pk2 = '2_'+$p2.val();
+                            data[pk1] = $pv1.val();
+                            data[pk2] = $pv2.val();
+                            var v = data[pk1];
+                            if (v == '' || isNaN(v)) {
+                                return $pv1.focus(), false
+                            }else{
+                                v = parseFloat(v);
+                                if (v < 0 || (param.reward_type == 0 && v > maxPercentage) || (param.reward_type == 1 && v > minPrice)) {
+                                    return $pv1.focus(), false
+                                }
+                                data[pk1] = v;
+                            }
+
+                            v = data[pk2];
+                            if (v == '' || isNaN(v)) {
+                                return $pv2.focus(), false
+                            }else{
+                                v = parseFloat(v);
+                                if (v < 0 || (param.reward_type == 0 && v > maxPercentage) || (param.reward_type == 1 && v > minPrice)) {
+                                    return $pv2.focus(), false
+                                }
+                                data[pk2] = v;
+                            }
+                            param.reward_value[id].push(data);
+                        }
+                    }
+
+                    return param;
+                }
+            };
+
+            $('#addItem').on('click', function () {
+                return t.appendBuyer(), false
+            });
+
+            var $items = t.$items;
+            $items.on('click', '.js-add-parent', function () {
+                return t.appendCondition(this), false
+            }).on('click', '.js-remove', function () {
+                return t.deleteCondition(this), false
+            }).on('change', '.js-buyer', function () {
+                return t.changeBuyer(this), false;
+            });
+
+            setTimeout(function(){
+                t.init({$data.reward_value});
+            }, 200);
+
+            // 保存
+            $('#btnSaveCommision').on('click', function () {
+                var param = t.getData(50, {$data.min_price});
+                param.id = {$data.id};
+
+                $.ajax({
+                    url: '__ACTION__',
+                    type: 'post',
+                    data: param,
+                    dataType: 'json',
+                    success: function(){
+                        $modal.modal('hide');
+                    }
+                });
+                return false;
+            });
+        </script>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        <button id="btnSaveCommision" type="button" class="btn btn-primary" aria-hidden="true">保存</button>
+    </div>
+</div>

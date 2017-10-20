@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<include file="_layout/mall.head.html" title="我的订单"/>
+<link rel="stylesheet" href="__CDN__/css/shop.homepage.css?20170901">
+<style>
+
+</style>
+<literal>
+<style>
+.container{padding-bottom:51px}
+.select-express{position:relative;font-size:12px}
+.select-express select{opacity:0;position:absolute;width:100%;height:100%;left:0;right:0;top:0;bottom:0}
+.select-express.error{color:red}
+.select-express .express_name{color:#ddd}
+.order-total-pay{padding:0}
+.order-total-pay .btn{position:relative;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;margin-left:9px;width:110px;height:50px;line-height: 40px;border-radius:0;background-color:#da8f3e;border-color:#da8f3e;color:#fff}
+.customer-service{text-align:center;border-top:1px solid #e5e5e5;background-color:#fff;border-bottom:1px solid #e5e5e5}
+.customer-service .online-kefu{position:relative;width:50%;height:48px;line-height:48px}
+.online-kefu:before{position:relative;content:'';background:url('https://open.weixin.qq.com/zh_CN/htmledition/res/assets/res-design-download/icon32_wx_logo.png') no-repeat;width:18px;height:18px;display:inline-block;background-size:100%;margin-bottom:-5px;margin-right:3px}
+.online-kefu:after{content:'';display:inline-block;position:absolute;right:0;top:14px;width:1px;height:20px;background:#e7e7e7}
+.online-tel{width:50%;height:48px;line-height:48px}
+.online-tel:before{content:'';background:url('__CDN__/img/mall/phone_aaaa.jpg') no-repeat;width:18px;height:18px;display:inline-block;background-size:100%;margin-bottom:-5px;margin-right:3px}
+.icon-arrow-right{margin-right:2px}
+.express-item:before{content:''; background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAe1BMVEUAAABmZmZpaWlnZ2doaGhmZmZnZ2doaGhubm5mZmZmZmZmZmZmZmZmZmZmZmZmZmZnZ2dnZ2dnZ2dnZ2dmZmZmZmZmZmZmZmZnZ2doaGhnZ2dubm5oaGhmZmZoaGhoaGhsbGxsbGxnZ2dmZmZoaGhnZ2dmZmZnZ2dmZmZDcWUmAAAAKHRSTlMAsU6qO/XQFAj574rr496YfldILvLKw7ymNxkQhGxhQyogt6R7JdZ3wz+f0QAAAS9JREFUSMfd1NmOgjAYhuEi+74JjuI6zvLe/xVOhkqaqMjfU78T6Jc8DWn/oN4wYc98fqroAaS8zOYB9JzUbLyc+r5LCNV8DpTKZOUGMcTqRVY4akrbMSYTgjYjP5yjDZ0MDBnu/5HllDKwvx1YTC0CQ0I7XhtEIlDTj88jvhIBl8P4vFKIQLTmMr4EOCLQEEz3/CsCJZUu4CwCGa0eLmIlAR7FdBuZCKSker2hE4ECT69zSglo9YfowZCASu+rB0MCAhplBmMZnDEpJMDBxJEAl9o0EhCwtQNrBiuwI1FWwKOzA0eudmBPZQdcajsQsLUDCYMdyBnzcatOTHnel6rRwg+nP5TJk77fqWmtt2rwdbXQq+81n150qWK+FvopXsKYdKE3CdPAL9ztbP9O+QOnYDEI+yp1GgAAAABJRU5ErkJggg==');width: 16px;height:16px;display:inline-block;position:absolute;top:50%;margin-top:-8px;background-size: 100%;}
+.express-item p{margin-left: 20px;}
+#share_code_body{top:0px;}
+</style>
+</literal>
+</head>
+<body>
+
+	<div class="container">
+		<div class="content">
+			<div style="display:flex;justify-content:space-between;align-items:center;background:#da8f3e; padding: 20px;color: #fff;">
+                <if condition="$countDown['visible']">
+                    <div>
+                        <h3>{$trade.status_str}</h3>
+                        <div style="font-size: 12px;margin-top: 5px;line-height:15px;">{$countDown['message']}
+                        <if condition="$countDown['unable'] neq true">
+                            <span id="trade_message"></span>
+                        </if>
+                        </div>
+                    </div>
+                    <if condition="$trade.status eq 25">
+                        <img src="__CDN__/img/mall/trade_status_3.png" style="width:98px;">
+                    <else/>
+                        <img src="__CDN__/img/mall/trade_status_{$trade.status}.png" style="width:98px;">
+                    </if>
+                <else/>
+                    <div>
+                        <h3>订单状态</h3>
+                        <div style="font-size: 12px;margin-top: 5px;line-height:15px;">{$trade.status_str}</div>
+                    </div>
+                    <if condition="$trade.status eq 25">
+                        <img src="__CDN__/img/mall/trade_status_3.png" style="width:98px;">
+                    <else/>
+                        <img src="__CDN__/img/mall/trade_status_{$trade.status}.png" style="width:98px;">
+                    </if>
+                </if>
+			</div>
+            <div class="express-panel" style="padding-right:20px;display:flex;align-items:center;width:100%;box-sizing:border-box;">
+                <div class="logistics-tips font-size-12 c-orange hide">很抱歉，该地区暂不支持配送。</div>
+                <!-- <ul class="express-detail">
+                    <li class="clearfix">
+                        <span class="name">收货人：{$trade.receiver_name}</span>
+                        <span class="tel">{$trade.receiver_mobile}</span>
+                    </li>
+                    <li class="address-detail">收货地址：{$trade.receiver_province} {$trade.receiver_city} {$trade.receiver_county} {$trade.receiver_detail}</li>
+                </ul> -->
+				<ul class="express-detail icon-address" style="display:flex;justify-content:space-between;align-items:center;">
+					<li class="info address-detail" style="flex:5;">
+						<div style="display:flex;">
+							<span class="name">收货人：{$trade.receiver_name}</span>
+							<span class="tel">{$trade.receiver_mobile}</span>
+						</div>
+						<div>收货地址：{$trade.receiver_province} {$trade.receiver_city} {$trade.receiver_county} {$trade.receiver_detail} </div>
+					</li>
+				</ul>
+            </div>
+			<!-- 商品列表 -->
+            <notempty name="trade['express_no']">
+                <div class="block block-list">
+                    <foreach name="trade['express_no']" key="express_no" item="express_name">
+                        <if condition="$isLB neq 1">
+                            <a class="express-item block-item link" href="https://m.kuaidi100.com/result.jsp?nu={$express_no}">
+                                <p class="title-info c-black">{$express_name}<span class="pull-right">{$express_no}<i class="icon-arrow-right"></i></span></p>
+                            </a>
+                            <else/>
+                            <a class="express-item block-item link" href="__MODULE__/order/checkLogistics?tid={$trade.tid}">
+                                <p class="title-info c-black">{$express_name}<span class="pull-right">{$express_no}<i class="icon-arrow-right"></i></span></p>
+                            </a>
+                        </if>
+                    </foreach>
+                </div>
+            </notempty>
+            <div class="block block-list block-order">
+                <div class="header"><span>店铺：{$trade.seller_name}</span></div>
+                <div class="trade-item">
+                    <foreach name="trade['orders']" item="order">
+                    <a class="name-card name-card-goods clearfix block-item" href="{$order['detail_url']}">
+                        <div class="thumb"><img src="{$order.pic_url}"></div>
+                        <div class="detail">
+                            <div class="clearfix detail-row">
+                                <div class="right-col text-right">
+                                    <div class="price"><span class="price-prefix">{$order['view_price'][0]['prefix']}</span><em>{$order['view_price'][0]['price']}</em><span class="price-suffix">{$order['view_price'][0]['suffix']}</span></div>
+                                    <div class="price error-box">{$order.main_tag}</div>
+                                </div>
+                                <div class="left-col">
+                                    <div class="goods-title"><h3 class="ellipsis">{$order.title}</h3></div>
+                                </div>
+                            </div>
+                            <div class="clearfix detail-row">
+                                <div class="right-col">
+                                    <div class="num c-gray-darker">×<span class="num-txt">{$order.quantity}</span></div>
+                                </div>
+                                <div class="left-col"><p class="c-gray-darker sku">{$order.spec}</p></div>
+                            </div>
+                            <if condition="$order['refund']['refund_status'] gt -1">
+                            <div class="clearfix detail-row">
+                                <div class="right-col">
+                                <span class="tag tag-red tag-opt js-refund" data-refund_id="<?php if($isLB!=1){echo $order['oid'];}else{echo '0';}?>">{$order['refund']['status_str']}</span>
+                                </div>
+                            </div>
+                            </if>
+                        </div>
+                    </a>
+                    </foreach>
+                </div>
+                <div class="block-item order-message">
+                    <span class="font-size-12">买家留言：{$trade['buyer_remark']}</span>
+                </div>
+            </div>
+			<div style="margin-top:10px">
+	            <div class="block-item sum-detail">
+                    <p><span class="title-info">商品总额</span><span class="pull-right">¥{$trade.total_fee}</span></p>
+                    <p><span class="title-info">运费</span><span class="pull-right">¥{$trade.total_postage}</span></p>
+                    <if condition="$trade['discount_fee'] gt 0">
+                    <p><span class="title-info">店铺优惠</span><span class="pull-right">- ¥{$trade.discount_fee}</span></p>
+                    </if>
+                    <if condition="$trade['paid_wallet'] gt 0">
+                    <p><span class="title-info">{$trade['project']['wallet_alias']}抵用</span><span class="pull-right">- ¥{$trade.paid_wallet}</span></p>
+                    </if>
+                    <if condition="$trade['paid_balance'] gt 0">
+                    <p><span class="title-info">{$trade['project']['balance_alias']}抵用</span><span class="pull-right">- ¥{$trade.paid_balance}</span></p>
+                    </if>
+                    <if condition="$trade['adjust_fee'] neq '0.00'">
+                    <p><span class="title-info">调价</span><span class="pull-right">{:floatval($trade['adjust_fee']) < 0 ? '-' : '+'} ¥{:abs($trade['adjust_fee'])}</span></p>
+                    </if>
+                    <if condition="$trade['total_score'] gt 0">
+                    <p><span class="title-info">{$trade['project']['score_alias']}总额</span><span class="pull-right">{$trade.total_score}积分</span></p>
+                    </if>
+                    <if condition="$trade['discount_score'] gt 0">
+                    <p><span class="title-info">优惠</span><span class="pull-right">{$trade.discount_score}{$trade['project']['score_alias']}</span></p>
+                    </if>
+                </div>
+                <div class="pay-arrow"></div>
+                <div class="block-item sum-need-pay">
+                    <php>
+                    if($trade['paid_fee'] > 0 && $trade['paid_score'] > 0){
+                        echo '<div><span class="title-info">已付'.$trade['project']['score_alias'].'</span><span class="pull-right">'.$trade['paid_score'].'</span></div>';
+                        echo '<div class="font-size-12"><span class="title-info">已付款</span><span class="pull-right">¥'.$trade['paid_fee'].'</span></div>';
+                    }else if($trade['paid_score'] > 0){
+                        echo '<span class="title-info">已付'.$trade['project']['score_alias'].'</span><span class="pull-right">'.$trade['paid_score'].'</span>';
+                    }else{
+                        echo '<span class="title-info">已付款</span><span class="pull-right">¥'.$trade['paid_fee'].'</span>';
+                    }
+                    </php>
+                </div>
+                <!--
+                <div class="block block-list">
+                    <div class="block-item">
+                        <span class="title-info">匿名购买</span>
+                        <div id="delete_order" class="switch mini{$trade['anonymous'] ? ' switch-on' : ''} disabled"></div>
+                    </div>
+               </div>
+                 -->
+            </div>
+            <div class="customer-service horizontal-view">
+              <a class="js-lxkf1 online-kefu" href="javascript:;" data-id="{$trade.seller_id}">店铺客服</a>
+              <a class="online-tel" href="tel:{$trade.service_hotline}">售后热线</a>
+            </div>
+            <div class="block block-list">
+                <div class="block-item sum-detail">
+                    <p><span class="title-info">订单编号: </span>{$trade.tid}</p>
+                    <p><span class="title-info">创建时间: </span>{$trade['created']}</p>
+                    <if condition="$trade['pay_time'] gt 0">
+                    <p><span class="title-info">付款时间: </span>{:date('Y-m-d H:i:s', $trade['pay_time'])}</p>
+                    </if>
+                    <if condition="$trade['consign_time'] gt 0">
+                    <p><span class="title-info">发货时间: </span>{:date('Y-m-d H:i:s', $trade['consign_time'])}</p>
+                    </if>
+                    <if condition="$trade['receive_time'] gt 0">
+                    <p><span class="title-info">成交时间: </span>{:date('Y-m-d H:i:s', $trade['receive_time'])}</p>
+                    </if>
+                    <if condition="$trade['refunded_fee'] gt 0">
+                    <p><span class="title-info">退款总额: </span>{$trade['refunded_fee']}元</p>
+                    </if>
+                    <if condition="$trade['refunded_score'] gt 0">
+                    <p><span class="title-info">退还积分: </span>{$trade['refunded_score']}积分</p>
+                    </if>
+                </div>
+            </div>
+            <notempty name="trade['buttons']">
+			<div class="js-order-total-pay order-total-pay bottom-fix">
+                <div class="pay-container clearfix">
+                    <div class="pull-right pull-margin-up">
+                        <span class="c-gray-darker font-size-16">共<span class="c-orange"> {$trade.total_quantity} </span>件，</span>
+                        <span class="c-gray-darker font-size-16">合计：</span>
+                        <span id="need_pay">
+                        <php>
+                        if($trade['paid_fee'] > 0 && $trade['payscore'] > 0){
+                            $payment = split_money($trade['paid_fee']);
+                            echo '<span class="c-orange"><span class="js-price font-size-16">¥'.$payment[0].'</span><span class="js-price-sub font-size-12">'.$payment[1].'</span></span> + ';
+                            echo '<span class="c-orange"><span class="js-price font-size-16">'.$trade['payscore'].'</span><span class="js-price-sub font-size-12">积分</span></span>';
+                        }else if($trade['payscore'] > 0){
+                            echo '<span class="c-orange"><span class="js-price font-size-16">'.$trade['payscore'].'</span><span class="js-price-sub font-size-12">积分</span></span>';
+                        }else{
+                            $payment = split_money($trade['paid_fee']);
+                            echo '<span class="c-orange"><span class="js-price font-size-16">¥'.$payment[0].'</span><span class="js-price-sub font-size-12">'.$payment[1].'</span></span>';
+                        }
+                        </php>
+                        </span>
+                        <?php
+                        $btn = isset($trade['buttons'][1]) ? $trade['buttons'][1] : $trade['buttons'][0];
+                        echo '<a class="'.$btn['class'].' btn btn-red-f44 commit-bill-btn" href="'.$btn['url'].'">'.$btn['text'].'</a>';
+                        ?>
+                    </div>
+                </div>
+            </div>
+            </notempty>
+		</div>
+		<include file="_layout/new_index/mall.qrcode.share2.html"/>
+        <include file="_layout/mall.copyright.html" />
+	</div>
+    <script>
+    require(['jquery'], function(){
+        <if condition="$countDown['visible']">
+        var $message = $('#trade_message');
+        var timer = setInterval(function(){
+            var data = countDown({$countDown['time']}000);
+            $message.html((data.day > 0 ? data.day+'天':'') + (data.hour > 0 ? data.hour+'小时':'') + (data.minute > 0 ? data.minute+'分':'') + (data.second > 0 ? data.second+'秒':''));
+        }, 1000);
+        </if>
+
+        // 删除订单
+        $('.js-delete-trade').on('click', function(){
+            if(!confirm('删除之后无法恢复，确定继续操作吗？')){
+                return false
+            }
+            return updateTrade.apply(this),false;
+        });
+        // 确认收货
+        $('.js-confirm-goods').on('click', function(){
+            if(!confirm('确定确认收货吗？')){
+                return false
+            }
+            return updateTrade.apply(this),false;
+        });
+        // 崔单
+        $('.js-reminder-trade').on('click', function(){
+            return updateTrade.apply(this),false;
+        });
+
+        // 退款
+        $('.js-refund').on('click', function(){
+            var refund_id = $(this).data('refund_id');
+            if(refund_id == 0){
+                $.ajax({
+                    url : '__MODULE__/kefu/qrcode',
+                    data : {id:<?php echo $trade['seller_id'];?>},
+                    dataType : 'json',
+                    success : function(data){
+                        $("#share_code_body img").attr("src",data);
+                        $("#share_code_body").show();
+                    }
+                });
+            }else{
+                $.ajax({
+                    url: '__MODULE__/refund?refund_id='+refund_id,
+                    waitting: true,
+                    success: function(html){
+                        $('body').append(html);
+                    }
+                });
+            }
+            return false;
+        });
+		// 店铺客服
+        $('.js-lxkf1').on('click', function(){
+            $.ajax({
+                url : '__MODULE__/kefu/qrcode',
+                data : {id:<?php echo $trade['seller_id'];?>},
+                dataType : 'json',
+                success : function(data){
+                    $("#share_code_body img").attr("src",data);
+                    $("#share_code_body").show();
+                }
+            });
+            return false;
+        });
+    });
+
+    function updateTrade(){
+        var $this = $(this);
+
+        $.ajax({
+            url: $this.attr('href'),
+            data: {tid: '{$trade.tid}'},
+            type: 'post',
+            dataType: 'json',
+            success: function(){
+                window.location.reload();
+            }
+        });
+    }
+    </script>
+</body>
+</html>

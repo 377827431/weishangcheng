@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="推广员中心" />
+    <style>
+        header {width:100%;padding-top:34%;position:relative;}
+        header>div{background-color:red;position:absolute;top:0px;left:0px;width:100%;height:100%;display:flex;justify-content:space-between;align-items:center;padding-left:20px;}
+        header>div>img{display:block;width:60px;height:60px;border-radius:30px;background-color: green;}
+        header>div>div{width:80%;display:flex;flex-direction:column;align-items:flex-start}
+        header>div>div>p{width:60%;}
+        p.ptitle{line-height:30px;font-size:16px;color:white;font-weight:bold;}
+        p.ptitle::before{content:"推广员";}
+        p.shop_name{color:white;}
+        p.shop_name::before{content:"当前店铺:";}
+        .curr_profit_con{position:relative;box-sizing:border-box;width:92%;margin-left:4%;border-radius:8px;background-color:white;padding:1em;z-index:2;top:-15px;}
+        a.goto_cash span{display:inline-block;font-size:14px;margin-top:4%;}
+        a.goto_cash span:nth-child(2){float:right;color:#ff5656;}
+        a.goto_cash span:nth-child(2)::after{content:"";margin-left:.5em;display:inline-block;width:7px;height:7px;border-top:2px solid #ccc;border-right:2px solid #ccc;transform:rotate(45deg);}
+        a.switch_shop{display:flex;justify-content: space-between;font-size:14px;line-height:50px;background-color:white;padding-left:4%;padding-right:4%;}
+        div.triangle::after{content:"";margin-left:.5em;display:inline-block;width:7px;height:7px;border-top:2px solid #ccc;border-right:2px solid #ccc;transform:rotate(45deg);}
+        div.flex-six{display:flex;justify-content:space-between;flex-wrap: wrap;background-color:white;margin-top:20px;}
+        div.flex-six>a{width:33%;display:flex;align-items:center;flex-direction: column;padding-top:10px;padding-bottom:10px;}
+        div.flex-six>a img{display:block;width:50%;margin-bottom:10px;}
+        div.flex-six>a:nth-child(n+4) p:nth-child(1){line-height:4em;font-size:16px;}
+        span.amount_to_cash::before{content:"可提现佣金";}
+        span.amount_to_cash::after{content:"(元)";}
+        span.to_exchange{font-weight:normal;font-size:12px;color:#919191;}
+        span.to_exchange::before{content:"(含待结算";}
+        span.to_exchange::after{content:")";}
+    </style>
+</head>
+<body style="backgound-color:#eee">
+    <header>
+        <div>
+            <img src="{$data['head_img']}" alt="">
+            <div>
+                <p class="ptitle">{$data['name']}</p>
+                <p class="shop_name">{$shop['name']}</p>
+            </div>
+        </div>
+    </header>
+    <section class="curr_profit_con">
+        <p style="font-size:14px;color:#252525;">当前店铺累计收益(元)</p>
+        <p style="font-weight:bold;font-size:16px;color:#252525;line-height:40px;border-bottom:1px solid #ececec;"><span>{$data['reward1']}</span><span class="to_exchange">{$data['reward0']}</span></p>
+        <a class="goto_cash" style="display: none" href="www.baidu.com"><span class="amount_to_cash">50.0</span><span><u>立即提现</u></span></a>
+    </section>
+    <a class="switch_shop">
+        <span>切换店铺</span>
+        <div class="triangle">
+            <select style="font-size:14px">
+                <option value="1">{$shop['name']}</option>
+            </select>
+        </div>
+    </a>
+    <div class="flex-six">
+        <a href="__MODULE__/mall"><img src="/img/seller/agent2.png" alt=""><p>推广产品</p></a>
+        <a id="fenxiang" href="javascript:void(0);"><img src="/img/seller/agent1.png" alt=""><p>邀请好友</p></a>
+        <a href="javascript:void(0);"></a>
+        <a href="javascript:void(0);"><p>{$data['p_one']}</p><p>累计客户</p></a>
+        <a href="javascript:void(0);" style="display: none"><p>0</p><p>累计邀请</p></a>
+        <a href="javascript:void(0);" style="display: none"><p>0</p><p>推广订单</p></a>
+    </div>
+
+</body>
+</html>
+<script>
+alert();
+//分享
+$("#fenxiang").on('click', function () {
+    require(["h5/jsweixin"], function(jweixin){
+        jweixin.init({$wxsign}, function(){
+            jweixin.share({$share}, function(){
+                toast.show('分享成功<br>新用户首次进入即可成为您的好友哦！');
+            });
+        });
+    });
+});
+</script>
+

@@ -1,0 +1,67 @@
+<div id="toolbar" class="toolbar">
+	<div class="btn-list">
+		<div class="btn-group">
+			<button type="button" class="btn btn-back"><i class="icon-reply"></i> 返回</button>
+			<button type="button" data-name="search" class="btn btn-default" data-event-type="default" data-event-value="" data-target=""><i class="icon-search"></i> 搜索</button>
+		</div>
+	</div>
+	<form class="form-horizontal">
+		<input type="hidden" name="id" value="{$data.id}">
+		<div class="clearfix">
+			<div class="filter-groups">
+				<div class="control-group">
+					<label class="control-label">微信昵称</label>
+					<div class="controls">
+						<input type="text" name="nickname">
+					</div>
+				</div>
+			</div>
+			<div class="pull-left">
+				<div class="filter-groups">
+					<div class="control-group">
+						<label class="control-label">领取时间</label>
+						<div class="controls">
+							<div class="input-append date inline" data-format="yyyy-MM-dd HH:mm:ss">
+								<input type="text"readonly="readonly" name="stime" style="width: 135px;" />
+								<span class="add-on"><i data-time-icon="icon-time"data-date-icon="icon-calendar"></i></span>
+							</div>
+							<div class="input-append date inline" data-format="yyyy-MM-dd HH:mm:ss">
+								<input type="text"readonly="readonly" name="etime" style="width: 135px;" />
+								<span class="add-on"><i data-time-icon="icon-time"data-date-icon="icon-calendar"></i></span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-url="__ACTION__" data-toolbar="#toolbar" data-show-columns="true" data-row-style="rowStyle">
+    <thead>
+		<tr>
+			<th data-width="200" data-field="nickname">微信昵称</th>
+			<th data-width="150" data-field="amount">领取金额</th>
+			<th data-width="150" data-field="create_time">领取时间</th>
+			<th data-width="155" data-field="mch_billno">商户订单号</th>
+			<th data-width="150" data-field="return_code" data-visible="false">返回状态码</th>
+			<th data-width="150" data-field="return_msg" data-visible="false">返回信息</th>
+			<th data-width="150" data-field="result_code" data-visible="false">业务结果</th>
+			<th data-width="150" data-field="err_code" data-visible="false">错误代码</th>
+			<th data-field="err_code_des">错误描述</th>
+			<th data-field="openid" data-visible="false">微信openid</th>
+		</tr>
+	</thead>
+</table>
+
+<script>
+function rowStyle(row, index) {
+    if (row.result_code != 'SUCCESS') {
+        return {
+            classes: 'warning'
+        };
+    }
+    return '';
+}
+</script>

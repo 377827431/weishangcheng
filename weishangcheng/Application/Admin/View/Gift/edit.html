@@ -1,0 +1,50 @@
+<form method="post" action="__ACTION__" data-validate="true" data-continue="true" data-submit="ajax" class="form-horizontal edit-form">
+  <div class="form-group">
+	  <div class="form-item">
+		  <div class="control-group">
+		    <label class="control-label must">商品名称</label>
+		    <div class="controls">
+		      <input class="required" type="text" name="title" maxlength="30" value="{$data.title}" placeholder="最多15个字符"{$data['type'] == 2 ? ' disabled="disabled"' : ''}>
+		    </div>
+		  </div>
+	  	  <div class="control-group">
+		    <label class="control-label must">商品id</label>
+		    <div class="controls">
+		      <input type="text" name="goods_id" required="required" value="{$data.goods_id}" maxlength="10" placeholder="商品id">
+		    </div>
+	  	  </div>
+	  	  <div class="control-group">
+		    <label class="control-label must">限购</label>
+		    <div class="controls">
+		      <input type="text" name="buy_quota" required="required" value="{$data.buy_quota}" maxlength="10" placeholder="0表示不限购">
+		    </div>
+	  	  </div>
+	  </div>
+	  <div class="form-item">
+		  <div class="control-group" style="padding-top:20px">
+		    <label class="control-label must">开始时间</label>
+  				<div class="controls">
+  					<div class="input-append date" data-format="yyyy-MM-dd hh:mm:ss">
+  						<input type="text" name="start_time" value="{$data.start_time}" required="required" >
+  						<span class="add-on"><i class="icon-th icon-calendar"></i></span>
+  					</div>
+  				</div>
+		  </div>
+		  <div class="control-group">
+		    <label class="control-label must">结束时间</label>
+   				<div class="controls">
+   					<div class="input-append date" data-format="yyyy-MM-dd hh:mm:ss">
+   						<input type="text" name="end_time" value="{$data.end_time}" required="required">
+   						<span class="add-on"><i class="icon-th icon-calendar"></i></span>
+   					</div>
+   	            </div>
+		  </div>
+	  </div>
+  </div>
+	<div class="form-actions">
+	  <button type="submit" class="btn btn-primary">保存</button>
+	  <button type="button" class="btn">取消</button>
+	</div>
+</form>
+
+<div style="display: none;" id="editor" class="edui-default"></div>

@@ -1,0 +1,399 @@
+<link rel="stylesheet" href="/css/goods-edit.css">
+<form id="goods_edit_form" class="form-horizontal fm-goods-info" method="post" action="__ACTION__?id={$data.id}">
+	<div class="tabbable">
+		<ul class="nav nav-tabs" id="myTab">
+			<li{$data['id'] ? '' : ' class="active"'}><a href="#tab1" data-toggle="tab">1.选择商品类目</a></li>
+			<li{$data['id'] ? ' class="active"' : ''}><a href="#tab2" data-toggle="tab">2.编辑基本信息</a></li>
+			<li><a href="#tab3" data-toggle="tab">3.编辑属性详情</a></li>
+		</ul>
+		<div class="tab-content">
+            <div id="page_loading" class="ui-page-loading"></div>
+			<div class="tab-pane{$data['id'] ? '' : ' active'}" id="tab1" data-index="0">
+				<div id="class-info-region" class="goods-info-group">
+					<div class="class-block">
+						<div class="control-group">
+							<div class="controls">
+								<div class="widget-goods-klass {$categoryClass}" id="cat_list">
+									<foreach name="categorys[0]" item="level1">
+                                    <div class="widget-goods-klass-item js-cat-item {:isset($categorys[$level1['id']])?' has-children':''}" data-id="{$level1.id}" data-name="{$level1.name}">
+                                        <div class="widget-goods-klass-name">{$level1.name}<i class="cover-down"></i></div>
+                                        <notempty name="categorys[$level1['id']]">
+                                        <ul class="widget-goods-klass-children">
+                                            <foreach name="categorys[$level1['id']]" item="level2">
+                                                <li data-pid="{$level2['id']}">
+                                                    <label class="radio{:isset($categorys[$level2['id']])?'':' js-cat-item'}" data-id="{$level2.id}" style="color:red"><input type="radio" name="js-cat-sub" {:isset($categorys[$level2['id']])?'disabled="disabled"':''}>{$level2.name}</label>
+                                                </li>
+                                                <foreach name="categorys[$level2['id']]" item="level3">
+                                                <li data-pid="{$level3['pid']}">
+                                                    <label class="radio js-cat-item" data-id="{$level3.id}"><input type="radio" name="js-cat-sub">{$level3.name}</label>
+                                                </li>
+                                                </foreach>
+                                            </foreach>
+                                        </ul>
+                                        </notempty>
+                                    </div> 
+									</foreach>
+									<div class="widget-goods-klass-item">
+										<a class="widget-goods-klass-name" style="color: #999;border-style: dashed;background-color: #fff;" href="__MODULE__/category">添加</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="app-actions">
+				    <div class="form-actions text-center">
+				        <button data-next-step="2" class="btn btn-primary js-switch-step" type="button">下一步</button>
+				    </div>
+				</div>
+			</div>
+			<div class="tab-pane{$data['id'] ? ' active' : ''}" id="tab2" data-index="1">
+				<table class="fm-goods-info goods-info-group">
+					<tr>
+						<th>基础信息</th>
+						<td>
+							<div class="control-group">
+								<label class="control-label">商品类目</label>
+								<div class="controls">
+									<a data-next-step="1" class="static-value js-switch-step" id="js-tag-step">未选择{$data['cat_tip']}</a>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">商品分组</label>
+								<div class="controls">
+									<select id="goods_tag" style="width:300px"></select>
+                                    <a href="javascript:;" class="js-refresh">刷新</a>
+									<span class="gray">（最多支持3个）</span>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">商品类型</label>
+								<div class="controls js_is_virtual">
+									<label class="radio inline">
+										<input type="radio" name="is_virtual" value="0" checked="checked">实物商品<span class="gray">（物流发货）</span>
+									</label>
+									<label class="radio inline">
+										<input disabled="disabled" type="radio" {$data['is_virtual']?'checked="checked"':''} name="is_virtual" value="1"{$data['tao_id'] ? 'disabled="disabled"' : ''}>虚拟商品<span class="gray">（无需物流）</span>
+									</label>
+								</div>
+							</div>
+						</td>
+					</tr>
+                    <tr>
+                        <th>商品信息</th>
+                        <td>
+                            <div class="control-group">
+                                <label class="control-label must">商品名</label>
+                                <div class="controls">
+                                    <input class="input-xxlarge" id="js-goods_title" required="required" type="text" name="title" placeholder="建议30个字符以内" value="{$data.title}" data-label="商品名称" maxlength="100">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label must"><a id="toggle_price" href="javascript:;">价格</a></label>
+                                <div class="controls goods-price-control">
+                                    <div class="js-price_type"></div>
+                                    <div class="js-cost-control price-item">
+                                        <input type="text" value="成　本" disabled="disabled">
+                                        <input type="text" name="cost" value="{$data.cost}" id="cost" style="width:219px" placeholder="辅助商家结算，对系统无意义" data-label="成本">
+                                        <input type="text" value="元/件" disabled="disabled">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label must">宣传图</label>
+                                <div class="controls">
+                                    <div class="picture-list ui-sortable">
+                                        <ul class="js-picture-list app-image-list clearfix">
+                                            <foreach name="data[images]" item="src">
+                                            <li class="sort"><a href="{$src}" target="_blank">
+                                                <img src="{$src}"></a><a class="js-delete-picture close-modal small hide">×</a>
+                                            </li>
+                                            </foreach>
+                                            <li>
+                                                <a href="javascript:;" class="add-goods js-add-picture">+加图</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <p class="help-desc">建议尺寸640 x 640 像素，大小不超过300KB，第一张图将作为主图在列表中展示</p>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+					<tr>
+						<th>库存/规格</th>
+						<td>
+							<div class="control-group">
+								<label class="control-label">商品规格</label>
+								<div class="controls">
+									<select id="goods_sku_list" style="display: none;width:100px;">
+										<option selected="selected"></option>
+										<foreach name="sku_list" key="sku_id" item="sku_text">
+										<option value="{$sku_id}">{$sku_text}</option>
+										</foreach>
+									</select>
+									<div id="goods_sku_content" class="sku-group" style="{$data['tao_id'] ? 'display:none' : ''}">
+										<div id="add_goods_sku">
+										    <h3 class="sku-group-title">
+										        <button type="button" class="btn" id="add_goods_sku">添加商品规格</button>
+										    </h3>
+										</div>
+									</div>
+									<div id="product_list" style="display: none">
+										<div id="stock-region" class="sku-stock">
+                                            <div class="sku-table-right">
+                                            <table class="table-sku-stock">
+                                                <thead><tr><th class="th-price">价格（元）</th><th class="th-stock">库存</th><th class="th-code">商家编码</th><th>销量</th></tr></thead>
+                                                <tbody><tr><td colspan="4">&nbsp;</td></tr></tbody>
+                                            </table>
+                                            </div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label must">总库存</label>
+								<div class="controls">
+									<input type="text" class="input-medium" value="{$data.stock}" name="stock" id="total_stock" data-label="总库存" data-rule-range="0,999999999" required="required" data-rule-digits="digits">
+					                <span class="help-desc">总库存为 0 或单品库存为0时，会上架到『已售罄商品』列表里</span>
+					                <!-- <p class="help-desc">发布后商品同步更新，以库存数字为准</p> -->
+									<label class="checkbox inline pull-right" style="margin-right:15px">
+					                    <input type="checkbox"{$data['hide_stock']==1?'checked="checked"':''} value="1" name="hide_stock">页面不显示商品库存
+					                </label>
+								</div>
+							</div>
+                            <div class="control-group">
+                                <label class="control-label must">单品重量</label>
+                                <div class="controls" style="position:relative">
+                                    <input id="weight" type="text" class="input-medium" name="weight" value="{$data.weight}" data-label="单品重量" data-rule-min="0" required="required">
+                                    <i style="position: absolute;left: 110px;top: 5px;" class="gray">千克(kg)</i>
+                                </div>
+                            </div>
+							<div class="control-group">
+					            <label class="control-label">商家编码</label>
+					            <div class="controls">
+					                <input type="text" class="input-medium" name="outer_id" value="{$data.outer_id}" maxlength="20">
+					            </div>
+					        </div>
+						</td>
+					</tr>
+					<tr>
+						<th>购买限制</th>
+						<td style="padding: 0;">
+							<div style="width: 380px;height: 165px;padding-top: 15px;border-right: 2px solid #f8f8f8;float: left;">
+								<div class="control-group">
+						            <label class="control-label">每人限购</label>
+						            <div class="controls">
+						                <input type="text" name="buy_quota" value="{$data.buy_quota}" class="input-small" data-label="每人限购" data-rule-range="0,999" data-rule-digits="digits">
+						                <span class="gray">0 代表不限购</span>
+						            </div>
+						        </div>
+						        <div class="control-group">
+						            <label class="control-label">每日限购</label>
+						            <div class="controls">
+						                <input type="text" name="every_quota" value="{$data.every_quota}" class="input-small"  data-label="每日限购" data-rule-range="0,999" data-rule-digits="digits">
+						                <span class="gray">0 代表不限购</span>
+						            </div>
+						        </div>
+						        <div class="control-group">
+						            <label class="control-label">每日限售</label>
+						            <div class="controls">
+						                <input type="text" name="day_quota" value="{$data.day_quota}" class="input-small" data-label="每日限售" data-rule-range="0,99999" data-rule-digits="digits">
+						                <span class="gray">0 代表不限售</span>
+						            </div>
+						        </div>
+                                <div class="control-group">
+                                    <label class="control-label">起批数量</label>
+                                    <div class="controls">
+                                        <input id="min_order_quantity" type="text" name="min_order_quantity" value="{$data.min_order_quantity}" class="input-small" data-label="起批数量" data-rule-range="1,999" data-rule-digits="digits">
+                                        <span class="gray">混批低于起订量不可下单</span>
+                                    </div>
+                                </div>
+					        </div>
+					        <div class="block-right">
+					        	<div class="control-group">
+						            <label class="control-label">凭卡购买</label>
+						            <div class="controls" style="height:113px;overflow:hidden">
+                                        <div>
+                                        <foreach name="memberCards" key="i" item="item">
+                                        <php>if($i > 0 && $i%3==0) {if($i>0){echo '</div>';} echo '<div>';}</php>
+										<label class="checkbox inline"><input type="checkbox" value="{$item.id}" name='level_quota[]' {:in_array($item['id'], $data['level_quota'])?'checked="checked"':''}>{$item.title}</label>
+                                        </foreach>
+                                        </div>
+                                        <div class="help-block">默认不限制，勾选后仅指定会员卡可购买</div>
+						            </div>
+						        </div>
+                                <div class="control-group">
+                                    <label class="control-label">会员标签</label>
+                                    <div class="controls">
+                                        <input type="text" placeholder="正在建设中，敬请期待" disabled="disabled" style="width:290px">
+                                    </div>
+                                </div>
+					        </div>
+					    </td>
+					</tr>
+					<tr>
+						<th>运费/其他</th>
+						<td>
+                            <div class="control-group">
+                                <label class="control-label">运费模板</label>
+                                <div class="controls">
+                                    <select name="freight_id" id="freight_id" data-label="运费模板" required="required"></select>
+                                    <a href="javascript:;" class="js-refresh">刷新</a>
+                                </div>
+                            </div>
+					        <div class="control-group">
+					            <label class="control-label">开售时间</label>
+					            <div id="sold_time" class="controls sold-time">
+					                <label class="radio inline">
+					                    <input type="radio" class="js-sold_time_type" data-type="now" checked="checked">立即开售
+					                </label>
+					                <label class="radio inline">
+					                    <input type="radio" class="js-sold_time_type" data-type="timer">定时开售
+					                </label>
+									<div class="input-append inline hide">
+										<input type="text" readonly="readonly" class="input-medium" data-label="定时开售时间"/>
+										<span class="add-on"><i class="icon-th icon-calendar"></i></span>
+									</div>
+									<p class="help-desc hide">开售时间决定商品是否可购买，并且影响新品排序</p>
+					            </div>
+					        </div>
+                            <div class="control-group">
+                                <label class="control-label">减库存方式</label>
+                                <div class="controls">
+                                    <label class="radio inline">
+                                        <input type="radio" name="sub_stock" value="0" checked="checked">付款减库存
+                                    </label>
+                                    <label class="radio inline">
+                                        <input type="radio" name="sub_stock" value="1"{$data['sub_stock']?'checked="checked"':''}>下单减库存
+                                    </label>
+                                </div>
+                            </div>
+					        <div class="control-group" id="join_discount">
+					            <label class="control-label">会员折扣</label>
+					            <div class="controls">
+					                <label class="checkbox inline">
+					                    <input id="member_discount" type="checkbox" name="member_discount" value="1"{$data['member_discount']==1?'checked="checked"':''}>参加会员卡折扣
+					                </label>
+					                <label class="checkbox inline" style="margin: 0;padding-left: 0;">
+						            	<span class="gray">勾选后页面直接显示会员折扣价，但有可能最终出售价格低于成本价造成亏损，请参考成本价合理设置折扣</span>
+					                </label>
+					            </div>
+					        </div>
+					        <div class="control-group">
+					            <label class="control-label">售后保障</label>
+					            <div class="controls">
+					                <label class="checkbox inline">
+					                    <input type="checkbox" name="invoice" value="1"{$data['invoice']==1?' checked="checked"':''}>发票
+					                </label>
+					                <label class="checkbox inline">
+					                    <input type="checkbox" name="warranty" value="1"{$data['warranty']==1?' checked="checked"':''}>保修
+					                </label>
+					                <label class="checkbox inline">
+					                    <input type="checkbox" name="returns" value="1"{$data['returns']==1?' checked="checked"':''}>退换
+					                   <span class="gray">用户是否可主动申请退款</span>
+                                    </label>
+					            </div>
+					        </div>
+                            <div class="control-group">
+                                <label class="control-label">积分抵用</label>
+                                <div class="controls">
+                                    <div style="position:relative;display:inline-block">
+                                        <input id="score" type="text" class="input-small" name="score" value="{$data.score}" data-rule-range="0,100" placeholder="0 ~ 100">
+                                        <i style="position: absolute;right: 8px;top: 5px;">%</i>
+                                    </div>
+                                    <span class="gray">抵用金额 = 用户最终购买价格(不含邮费) x (积分百分比 x 0.01) x 0.1;&nbsp;&nbsp;&nbsp;&nbsp;1积分=0.1元</span>
+                                </div>
+                            </div>
+						</td>
+					</tr>
+				</table>
+				<div class="app-actions">
+				    <div class="form-actions text-center">
+				        <button data-next-step="3" class="btn btn-primary js-switch-step" type="button">下一步</button>
+				    </div>
+				</div>
+			</div>
+			<div class="tab-pane" id="tab3" data-index="2">
+				<div class="goods-info-group">
+					<div class="app-design">
+						<div class="app-sidebar">
+						    <div class="app-sidebar-inner goods-sidebar-sub-title js-goods-sidebar-sub-title hide" style="display: block;">
+						        <p>商品简介(选填，微信分享给好友时会显示这里的文案)</p>
+						        <textarea class="js-sub-title input-sub-title" style="width:473px;max-width:473px;margin:0px; height: 100px;" name="digest" maxlength="200">{$data['digest']|htmlspecialchars}</textarea>
+						    </div>
+						    <div class="app-sidebar-inner goods-sidebar-sub-title js-goods-sidebar-sub-title hide" style="display: block;">
+						        <p>参数设置(选填，自定义的商品属性将展示在图文详情中的顶部)</p>
+						        <div style="height:378px;background-color: #fff;border: 1px solid #d1d1d1;overflow-y:auto;">
+						        	<table class="attr-table">
+						        		<tbody>
+						        			<tr>
+							        			<th>详情模板</th>
+							        			<td class="select_area">
+							        				<div class="js-template_id" style="height:36px;line-height:36px;padding: 0 8px;">
+                                                        <span>默认模板</span>
+                                                        <a href="javascript:alert('暂不支持修改');" class="gray pull-right">...</a>
+                                                    </div>
+							        			</td>
+						        			</tr>
+                                            <tr>
+                                                <th>发货地区</th>
+                                                <td class="select_area" id="send_place">
+                                                    <div class="js-send-place-name" style="height:36px;line-height:36px;padding: 0 8px;">不显示</div>
+                                                </td>
+                                            </tr>
+                                            <tr title="选中地区无法下单，此功能和运费模板同时生效">
+                                                <th>禁单地区</th>
+                                                <td class="select_area" id="remote_area">
+                                                    <div class="js-remote_area" style="height:36px;line-height:36px;padding: 0 8px;">不限制</div>
+                                                </td>
+                                            </tr>
+							        		<tr>
+							        			<th>商品属性</th>
+							        			<td>属性值<a class="js-add-attr" style="float:right;font-size:12px" data-total="{:count($data['parameters'])}">添加</a></td>
+							        		</tr>
+						        			<?php foreach ($data['parameters'] as $index=>$value):?>
+						        			<tr>
+							        			<th><input type="text" name="parameters[{$index}][key]" value="{$value[0]}" maxlength="8"></th>
+							        			<td><a class="delete-attr label label-warning">删除</a><input type="text" name="parameters[{$index}][value]" value="{$value[1]}" maxlength="128"></td>
+						        			</tr>
+						        			<?php endforeach ?>
+							        	</tbody>
+						        	</table>
+						        </div>
+						    </div>
+						</div>
+						<div class="app-sidebar">
+						    <div class="app-sidebar-inner goods-sidebar-sub-title js-goods-sidebar-sub-title hide" style="display: block;">
+						        <p >图文详情</p>
+						        <script id="image_text_container" name="detail" type="text/plain">{$data.detail}</script>
+						    </div>
+						</div>
+					</div>
+				</div>
+				<div class="app-actions">
+				    <div class="form-actions text-center">
+				        <button data-next-step="2" class="btn js-switch-step" type="button">上一步</button>
+				        <button class="btn btn-primary js-submit" type="button" data-display="1">上架</button>
+				        <button class="btn js-submit" type="button" data-display="0">下架</button>
+				        <if condition="ACTION_NAME eq 'edit'">
+				        <button class="btn btn-primary js-submit" type="button">保存</button>
+				        </if>
+				    </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+
+<script type="text/javascript" src="//cdn.bootcss.com/select2/4.0.3/js/select2.min.js"></script>
+<script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="/ueditor/ueditor.all.min.js"></script>
+<script type="text/javascript" src="//cdn.bootcss.com/jquery-validate/1.15.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="/js/goods-edit.js"></script>
+<script type="text/javascript">
+$(function(){
+	EditGoods.memberCards = {:json_encode($memberCards)};
+	EditGoods.init({:json_encode($data)});
+});
+</script>
+<link rel="stylesheet" href="//cdn.bootcss.com/select2/4.0.3/css/select2.min.css">

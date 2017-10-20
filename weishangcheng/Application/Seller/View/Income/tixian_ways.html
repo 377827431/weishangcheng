@@ -1,0 +1,32 @@
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="提现方式" />
+    <style>
+        ul.tixian_ways {width:100%;}
+        ul.tixian_ways li{line-height:50px;height:50px;width:100%;box-sizing:border-box;padding-left:4%;padding-right:4%;font-size:14px;font-family:"微软雅黑";}
+        ul.tixian_ways li>div:nth-child(1){float:left;}
+        ul.tixian_ways li>div:nth-child(2){float:right;color:#ccc;}
+        ul.tixian_ways li>div:nth-child(2)::after{content:"";display:inline-block;width:7px;height:7px;border-top:2px solid #ccc;border-right:2px solid #ccc;transform:rotate(45deg);margin-left:.2em;}
+        ul.tixian_ways li>div:nth-child(2).unset{color:#ccc;}
+        ul.tixian_ways li>div:nth-child(2).set{color:black;}
+    </style>
+</head>
+<body>
+    <ul class="tixian_ways">
+        <li from_where="ali" data_href="{$data.ali_url}"><div>支付宝</div><div class="set">{$data.ali_msg}</div></li>
+        <li from_where="bank" data_href="{$data.bank_url}"><div>银行卡</div><div class="set">{$data.bank_msg}</div></li>
+        <li from_where="tx" data_href="#"><div>微信零钱</div><div class="unset">未设置</div></li>
+    </ul>
+    <script>
+        require(['jquery'],function($){
+            $("ul.tixian_ways li").on('click',function(){
+                if($(this).find("div.set").length == 0){
+                    return false;
+                }else{
+                    window.location.href = $(this).attr("data_href");
+                }
+            })
+        })
+    </script>
+</body>
+</html>

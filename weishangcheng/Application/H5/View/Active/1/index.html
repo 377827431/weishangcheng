@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html class="" lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="cleartype" content="on">
+<meta name="referrer" content="always">
+<title>幸运大抽奖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" href="__CDN__/static/active_1/wheel.css">
+</head>
+<body>
+	<div class="apps-game">
+		<div class="logo"></div>
+		<div class="apps-wheel">
+			<div class="wheel-wrap">
+				<ul class="wheel">
+					<li class="wheel-row-wrap">
+						<ul class="wheel-row">
+							<li class="wheel-block prize-again" data-index="0">
+								<div class="wheel-icon"></div>
+							</li>
+							<li class="wheel-block prize-again" data-index="1">
+								<div class="wheel-icon"></div>
+							</li>
+							<li class="wheel-block prize-again" data-index="2">
+								<div class="wheel-icon"></div>
+							</li>
+							<li class="wheel-block prize-again" data-index="3">
+								<div class="wheel-icon"></div>
+							</li>
+						</ul>
+					</li>
+					<li class="wheel-row-wrap">
+						<ul class="wheel-row wheel-sep-row">
+							<li class="wheel-block prize-again" data-index="11">
+								<div class="wheel-icon"></div>
+							</li>
+							<li class="wheel-block prize-again" data-index="4">
+								<div class="wheel-icon"></div>
+							</li>
+						</ul>
+					</li>
+					<li class="wheel-row-wrap">
+						<ul class="wheel-row wheel-sep-row">
+							<li class="wheel-block prize-again" data-index="10">
+								<div class="wheel-icon"></div>
+							</li>
+							<li class="wheel-block prize-again" data-index="5">
+								<div class="wheel-icon"></div>
+							</li>
+						</ul>
+					</li>
+					<li class="wheel-row-wrap">
+						<ul class="wheel-row">
+							<li class="wheel-block prize-again" data-index="9">
+								<div class="wheel-icon"></div>
+							</li>
+							<li class="wheel-block prize-again" data-index="8">
+								<div class="wheel-icon"></div>
+							</li>
+							<li class="wheel-block prize-again" data-index="7">
+								<div class="wheel-icon"></div>
+							</li>
+							<li class="wheel-block prize-again" data-index="6">
+								<div class="wheel-icon"></div>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<div class="middle-button-area">
+					<div class="middle-button js-start-btn"></div>
+				</div>
+			</div>
+			<div class="info-area">
+				<div class="view-prize">
+					<a href="/h5/active?id={$wheel.id}&time={:time()}" class="js-change-mobile">更换手机号</a>
+				</div>
+				<ul class="activity-info">
+					<li>1.活动说明：
+						<div class="activity-info-content">人工服务费10元，到付给快递小哥即可</div>
+					</li>
+					<li>2.活动有效期：
+						<div class="activity-info-content">{$wheel.start_time} 至 {$wheel.end_time}</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="my-prize-list js-goods-list-container block block-list block-order ">
+		<div class="header" style="padding-left: 0px;">
+			<span>抽奖人：{$mobile}</span>
+		</div>
+		 <div class="js-goods-list">
+			<foreach name="myPrizeList" item="item">
+			<div class="js-goods-item block-item name-card name-card-3col name-card-goods clearfix">
+				<div class="thumb"><img src="{$item.image_url}"></div>
+				<div class="detail">
+					<h3 class="l2-ellipsis">{$item.title}</h3>
+					<div class="address">
+						<div>{$item.receiver_name} {$item.receiver_mobile}</div>
+						<div>{$item.receiver_city} {$item.receiver_county} {$item.receiver_detail}</div>
+					</div>
+				</div>
+				<div class="right-col">
+					<div class="price orgin">{$item.created}</div>
+					<div class="goods-action" data-id="{$item.id}">
+						<if condition="$item['status'] eq '0'">
+						已取消
+						<elseif condition="$item['status'] eq '1'"/>
+						<button class="btn btn-red js-cancel">取消</button>
+						<elseif condition="$item['status'] eq '2'"/>
+						已发货
+						<else/>
+						</if>
+					</div>
+				</div>
+			</div>
+			</foreach>
+		</div>
+	</div>
+	<script id="apps-modal-tpl" type="text/template">
+		<div class="apps-mask">
+			<div class="apps-modal">
+				<div class="apps-modal-content-wrap">
+					<p class="js-apps-modal-content apps-modal-content"></p>
+					<div class="apps-modal-action">
+						<button class="js-apps-modal-confirm apps-btn apps-primary-btn">确定</button>
+						<button class="js-apps-modal-cancel apps-btn">取消</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</script>
+	<script id="apps-notice-tpl" type="text/template">
+		<div class="apps-mask">
+			<div class="apps-notice-wap">
+				<div class="apps-notice-close"></div>
+				<div class="apps-notice-content"></div>
+			</div>
+		</div>
+	</script>
+	<script src="//cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+	<script type="text/javascript">
+		var _apps_global = {:json_encode($wheel)};
+		var _userCenterUrl = "{$userCenterUrl}";
+	</script>
+	<script src="__CDN__/static/active_1/wheel.js?modify=20160801"></script>
+</body>
+</html>

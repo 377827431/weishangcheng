@@ -1,0 +1,192 @@
+<div id="changeTradePrice" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width:650px;margin-left:-325px">
+  <style>
+    #changeTradePrice th{background-color:#f5f5f5; height:50px;border-bottom: 1px solid #ddd;}
+    #changeTradePrice th,#changeTradePrice td{vertical-align: middle;text-align:center}
+    #changeTradePrice .symbol{padding:0;width:6px}
+    #changeTradePrice .formula{table-layout: fixed;width: 100%;margin-bottom: 0;}
+    #changeTradePrice .formula .input input{color:#f89406;text-align:center}
+    #changeTradePrice table{position:relative}
+    #changeTradePrice .table.formula th{padding: 0;height:30px}
+    #changeTradePrice .order-info{max-height: 195px;overflow-y:auto;}
+    #changeTradePrice .ui-table-order .content-row .image-cell img{width:55px;height:55px}
+    #changeTradePrice .scroll-width{width:0px;padding:0}
+  </style>
+  <div class="modal-body" style="padding:0;border-radius: 6px;">
+    <table class="ui-table-order" style="margin-top: -1px;">
+        <thead>
+            <tr class="widget-list-header">
+                <th class="" colspan="2" style="width: 333px;text-align:left">订单 - {$trade['tid']}</th>
+                <th style="width:70px">价格</th>
+                <th class="symbol"></th>
+                <th style="width:70px">数量</th>
+                <th class="symbol"></th>
+                <th style="width:70px">优惠</th>
+                <th class="symbol"></th>
+                <th style="width: 80px">小计</th>
+                <th class="scroll-width"></th>
+            </tr>
+        </thead>
+    </table>
+    <div class="order-info">
+        <table class="ui-table-order" style="margin-top: -1px;">
+            <tbody class="widget-list-item">
+                <foreach name="trade['orders']" key="index" item="order">
+                <tr class="content-row">
+                    <td class="image-cell">
+                        <img src="{$order['pic_url']}">
+                    </td>
+                    <td class="title-cell" style="text-align:left">
+                        <a href="{$trade['project']['url']}/goods?id=64" target="_blank"  class="goods-title " style="color:#333;width:245px;max-height:36px;display: -webkit-box;text-overflow: ellipsis;-webkit-line-clamp: 2;-webkit-box-orient: vertical;overflow: hidden;">{$order['title']}</a>
+                        <div class="color-gray">{$order['spec']}</div>
+                    </td>
+                    <td style="width:70px">{$order['price']}</td>
+                    <td class="symbol">x</td>
+                    <td style="width:70px">{$order['quantity']}</td>
+                    <td class="symbol">-</td>
+                    <td style="width:70px">{$order['discount_fee']}</td>
+                    <td class="symbol">=</td>
+                    <td style="width: 80px">{:bcsub($order['payment'], $order['adjust_fee'], 2)}</td>
+                </tr>
+                </foreach>
+            </tbody>
+        </table>
+    </div>
+  </div>
+  <div>
+    <table class="table formula input-table">
+      <thead>
+        <tr>
+          <th>商品总额</th>
+          <th class="symbol"></th>
+          <th style="color:#f89406">订单邮费</th>
+          <th class="symbol"></th>
+          <th title="包含{$trade['project']['score_alias']}">优惠和{$trade['project']['score_alias']}</th>
+          <th class="symbol"></th>
+          <th>{$trade['project']['wallet_alias']}抵用</th>
+          <th class="symbol"></th>
+          <th>{$trade['project']['balance_alias']}抵用</th>
+          <th class="symbol"></th>
+          <th style="color: #f89406;">调价(±金额)</th>
+          <th class="symbol"></th>
+          <th>还应支付</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{$trade['total_fee']}</td>
+          <td class="symbol">+</td>
+          <td class="input"><input type="text" class="js-adjust_post" value="{$trade['total_postage']}" placeholder="{$trade['total_postage']}"></td>
+          <td class="symbol">-</td>
+          <td>{$trade['discount_fee']}</td>
+          <td class="symbol">-</td>
+          <td>{$trade['paid_wallet']}</td>
+          <td class="symbol">-</td>
+          <td>{$trade['paid_balance']}</td>
+          <td class="symbol js-adjust_fee-symbol">{$trade['adjust_fee']>0?'+':'-'}</td>
+          <td class="input"><input type="text" class="js-adjust_fee" value="{$trade['adjust_fee'] == 0 ? '' : abs($trade['adjust_fee'])}" data-value="{$trade['adjust_fee']}" placeholder="{:abs($trade['adjust_fee'])}"></td>
+          <td class="symbol">=</td>
+          <td class="js-payment">{$trade['payment']}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn" data-dismiss="modal">取消</button>
+    <button type="button" class="js-save btn btn-primary" disabled="disabled">保存</button>
+</div>
+<script>
+  (function(){
+	  var $modal = $('#changeTradePrice'),
+	  $fee = $modal.find('.js-adjust_fee'),
+	  $post = $modal.find('.js-adjust_post'),
+	  $symbol = $modal.find('.js-adjust_fee-symbol'),
+	  $payment = $modal.find('.js-payment'),
+	  scroll = $modal.find('.order-info')[0],
+	  scrollbarWidth = scroll.offsetWidth - scroll.scrollWidth;
+	  
+	  $modal.find('.scroll-width').css('width', scrollbarWidth);
+	  $modal.modal().on('hidden', function(){
+		  $modal.remove();
+		  return false;
+	  });
+	  
+	  // 保存按钮
+	  var $btnSave = $modal.find('.js-save');
+	  $modal.on('change', '.js-adjust_fee,.js-adjust_post',function(){
+		  var $this = $(this), value = this.value.toString(), symbol = '';
+		  if(value != ''){
+			  symbol = value.substr(0, 1);
+			  if(symbol == '+' || symbol == '-'){
+				  value = value.substr(1);
+			  }else{
+				  symbol = $symbol.html()
+			  }
+		  }
+		  
+		  if(value == '' || isNaN(value)){
+			  this.value = '';
+			  value = 0;
+		  }else{
+			  value = parseFloat(value);
+		  }
+
+		  if($this.hasClass('js-adjust_fee')){
+			  $symbol.html(symbol);
+			  if(symbol == '-'){
+				  value *= -1;
+			  }
+			  $this.data('value', value);
+			  this.value = Math.abs(value);
+		  }else if(value < 0){
+			  this.value = '';
+		  }
+		  
+		  var post_fee = $post.val(),
+		      adjust_fee = parseFloat($fee.data('value'));
+		  post_fee = post_fee == '' ? 0 : parseFloat(post_fee);
+		  
+		  var payment = parseFloat({$fixedFee}) + post_fee + adjust_fee;
+		  $payment.html(payment.toFixed(2));
+		  
+		  if(payment < 1){
+			  alert('最少需支付1元');
+			  $btnSave.attr('disabled', 'disabled');
+		  }else{
+			  $btnSave.removeAttr('disabled');
+		  }
+		  
+		  return false;
+	  });
+	  
+	  // 保存
+	  $btnSave.on('click', function(){
+		  var postData = {adjust_fee: $fee.data('value'), postage: $post.val(), tid: '{$trade['tid']}', payment: $payment.html()};
+		  if(postData.adjust_fee === ''){
+			  return $fee.focus(), alertMsg('请输入调价金额'), false;
+		  }else if(postData.post_fee === ''){
+			  return $post.focus(), alertMsg('请输入运费'), false;
+		  }
+		  
+		  $btnSave.attr('disabled', 'disabled');
+		  $.ajax({
+			  url: '__ACTION__',
+			  type: 'post',
+			  data: postData,
+			  dataType: 'json',
+			  success: function(){
+				  if(typeof getOrderList == 'function'){
+					  getOrderList();
+				  }else{
+					  window.location.reload();
+				  }
+				  $modal.modal('hide');
+			  },
+			  error: function(){
+				  $btnSave.removeAttr('disabled');
+			  }
+		  });
+		  return false; 
+	  });
+  })(); 
+  </script>
+</div>

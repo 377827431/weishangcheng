@@ -1,0 +1,33 @@
+<toolbar id="toolbar">
+    <form id="order_search" class="form-horizontal">
+        <div class="control-group">
+            <label class="control-label" style="width: 120px;">下单时间</label>
+            <div class="input-append date" data-format="yyyy-MM-dd">
+                <input type="text" name="date" value="{$date}"style="width: 130px;">
+                <span class="add-on"><i class="icon-th"></i></span>
+            </div>
+        </div>
+    </form>
+</toolbar>
+<table id="table" data-toggle="gridview" class="table" data-url="__ACTION__" data-toolbar="#toolbar"  data-show-columns="true"
+ data-side-pagination="client" data-page-size="All">
+    <thead>
+        <tr>
+            <th data-field="type_name" >付款类型</th>
+            <th data-field="type" >付款类型标记</th>
+            <th data-field="bp" data-formatter="fomat_status">收支</th>
+            <th data-field="count" >记录总数</th>
+            <th data-field="money" >金额总计</th>
+        </tr>
+    </thead>
+</table>
+<script type="text/javascript">
+//格式化数据
+function fomat_status(status, row, index){
+    if(status == '1'){
+        return '收入';
+    }else{
+        return '支出';
+    }
+}
+</script>

@@ -1,0 +1,49 @@
+<style>
+.fixed-table-body{width:940px;}
+</style>
+<toolbar id="toolbar">
+    <form id="order_search" class="form-horizontal">
+            <div class="control-group">
+                    <label class="control-label" style="width: 120px;">支付时间</label>
+                    <div class="controls" style="margin-left:125px;">
+                        <div class="input-append date" data-format="yyyy-MM-dd hh:mm:ss">
+                            <input type="text" name="start_date" value="{$start_date}"style="width: 135px;">
+                            <span class="add-on"><i class="icon-th"></i></span>
+                        </div>
+                        至
+                        <div class="input-append date" data-format="yyyy-MM-dd hh:mm:ss">
+                            <input type="text" name="end_date" value="{$end_date}" style="width: 135px;">
+                            <span class="add-on"><i class="icon-th"></i></span>
+                        </div>
+                    </div>
+                </div>
+    </form>
+</toolbar>
+<table id="table" data-toggle="gridview" class="table" data-url="__ACTION__" data-toolbar="#toolbar" data-show-columns="true"
+ data-side-pagination="client" data-pagination="false" style="min-width:1100px">
+    <thead>
+        <tr>
+            <th data-field="count" data-formatter="fomatter_num">笔/人/件</th>
+            <th data-field="total_fee">商品总额</th>
+            <th data-field="post_fee">邮费</th>
+             <th data-field="paid_balance">零钱</th>
+            <th data-field="paid_no_balance">积分</th>
+            <th data-field="discount_fee">优惠</th>
+            <th data-field="payment">微信支付</th>
+            <th data-field="wechat_fee">微信手续费</th> 
+            <th data-field="trade_difference">上级差价</th>
+            <th data-field="total_cost">成本</th>
+            <th data-field="profit">利润</th>
+            <th data-field="seller_nick" data-width="130">店铺</th>
+            <th data-field="refund_fee">退款</th>
+            <th data-field="back_fee">应退平台</th>
+        </tr>
+    </thead>
+</table>
+<script type="text/javascript">
+function fomatter_num(val, row, index){
+    if(row['count'] > 0){
+        return row['count'] + '/' + row['buyer_id'] + '/' + row['total_num']
+    }
+} 
+</script>

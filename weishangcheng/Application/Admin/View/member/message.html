@@ -1,0 +1,64 @@
+<form id="messageModal" method="post" action="__ACTION__" data-validate="true" data-submit="ajax" class="form-horizontal">
+    <style>
+    .modal .control-label{width:90px}
+    .modal .controls{margin-left:100px}
+    .modal input,.modal textarea{width: 350px;}
+    </style>
+	<div class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+	  <div class="modal-header">
+	    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	    <h3 id="myModalLabel">待办事项通知</h3>
+	  </div>
+	  <div class="modal-body">
+		<div class="control-group">
+			<label class="control-label must">标题</label>
+			<div class="controls">
+				 <input type="text" class="required"  name="first" placeholder="最多输入16字" maxlength="16">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label must">事项名称</label>
+			<div class="controls">
+                  <input type="text" class="required"  name="keyword1" maxlength="15">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label must">时间</label>
+			<div class="controls">
+                  <input type="text" class="required"  name="keyword2" value="{:date('Y年m月d日 H:i')}" placeholder="yyyy年mm月dd日 hh:ii" maxlength="17">
+			</div>
+		</div>
+        <div class="control-group">
+            <label class="control-label">详情链接</label>
+            <div class="controls">
+                  <input type="text" name="url" placeholder="以“/”或“http”开头">
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">备注</label>
+            <div class="controls">
+                  <textarea name="remark"></textarea>
+            </div>
+        </div>
+        <div class="control-group hide">
+            <label class="control-label must">消息接收人</label>
+            <div class="controls">
+                 <input type="text" name="id" value="{$id}" placeholder="英文逗号间隔的会员ID" required="required">
+            </div>
+        </div>
+	  </div>
+	  <div class="modal-footer">
+	    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+	    <button class="btn btn-primary">确定发送</button>
+	  </div>
+	</div>
+	<script>
+	(function(){
+		$('#reissueScoreModal').on('valid', function(){
+			if(!confirm('确定推送消息吗？')){
+				return false;
+			};
+		});
+	})();
+	</script>
+</form>

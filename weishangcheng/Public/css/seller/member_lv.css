@@ -1,0 +1,33 @@
+.add_member_level{text-align:center;background-color: #ff5000;line-height:46px;width:92%;border-radius:6px;margin-left:4%;box-sizing:border-box;color:white;font-family:"微软雅黑";font-size:16px;}
+.add_btn_con{position:fixed;bottom:0px;width:100%;border-top:1px solid #ccc;padding-top:10px;padding-bottom:10px;background-color: #fff;}
+.add_member_level{color:white;}
+div.level_list ul li {line-height:48px;width:92%;margin:0 auto;font-size:14px;font-family:"微软雅黑";border-bottom:1px solid #ccc;}
+div.level_list ul li span.edit_icon{padding-left:10px;width:24px;height:24px;background:url(/img/seller/edit-orange.svg) no-repeat;background-size:100% 100%;display:inline-block;vertical-align:middle;}
+div.level_list ul li span.delete_icon{padding-left:10px;width:24px;height:24px;background:url(/img/seller/delete_icon_orange.svg) no-repeat;background-size:100% 100%;display:inline-block;vertical-align:middle;}
+div.level_list ul li span.view_icon{padding-left:10px;width:24px;height:24px;background:url(/img/seller/view-orange.svg) no-repeat;background-size:100% 100%;display:inline-block;vertical-align:middle;}
+div.level_list ul li div.member_ctrol{display:inline-block;float:right;vertical-align:middle;}
+/*.edit_member_lv_dialog{display:none;}*/
+
+div.edit_member_lv_dialog{position:absolute;top:0;width:100%;height:100%;font-family:"微软雅黑";display:none;}
+div.edit_member_lv_dialog div.dialog_mask{position:fixed;width:100%;height:100%;background-color:rgba(0,0,0,0.7);}
+div.edit_member_lv_dialog div.dialog_body{position:absolute;bottom:0px;background-color: #fff;width:92%;line-height:40px;padding-left:4%;padding-right:4%;}
+div.edit_member_lv_dialog div.dialog_body ul li{border-bottom:1px solid #ccc;}
+div.submit_member{display:inline-block;float:left;width:48%;text-align:center;background-color: #ff5000;height:36px;line-height:36px;margin-top:5px;margin-bottom:5px;color:white;border-radius:6px;font-size:14px;}
+div.cancel_member{display:inline-block;float:right;width:48%;text-align:center;background-color: #ccc;height:36px;line-height:36px;margin-top:5px;margin-bottom:5px;border-radius:6px;font-size:14px;}
+div.edit_member_lv_dialog ul li{font-size:14px;}
+div.edit_member_lv_dialog input{border:none;outline:none;}
+div.edit_mmeber_lv_dialog ul li span{float:left;display:inline-block;vertical-align:middle;}
+div.edit_member_lv_dialog ul li input{float:right;vertical-align:middle;display:inline-block;margin-top:10px;text-align:right;}
+div.edit_member_lv_dialog ul li select{float:right;vertical-align:middle;display:inline-block;margin-top:10px;font-size:14px;padding-right:5px;}
+div.edit_member_lv_dialog ul li.member_level_li::before{content:"∨";float:right;position:relative;top:-3px;}
+
+div.dropdown_block{line-height:30px;border:1px solid #ccc;margin-bottom:10px;border-radius:6px;padding:10px;display:none;position:relative;}
+div.dropdown_block span{display:inline-block;min-width:calc(50% - 2px);}
+div.dropdown_block span:nth-child(n+5){width:100%;}
+div.dropdown_block span.level::before{content:"会员等级：";}
+div.dropdown_block span.expire::before{content:"过期时间：";}
+div.dropdown_block span.discut::before{content:"折扣：";}
+div.dropdown_block span.pirce_value::before{content:"价格：";}
+div.dropdown_block span.auto_order::before{content:"自动升级订单数：";}
+div.dropdown_block span.auto_price::before{content:"自动升级消费金额：";}
+div.dropdown_block span.auto_score::before{content:"自动升级积分数：";}

@@ -1,0 +1,11 @@
+<div style="position:fixed;top:0;height:50px;line-height:50px;z-index:10;color:#06bf04;font-size:14px;" class="top-fix">
+    <div style="text-align:right;z-index:125;position:absolute;top:0;left:15px;right:15px;height:50px;">
+		<span style="float:left;">欢迎光临{:C('WEBSITE_NAME')}</span>
+		<a class="btn btn-green" onclick="document.getElementById('watch_qrcode').style.display='block'">点击关注</a>
+	</div>
+	<div style="background-color:black;opacity:0.6;position:fixed;top:0;height:50px;" class="top-fix"></div>
+</div>
+<div id="watch_qrcode" class="top-fix" style="text-align: center;  display: none; background-color: rgb(255, 255, 255);position: fixed;top: 0;left: 0;right: 0;bottom: 0;z-index: 2;padding-top: 25%;" onclick="this.style.display='none'">
+	<img src="{:C('WEIXIN.qrcode')}" style="width:80%">
+	<p style="color: #f60;font-size: 14px;font-weight: bold;">长按识别二维码</p>
+</div>

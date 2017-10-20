@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="审核结果" />
+    <title>审核结果</title>
+    <style>
+        .p_title{font-size:14px;font-family:"微软雅黑";line-height:30px;}
+        .button_yellow{color:white;background-color: #da8f3e;line-height:42px;border-radius:6px;font-size:16px;font-family:"微软雅黑";text-align:center;}
+        .inner_container{box-sizing:border-box;width:100%;padding-left:4%;padding-right:4%;}
+        #loading_circle{position:fixed;top:45px;left:calc(50% - 50px);}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content ">
+            <div class="content-body">
+                <div>
+                    <img src="__CDN__/img/seller/certification_header.jpg" style="width:100%">
+                    <canvas id="loading_circle">
+                    </canvas>
+                </div>
+                <div class="inner_container">
+                    <p class="p_title" style="text-align:center;padding-left:1em;padding-right:1em;">您的认证信息已提交，目前正在审核中，请耐心等待，预计3个工作日完成人工审核。</p>
+                    <a href="/seller/shop"><div class="button_yellow goon_button" style="cursor:pointer;margin-top:24px;margin-bottom:24px;">继续</div></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // 画动态图
+        var oCircle = document.getElementById("loading_circle");
+        oCircle.height = 100;
+        oCircle.width = 100;
+        var ctx = oCircle.getContext("2d");
+
+        function resetPosition(height,width){
+            ctx.translate(parseInt(width / 2,10),parseInt(height / 2,10));
+        }
+        function drawCircle(deg,r,scolor,ecolor,line_width){
+            //画轨道
+            ctx.clearRect(-50,-50,100,100);
+            ctx.beginPath();
+            ctx.strokeStyle = "#ffafa3";
+        	ctx.lineWidth = line_width;
+        	ctx.lineCap = "round";
+        	ctx.arc(0,0,r,0,2*Math.PI,false);
+        	ctx.stroke();
+            //画渐变
+            ctx.beginPath();
+            ctx.save();
+            var gradient = ctx.createLinearGradient(r*Math.cos(deg), -r*Math.sin(deg), r*Math.cos(deg), r*Math.sin(deg));
+            gradient.addColorStop(0,ecolor);
+            gradient.addColorStop(1,scolor);
+            ctx.strokeStyle = gradient;
+            ctx.lineWidth = line_width;
+        	ctx.lineCap = "round";
+            ctx.arc(0,0,r,deg-Math.PI,deg,false);
+            ctx.stroke();
+            ctx.restore();
+            drawText();
+        }
+        function drawText(){
+            //感叹号
+            ctx.beginPath();
+            ctx.moveTo(0,-30);
+            ctx.lineCap = "round";
+            ctx.lineTo(0,-12);
+            ctx.strokeStyle = "white";
+            ctx.lineWidth = "8";
+            ctx.stroke();
+            ctx.closePath();
+            //点
+            ctx.beginPath();
+            ctx.arc(0,2,4,0,360,false);
+            ctx.fillStyle = "white";
+            ctx.fill();
+            ctx.closePath();
+            //审核中
+            ctx.beginPath();
+            ctx.font = "bold 16px SimSun";
+            ctx.textBaseline = "middle";
+            var textW = ctx.measureText("审核中").width;
+            ctx.fillText("审核中",0-textW/2,22);
+            ctx.closePath();
+
+        }
+        resetPosition(100,100);
+        var deg = 0;
+        setInterval(function(){
+            deg -= 0.1;
+            if(deg < -2*Math.PI){
+                deg = 0;
+            }
+            drawCircle(deg,47,"#ffafa3","white",6);
+        },30);
+    </script>
+</body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="订单管理" />
+    <link rel="stylesheet" href="__CDN__/css/seller/keyshop.css?20170919">
+    <style>
+        .btn_grey{
+            background-color:grey;
+            color:white;
+        }
+        ul.js-list .no_more_li{
+            display:none;
+        }
+        ul.js-list .no_more_li:last-of-type{
+            display:block !important;
+        }
+        #share_code_body {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 99999;
+            display: none;
+        }
+        #share_code_body .share_code_body {
+            position: relative;
+            width: 92%;
+            margin: 0 auto;
+            margin-top: 25px;
+            border-radius: 6px;
+        }
+        #share_code_body .close_icon {
+            position: absolute;
+            width: 30px;
+            border-radius: 15px;
+            height: 30px;
+            top: -6px;
+            right: -6px;
+            z-index: 100000;
+            background: white url(/img/mall/new_close_icon.png) no-repeat;
+            -webkit-background-size: 100% 100%;
+            background-size: 100% 100%;
+        }
+    </style>
+</head>
+<body>
+<div id="share_code_body" class="dc_code_body" style="display: none;">
+    <div class="share_code_body" style="background-color:transparent; width:auto !important; margin-top: 0px !important;">
+        <span class="close_icon dc_close_icon" style="background:none;color:white;top:-40px;right:0%;font-size:25px;width:40px;height:40px;font-family:'宋体';text-align:center;line-height:40px;">×</span>
+            <img class="share_logo dc_img" src="" alt="" style="width: auto;display:block;margin:0 auto;border-radius: 8px;">
+            <!-- <img class="share_logo" src="/img/temp/seller_recommend/100001-101000/1000073.png?modify=1505873414" alt="" style="display:block;margin:0 auto; width:80%;border-radius:8px;position:absolute;top:0px;left:10%;opacity:0;"> -->
+            <div class="share_code_btn_text" style="margin:0 auto;margin-top:10px;padding:10px 0px;text-align:center;color:white;background-color:#e4bc91;font-size:15px;border-radius:8px;">点击分享</div>
+    </div>
+</div>    
+<div class="container" style="padding-top: 98px;padding-bottom:60px;">
+    <div class="content">
+        <div class="order-tab-container" id="order-tab-container">
+            <ul class="clearfix">
+                <li class="all_log <?php if(empty($param) || $param=='today'){echo 'active';}?>" href="#all_log" data-status="all">全部</li>
+                <li class="topay_log <?php if($param=='topay'){echo 'active';}?>" href="#topay_log" data-status="topay">待付款</li>
+                <if condition="$isLB eq 1">
+                <li class="topurchase_log" href="#topurchase_log" data-status="topurchase">待采购</li>
+                </if>
+                <li class="tosend_log <?php if($param=='tosend'){echo 'active';}?>" href="#tosend_log" data-status="tosend">待发货</li>
+                <li class="send_log <?php if($param=='send'){echo 'active';}?>" href="#send_log" data-status="send">已发货</li>
+                <li class="success_log" href="#success_log" data-status="success">已完成</li>
+                <if condition="$isLB neq 1">
+                <li class="refund_log" href="#refund_log" data-status="refund">退款中</li>
+                </if>
+            </ul>
+        </div>
+        <div class="order_opeation clearfix">
+            <div class="search_goods_box">
+                <input type="text" value="{$search_title}" name="" placeholder="搜索：订单号、货号、手机号、姓名、昵称" />
+                <a href="javascript:;" class="search_goods_btn"><i></i></a>
+            </div>
+        </div>
+        <div id="log-container">
+            <div class="order-log-container" id="all_log">
+                <ul class="js-list">
+
+                </ul>
+            </div>
+            <div class="order-log-container" id="topay_log">
+                <ul class="js-list">
+                </ul>
+            </div>
+            <if condition="$isLB eq 1">
+            <div class="order-log-container" id="topurchase_log">
+                <ul class="js-list">
+                </ul>
+            </div>
+            </if>
+            <div class="order-log-container" id="tosend_log">
+                <ul class="js-list">
+                </ul>
+            </div>
+            <div class="order-log-container" id="send_log">
+                <ul class="js-list">
+                    
+                </ul>
+            </div>
+            <div class="order-log-container" id="success_log">
+                <ul class="js-list">
+                </ul>
+            </div>
+            <if condition="$isLB neq 1">
+            <div class="order-log-container" id="refund_log">
+                <ul class="js-list">
+                </ul>
+            </div>
+            </if>
+        </div>
+    </div>
+</div>
+<if condition="$isLB eq 1">
+<div class="update_order_box">
+    <a type="button" class="update_order_btn" href="javascript:;">手动更新订单状态</a>
+</div>
+</if>
+<input type="hidden" class="search_title" value="{$search_title}" />
+<input type="hidden" class="param" value="{$param}" />
+<!-- 财源宝弹窗 -->
+<div class="cyb_dailog" style="display:none;position:fixed;top:0px;left:0px;width:100%;height:100%;background-color:rgba(0,0,0,0.6);z-index:1000;">
+    <div class="cyb_body" style="width:80%;margin-left:10%;padding:20px 0px;box-sizing:border-box;margin-top:100px;padding-bottom:10px;border-radius:6px; background-color:white;">
+        <h3 style="text-align:center; margin-bottom:20px; width:90%; margin: 0 auto 20px auto;">
+            <img src="/img/seller/Right.png" style="height: 25px;width: 25px;position: relative; top: .4rem;" alt="">
+            已同步至采源宝
+        </h3>
+        <p style="width:90%;margin:0 auto;font-size:14px;line-height:1.3em;margin-bottom: 2rem;">
+            请立即付款! 或稍后到采源宝 - 我的 - 待付款中对此笔订单付款。
+        </p>
+        <div class="goto_pay" style="cursor:pointer;width:90%;margin-left:5%;height:32px;background-color:#da8f3e;border-radius:6px;margin-top:4px;color:white;text-align:center;line-height:32px;font-size:16px;">马上去付款</div>
+    </div>
+</div>
+
+<!-- 订单更新中弹窗 -->
+<!-- <div id="update_loading_dailog" style="position:fixed;flex-direction:column;width:100%;height:100%;top:0px;left:0px;background-color:rgba(0,0,0,0.6);display:flex;align-items: center;justify-content: center;z-index:9999;">
+    <span style="color:white;font-size:16px;">订单状态更新中,请稍后</span>
+</div> -->
+<script type="text/javascript">
+    var update_order_flag = false;
+    // require(['alipan'],function(ali){
+    //             alert(ali.isAvailable)
+    //         if(ali.isAvailable){
+              
+    //         }else{
+                
+    //         }
+
+    //     })
+    /*下拉加载更多*/
+    require(['seller/my_order_list']);
+    require(["jquery"], function($){
+        // $('#update_loading_dailog').hide();
+        $('body').on('click','.order_opeation .search_goods_btn',function(){
+            var self = $(this);
+            var search_val = $.trim(self.siblings('input').val());
+            window.location.href = '/seller/order'+'?title=' + search_val;
+            return false;
+        });
+        //点击关闭弹窗
+        // $("#closed").click(function(){
+        //     $(".cyb_dailog").fadeOut(300);
+        // })
+       
+        //当前被操作的tid;
+        var tid = "";
+        //显示财源宝弹窗
+        $("body").on("click","a.goto_caiyuanbao",function(){
+            tid = $(this).attr("trade_tid");
+            $.ajax({
+                url: '/seller/order/payTo1688',
+                data: {tid: tid},
+                type: 'post',
+                dataType: 'json',
+                success: function(data){
+                    if(data == 'nopay'){
+                        window.location.href="https://trade.m.1688.com/page/buyerOrderList.html?sceneType=weigong";
+                    }else if(data == 'paid'){
+                        toast.show("已付款给供应商，等待供应商发货");
+                        setTimeout(function(){
+                            window.location.reload();
+                        },1500);
+
+                    }else if(data == 'complete'){
+                        toast.show("订单同步成功");
+                        setTimeout(function(){
+                            window.location.reload();
+                        },1500);
+                    }else{
+                        toast.show(data);
+                        return false;
+                    }
+
+                }
+            });
+
+        })
+        //马上去付款
+        $("div.goto_pay").click(function(){
+            window.location.href="https://trade.m.1688.com/page/buyerOrderList.html?sceneType=weigong";
+        })
+        //手动更新订单
+        $(".update_order_btn").click(function(){
+            var that = this;
+            if(update_order_flag == false){
+                update_order_flag = true;
+                // $("#update_loading_dailog").show();
+                $(this).text("订单更新中，请稍后...");
+                $(this).addClass("btn_grey");
+            }else{
+                //订单更新中
+                return false;
+            }
+            $.ajax({
+                url:"/seller/order/synOrderShop",
+                success:function(){
+                    update_order_flag = false;
+                    $("#update_loading_dailog").hide();
+                    toast.show('同步订单完成');
+                    setTimeout(function(){
+                        $(that).toggleClass("btn_grey");
+                        $(that).text("手动更新订单状态");
+                        $('#order-tab-container>ul>li.active').trigger('click');
+                    },1500);
+                    return false;
+                }
+            })
+        })
+        //关闭遮罩
+        $("div.cyb_dailog").click(function(){
+            $("div.cyb_dailog").fadeOut(300);
+        })
+
+        //提醒 order/remind
+        $("body").on("click",".js-remind",function(){
+            tid = $(this).attr("trade_tid");
+            is_suyuan = $(this).attr("is_suyuan");
+            $.ajax({
+                url: '/seller/order/tradepaid',
+                data: {tid: tid,is_suyuan: is_suyuan},
+                type: 'post',
+                dataType: 'json',
+                success: function(data){
+                    if(data == '0'){
+                        toast.show('确认付款完成');
+                    }
+                    else if(data == '1'){
+                        $("div.cyb_dailog").show();
+                        document.cookie="open="+tid;
+                        // $(".cyb_body p").val();
+                        // toast.show('确认付款，同步采购单完成');
+                    }else{
+                        toast.show(data);
+                    }
+                    setTimeout(function(){
+                        $('#order-tab-container>ul>li.active').trigger('click');
+                    },3000);
+                }
+            });
+        })
+        var getCookie = function(objName) {
+            var arrStr = document.cookie.split("; ");
+            for (var i = 0; i < arrStr.length; i++) {
+                var temp = arrStr[i].split("=");
+                if (temp[0] == objName) {
+                    return unescape(temp[1]);
+                }
+            }
+        };
+        function deleteCookie(name){ 
+            var date=new Date(); 
+            date.setTime(date.getTime()-10000); 
+            document.cookie=name+"=v; expires="+date.toGMTString(); 
+        }
+        var data = document.cookie.indexOf("open=")
+        if(data != "-1"){
+            var tid = getCookie("open"); 
+             $.ajax({
+                url:"/seller/order/synOrder1688?modify="+Date.parse(new Date()),
+                data:{tid:tid},
+                type:'post',
+                dataType:'json',
+                success:function(){
+                    deleteCookie("open");
+                    $('#order-tab-container>ul>li.active').trigger('click');
+                }
+            });
+        }
+        //分享物流给买家
+        $("body").on("click",".dc_fx_function",function(){
+
+            var id = $(this).attr("data-id");
+            $.ajax({
+                type: "post",
+                url: "https://seller.xingyebao.com/login/shop_guanzhu",
+                data:{shop_id:id},
+                dataType: "json",
+                success: function (data) {
+                    $(window).on("resize",function(){
+                        var width = $(window).width()/4;
+                        var height = $(window).height()*0.45
+                        var x = height/2;
+                        var top =  height-x;
+                        $(".share_code_body").css({
+                            height:height+"px !important",
+                            top:top+'px'
+                        })
+                        $(".dc_img").css("height",height+"px");
+                    }).trigger("resize");
+                    $(".dc_code_body").attr("style","display:flex");
+                    $(".share_code_btn_text").show();
+					$(".dc_code_body img.dc_img").attr("src",data);
+                }
+            });
+        })
+        //点击分享码弹窗分享
+        require(['alipan'],function(ali){
+            if(window.WindVane.isAvailable){
+                $("body").on("click",".share_code_btn_text",function(){
+                    $(".dc_code_body").fadeOut(300);
+                    ali.aliShare("",[''+$('.dc_code_body img.dc_img').attr('src')]);
+                })
+            }else{
+                $(".share_code_btn_text").hide();
+            }
+        })
+
+        //点击分享弹窗关闭
+        $(".dc_close_icon").click(function(){
+            $(".dc_code_body").fadeOut(300);
+            // window.location.href="http://www.baidu.com";
+        })
+    });
+</script>
+</body>
+</html>

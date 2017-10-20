@@ -1,0 +1,37 @@
+<head>
+    <include file="_layout/mall.head.html" title="我的收入" />
+        <style>
+            .content-body{position:absolute;top:0px;width:100%;height:100%;background-color: #f1f0f5;}
+            .bank_icon_container{width:25%;height:102px;float:left;background-color: #fff;}
+            .bank_icon_container img{display:block;width:70px;height:70px;margin:0 auto;margin-top:16px;border:none;}
+            .bank_info_container{width:75%;height:102px;float:right;background-color: #fff;}
+            .common_btn{width:92%;text-align: center;height: 39px;line-height: 39px;background-color: #fc4f0d;border-radius: 6px;margin: 20px auto;color: white;font-size: 16px;cursor: pointer;}
+            .bank_info_container p{font-family:'微软雅黑';}
+            .bank_info_container p:nth-child(1){line-height:30px;font-size:16px;color:black;margin-top:10px;}
+            .bank_info_container p:nth-child(2){line-height:24px;font-size:14px;color:#777;}
+            .bank_info_container p:nth-child(3){line-height:24px;font-size:14px;color:#777;}
+            .bank_info_container p:nth-child(3) span:nth-child(2)::before{content:" ";}
+        </style>
+    </head>
+<body>
+    <div class="container">
+        <div class="content ">
+            <div class="content-body">
+                <div class="bank_icon_container"><img src="__CDN__/img/seller/icbc.jpg" /></div>
+                <div class="bank_info_container">
+                    <p>{$data.card_name}</p>
+                    <p>{$data.bc_no}</p>
+                    <p><span>浙江</span><span>嘉兴</span></p>
+                </div>
+                <div style="clear:both"></div>
+                <a href="/seller/income/bank_edit"><div class="common_btn change_bank_btn">{$data['show_name'] ? $data['show_name'] : 更换银行卡}</div></a>
+                <a href="/seller/income/bind_card"><div class="common_btn edit_bank_btn" style="background-color:#eaeaea;color:black">银行开户信息编辑</div></a>
+			</div>
+        </div>
+    </div>
+	<script>
+	require(['jquery'],function($){
+    })
+    </script>
+</body>
+</html>

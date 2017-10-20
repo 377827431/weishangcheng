@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+	<include file="_layout/mall.head.html"  title="联系商家付款" />
+	<link rel="stylesheet" href="__CDN__/css/shop.homepage.css?20170901">
+	<literal>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+		body{
+			background: #EEEEEE;
+		}
+		.payseller_box{
+			width: 100%;
+			background: #fff;
+			color: #0F0F0F;
+			overflow: hidden;
+		}
+		.payseller_info_box{
+			width: 100%;
+			background: #fff;
+			margin-top: 15px;
+			overflow: hidden;
+		}
+		.payseller_box_ts{
+			width: 93%;
+			margin: 0 auto;
+			padding: 20px 0px;
+		}
+		.payseller_info_box_ms{
+			width: 93%;
+			margin: 20px auto;
+			/*display: flow-root;*/
+			margin-top: 0px;
+		}
+		.payseller_info_box_ms ul li{
+			border-bottom: 1px solid #BABABA;
+		}
+		.payseller_info_box_ms ul li p{
+			color: #E4BC91;
+			margin: 10px auto;
+			/*display: flow-root;*/
+			font-size: 14px;
+		}
+		.flex_left{
+			color: #0F0F0F !important;
+			font-size: 14px;
+			float: left;
+		}
+		.flex_right{
+			font-size: 14px;
+			float: right;
+		}
+		.color_ad{
+			color: #ADADAD !important;
+		}
+		.payseller_info_box_ms a{
+			width: 45%;
+			margin: 20px auto;
+			font-size: 14px;
+			text-align: center;
+			padding: 6px 0px;
+			text-decoration: none;
+			color: #0F0F0F;
+			margin-bottom: 0px;
+		}
+		.payseller_info_box_ms a img{
+			width: 25px;
+			height: 25px;
+			margin-right: 8px;
+			position: relative;
+    		top: .1rem;
+		}
+		.payseller_code{
+			float: left;
+			border: 1px solid #BDBDBD;
+		}
+		.payseller_tel{
+			float: right;
+			border: 1px solid #BDBDBD;
+		}
+		.top_rem{
+			position: relative;
+    		top: -.4rem;
+		}
+		.footer_nav{
+			width: 100%;
+			background: #fff;
+			position: fixed;
+			bottom: 0px;
+			right: 0px;
+			overflow: hidden;
+		}
+		.footer_center{
+			width: 93%;
+		    margin: 10px auto;
+		    /*display: flow-root;*/
+		}
+		.footer_left{
+			float: left;
+		    width: 50%;
+		    padding: 10px 0px;
+		    color: #DF862A;
+		}
+		.footer_right{
+			width: 33%;
+		    background: #E4BC91;
+		    float: right;
+		    text-align: center;
+		    font-size: 14px;
+		    color: #fff;
+		    padding: 8px 0px;
+		    border-radius: 6px;
+		    cursor: pointer;
+		}
+		.color_A0{
+			color: #A0A0A0 !important;
+		}
+		.payseller_zy{
+			width: 93%;
+			margin: 20px auto;
+			font-size: 13px;
+		}
+		#share_code_body{top:0px;}
+		div{
+			font-size:14px;
+		}
+		.grey{
+			color:#6a6a6a;
+		}
+		.black{
+			color:#262626;
+		}
+		.orange{
+			color:#de8e39;
+		}
+		.yuan_unit::before{
+			content: "¥";
+		}
+		.good_num::before{
+			content:"x";
+		}
+		.good_items{
+			border-top:1px solid #e1e1e1;
+		}
+		.red{
+			color:#ff0700;
+		}
+		@keyframes bling {
+			from{
+				opacity: 0.1;
+			}
+			to{
+				opacity: 1;
+			}
+		}
+		.animation_bling{
+			animation:bling infinite 1s;
+		}
+
+		/*拨打电话弹窗*/
+		.offshelf_dialog{display: none;}
+        .offshelf_dialog .offshelf_dialog_bg{height: 100%; position: fixed; top: 0px; left: 0px; right: 0px; z-index: 1000; transition: none 0.2s ease; opacity: .7; background-color: rgba(0, 0, 0, 0.901961);}
+
+        .offshelf_dialog .offshelf_dialog_box{text-align:center;border-radius:6px;background-color: #fff;width: 80%;position: fixed;left:50%;top:50%;margin-left:-40%;margin-top:-100px;z-index: 1001;}
+        .offshelf_dialog .offshelf_dialog_box .offshelf_dialog_content{text-align:center;padding: 36px 12px;padding-bottom:14px;padding-top: 14px;}
+        .offshelf_dialog .offshelf_dialog_box .offshelf_dialog_content>img{width: 40%;}
+        .offshelf_dialog .offshelf_dialog_box .offshelf_dialog_content p.dialog_text_main{font-size: 14px;margin-top: 10px;line-height: 24px;text-align: center;}
+
+        .offshelf_dialog .close_icon_btn{cursor: pointer;width: 24px;height: 24px;font-size: 18px;line-height: 24px;text-align: center;border-radius: 50%;color: #fff;position: absolute;right: 8px;top: 8px;background-color: #e4bc91;}
+        /*拨打电话*/
+        .goto_phone{font-size:14px;width:70%;margin:10px auto 0px;cursor:pointer;height:36px;border-radius:6px;line-height:36px;text-align:center;color:white;background-color:#da8f3e;}
+	</style>
+	<style type="text/css">
+        div.Payment_popups{
+            display:flex;
+            position:fixed;
+            width:100%;
+            height:100%;
+            background-color:rgba(0,0,0,0.7);
+            top:0px;
+            left:0px;
+            z-index:99999;
+        }
+        div.Payment_popups_box{
+            width:100%;
+            height:100%;
+            justify-content:center;
+            align-items:center;
+            color:white;
+        }
+        .close_dc{
+            display:block;
+            position:relative;
+            top:6%;
+            left:74%;
+            margin-left:10px;
+            width:25px;
+            height:25px;
+            z-index: 99999;
+
+        }
+        .close_dc img{
+            width:100%;
+            height:100%;
+        }
+        .Payment_popups_box_zf,
+        .Payment_popups_box_bz
+        {
+            width:70%;
+            margin-left:15%;
+        }
+        .Payment_popups_box_zf{
+            width:50%;
+            margin-left:25%;
+        }
+        .Payment_popups p{width:100%;text-align:center;font-size:14px;}
+        .Payment_popups p.yangdonglei{height:30px;display:flex;align-items:center;width:100%;justify-content:center;font-size:14px;}
+		/*微信支付宝付款*/
+		span.icon_wx{display:inline-block;margin-right:10px;width:20px;height:20px;background:url("__CDN__/img/wx_logo.png") no-repeat;background-size:100% 100%;}
+		span.icon_zfb{display:inline-block;margin-right:10px;width:20px;height:20px;background:url("__CDN__/img/zfb_logo.png") no-repeat;background-size:100% 100%;}
+		div.check_box{width: 20px;height: 20px;background:url("__CDN__/img/check_box_unchecked.jpg") no-repeat;background-size:100% 100%;cursor:pointer;}
+		div.check_box.checked{background:url("__CDN__/img/check_box_checked.jpg") no-repeat;background-size:100% 100%;}
+		.black{color:#393839;}
+		.good_items{background: #fff;}
+		.pay_code_qr_dc{ 
+			width: 100%; 
+			margin: 0px auto; 
+			text-align: center;
+			background: #ffffff;
+			padding-top: 10px;
+		}
+		.pay_code_qr_dc img{
+			width:100px; 
+			height:100px;
+			margin: 0 auto;
+			display: block;
+			overflow: hidden; 
+		}
+		.pay_code_qr_dc p{
+			line-height: 28px;
+			font-size: 16px;
+			margin: 15px auto;
+		}
+    </style>
+	</listeral>
+	</head>
+
+	<body style="background-color:#eaeaea;">
+		<!-- 拨打电话弹窗 -->
+		<!-- <div class="offshelf_dialog" style="display: none;">
+		            <div class="offshelf_dialog_bg"></div>
+		            <div class="offshelf_dialog_box">
+		                <a href="javascript:;" class="close_icon_btn">×</a>
+		                <div class="offshelf_dialog_content">
+		                    <p class="dialog_text_main">
+		                        <br>客服电话：<a class="tel_phone phone_num" href="javascript:void(0);" style="color:#da8f3e;">18968001693</a>
+		                    </p>
+		                    <div class="goto_phone tel_phone">立即拨打</div>
+		                </div>
+		            </div>
+		        </div> -->
+		<div id="share_code_body" style="display:none;">
+            <div class="share_code_body" style="width:100%;background-color:transparent;margin-top:50px;">
+                <span class="close_icon" style="background:none;color:white;top:-40px;right:5%;font-size:20px;width:40px;height:40px;font-family:'宋体';text-align:center;line-height:40px;">×</span>
+                <?php if(!IS_WEIXIN){?><?php }?>
+                    <img class="share_logo" src="" alt="" style="display:block;margin:0 auto; width:80%;border-radius:8px;">
+                    <img class="share_logo" src="" alt="" style="display:block;width:80%;border-radius:8px;position:absolute;top:0px;left:10%;opacity:0;">
+                    <div style="width:80%;margin:0 auto;height:40px;margin-top:10px;line-height:40px;text-align:center;color:white;background-color:#e4bc91;font-size:15px;border-radius:8px;">扫码联系商家</div>
+                <?php if(!IS_WEIXIN){?><?php }?>
+            </div>
+        </div>
+
+        <script>
+            require(['jquery'],function(){
+                $('span.close_icon').on('click',function(){
+                    $("#share_code_body").fadeOut(300);
+                })
+            });
+        </script>
+		<!--提示-->
+		<div class="btn_group_top">
+			<div class="header" style="background-color:white;display:flex;justify-content:space-between;height:50px;align-items:center;box-sizing:border-box;padding:0px 20px;">
+				<div style="display:flex;justify-content:space-between;width:80%;">
+					<span style="width:90%;display:inline-block;overflow:hidden;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">收件人:{$receiver_msg.name}  {$receiver_msg.province}{$receiver_msg.city}{$receiver_msg.county}{$receiver_msg.detail}</span>
+				</div>
+				<div style="width:20%;text-align:right;">{$v.status_str}</div>
+			</div>
+			<foreach name="order" item="v">
+			<foreach name="v.orders" item="val">
+			<div class="good_items items_header" style="display:flex;justify-content:space-between;height:80px;align-items:center;height:100px;box-sizing:border-box;padding:0px 20px;">
+				<div style="flex:5;display:flex;justify-content:flex-start;align-items:center;">
+					<img src="{$val.pic_url}" alt="" style="width:80px;height:80px;display:black;">
+				</div>
+				<div style="width:50%;">
+					<div style="width:100%;line-height:1.5em;height:3em;word-break:break-all;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{$val.title}</div>
+					<div class="grey" style="width:100%;height:1.5em;line-height:1.5em;font-size:12px;">{$val.spec}</div>
+				</div>
+				<div style="flex:3;display:flex;flex-direction:column;">
+					<div class="yuan_unit black" style="line-height:3em;text-align:right;">{$val.price}</div>
+					<div class="good_num grey" style="line-height:calc(1.5em - 2px);text-align:right;">{$val.quantity}</div>
+				</div>
+			</div>
+			</foreach>
+			</foreach>
+			<div style="margin-top:1px solid #e2e2e2;display:flex;border-bottom:1px solid #e2e2e2;border-top:1px solid #e2e2e2;justify-content:space-between;align-items:center;background-color:white;height:60px;box-sizing:border-box;padding:0px 20px;width:100%;">
+				<div><span style="width:2.5em;">合计:</span><span class="orange" style="padding-left:1em;font-weight:bold;">¥{$total}</span><span class="grey" style="font-size:12px;">(含运费¥{$post})</span></div>
+				<!-- <div id="lxsj"><div class="orange" style="background-color:#de8e39;color:white;padding:.6em 1em;border-radius:.3em;">微信支付</div></div> -->
+			</div>
+			<!-- <div class="pay_code_qr_dc" style="display:none;">
+					<img src="" />
+					<p style="margin-bottom:0px;">扫码关注公众号</p>
+					<p style="margin-top: 0px;">跟踪订单信息和物流信息</p>
+			</div> -->
+		</div>
+		<div class="pay_btn_con" style="margin-top:10px;">
+			<div style="display:flex;width:100%;flex-direction:column;background-color:white;">
+				<div style="display:flex;width:90%;margin:0 auto;flex-direction:flex-row;height:50px;align-items:center;justify-content:space-between;border-bottom:1px solid #e7e7e7;">
+					<div style="display:flex;align-items:center;"><span class="icon_wx"></span><span class="black" style="font-size:16px;">微信收款码支付</span></div>
+					<div class="check_box checked wx_check"></div>
+				</div>
+				<if condition="$has_zfb eq 1">
+				<div style="display:flex;width:90%;margin:0 auto;flex-direction:flex-row;height:50px;align-items:center;justify-content:space-between;">
+					<div style="display:flex;align-items:center;"><span class="icon_zfb"></span><span class="black" style="font-size:16px;">支付宝收款码支付</span></div>
+					<div class="check_box zfb_check"></div>
+				</div>
+				</if>
+			</div>
+			<div style="background-color:#eaeaea;padding-top:10px;padding-bottom:10px;">
+				<div id="lxsj" style="width:90%;margin: 0 auto;background-color:#da8f3c;color:white;height:46px;border-radius:6px;text-align:center;line-height:46px;font-size:16px;cursor:pointer;">确认支付</div>
+			<div>
+		</div>
+		
+		<!-- <p class="black" style="font-size:24px;width:100%;text-align:center;padding-top:20px;background-color:#eee;">立即付款</p> -->
+		<!-- <p class="black" style="font-size:14px;line-height:50px;text-align:center;background-color:#eee;font-size:14px;"><span>扫码输入金额，--→ </span><span class="red animation_bling">添加留言 </span><span>输入</span><span class="red animation_bling">【收件人姓名】</span></p>
+
+		<div style="position:relative;width:100%;padding-top:100%;">
+			<div style="position:absolute;top:0px;width:100%;height:100%;display:flex;justify-content:center;align-items:center;">
+				<div style="width: 100%;height: 100%;background:url('__CDN__/img/mall/pay_footer1.jpg') no-repeat;background-size:100% 100%;display:flex;justify-content:center;align-items:center;">
+					<img src="{$pay_qr}" style="width:60%;">
+				</div>
+			</div>
+		</div> -->
+		<!-- <div style="width:100%;">
+			<img src="__CDN__/img/mall/pay_footer2.jpg" style="display:block;width:100%;" alt="">
+		</div> -->
+	    <div class="Payment_popups" style="display:none;">
+	        <div class="Payment_popups_box" style="position: relative;">
+	            <div class="close_dc"><img src="/img/close_dc.png"></div>
+	            <p class="yangdonglei" style="margin-bottom: 6px;font-size:16px;color:#ffd800;position:relative;left:-15px;"><img style="width:20px;height:20px;margin-right:10px;" class="Payment_popups_icon" src="/img/zfb_icon.png"/><span class="wx_or_zhifubao_span">扫码付款</span></p>
+	            <p style="font-size: 14px; margin-top: 0px; margin-bottom: 6px;color:#ffd800;"><span class="data_value" style="font-size: 24px; font-weight: bold;">180.00</span>元</p>
+	            <img id="ydl_payment_popups_img" onerror="reload_img(this.src)" class="Payment_popups_box_zf"  src="/img/wx_qr.png"/>
+	            <img class="Payment_popups_box_bz" style="margin-top:20px" src="/img/wx_bz.png"/>
+	        </div>
+		</div>
+		<div id="share_code_body" class="dc_code_body" style="display: none;">
+			<div class="share_code_body" style="background-color:transparent; margin-top: 0px !important; width: auto !important;">
+				<span class="close_icon dc_close_icon" style="background:none;color:white;top:-40px;right: 0%;font-size:25px;width:40px;height:40px;font-family:'宋体';text-align:center;line-height:40px;">×</span>
+					<img class="share_logo dc_img" src="" alt="" style="width: auto;display:block;margin:0 auto;border-radius: 8px;">
+					<!-- <img class="share_logo" src="/img/temp/seller_recommend/100001-101000/1000073.png?modify=1505873414" alt="" style="display:block;margin:0 auto; width:80%;border-radius:8px;position:absolute;top:0px;left:10%;opacity:0;"> -->
+					<div class="share_code_btn_text" style="width:auto;margin:0 auto;margin-top:10px;padding:10px 0px;text-align:center;color:white;background-color:#e4bc91;font-size:15px;border-radius:8px;">点击分享</div>
+			</div>
+		</div>
+	</body>
+	<!-- shop_id -->
+	<input value="" id="shopidc" type="hidden">
+<script>
+	require(['jquery'], function(){
+		//字符串截取shop_id;
+		var shoplistid = window.location.href.split("&shop_id=");
+		$("#shopidc").val(shoplistid[1]);
+		//初始二维码请求
+		// $.ajax({
+		// 	type: "post",
+		// 	url: "https://seller.xingyebao.com/login/shop_guanzhu_code",
+		// 	data: {shop_id:$("#shopidc").val()},
+		// 	dataType: "json",
+		// 	success: function (data) {
+		// 		$(".pay_code_qr_dc img").attr("src",data);
+		// 		$(".pay_code_qr_dc").show();	
+		// 	}
+		// });
+		$(".close_dc").click(function(){
+			$(".Payment_popups").hide();
+			$("#ydl_payment_popups_img,.Payment_popups_box_bz").removeAttr("src");
+		})
+		// 拨打电话
+		$(".tel_phone").click(function(){
+            //取电话
+            var phone_num = $(".offshelf_dialog a.phone_num").text();
+            window.location.href='tel:'+phone_num;
+        })
+		$(".close_icon_btn").click(function(){
+			$(".offshelf_dialog").hide();
+		})
+		// 店铺客服
+     //    $('#lxsj').on('click', function(){
+     //        $.ajax({
+     //            url : '__MODULE__/kefu/qrcode',
+     //            data : {id:100001001},
+     //            dataType : 'json',
+     //            success : function(data){
+					// console.log(data);
+					// return false;
+     //                $("#share_code_body img").attr("src",data);
+     //                $("#share_code_body").show();
+     //            }
+     //        });
+     //    });
+        $('#lxsj').on('click', function(){
+        	var wx_or_zhifubao = $(".pay_btn_con .check_box.checked").hasClass("wx_check")?"wx":"zfb";
+            $.ajax({
+                url:"__PAY__/order/getPayQr",
+                data:{tid:{$tid},wx_or_zfb:wx_or_zhifubao},
+                dataType:"json",
+                type:"post",
+                success:function(data){
+                    $(".Payment_popups_box span.data_value").text({$total});
+                    $(".Payment_popups_box_zf").attr("src",data.pay_qr);
+                    $(".Payment_popups_box_bz").attr("src",data.explain);
+                    if(wx_or_zhifubao == 'zfb'){
+	                    $(".Payment_popups span.wx_or_zhifubao_span").text("截屏保存扫码付款");
+	                }else if(wx_or_zhifubao == 'wx'){
+						$(".Payment_popups span.wx_or_zhifubao_span").text("扫码付款");
+	                }
+                    $(".Payment_popups").show();
+                }
+            });
+        });
+		//点击支付弹窗关闭在弹出分享码
+        $(".close_dc").click(function(){
+            $(".Payment_popups").hide();
+			var shop_id = $("#shopidc").val();
+			$.ajax({
+				type: "post",
+				url: "https://seller.xingyebao.com/login/shop_guanzhu",
+				data:{shop_id:shop_id},
+				dataType: "json",
+				success: function (data) {
+					$(window).on("resize",function(){
+						var width = $(window).width()/4;
+	                    var height = $(window).height()*0.5
+	                    var x = height/2;
+	                    var top =  height-x;
+	                    $(".share_code_body").css({
+	                        height:height+"px !important",
+	                        top:top+'px'
+	                    })
+	                    $(".dc_img").css("height",height+"px");
+					}).trigger("resize");
+					$(".dc_code_body").attr("style","display:flex");
+					$(".dc_code_body img.dc_img").attr("src",data);
+				}
+			});
+        });
+		//点击分享弹窗关闭
+		$(".dc_close_icon").click(function(){
+			$(".dc_code_body").fadeOut(300);
+			// window.location.href="http://www.baidu.com";
+		})
+		//点击分享码弹窗分享
+		require(['alipan'],function(ali){
+			// alert(ali.isAvailable)
+            if(ali.isAvailable){
+				$("body").on("click",".share_code_btn_text",function(){
+					$(".dc_code_body").fadeOut(300);
+					ali.aliShare("",[''+$('.dc_code_body img.dc_img').attr('src')]);
+				})
+            }else{
+				$(".share_code_btn_text").hide();
+            }
+
+        })
+		
+		$(".pay_btn_con div.check_box").on('click',function(){
+			$(".pay_btn_con div.check_box").toggleClass("checked",false);
+			$(this).toggleClass("checked",true);
+		})
+
+			var c_height = $(window).height();
+			var t_height = $(".btn_group_top").height();
+			if(c_height - t_height <= 167){
+				$(".pay_btn_con").css({
+					position:'fixed',
+					bottom:'0px',
+					'z-index':'10000',
+					width:'100%'
+				})
+				$(".btn_group_top").css({
+					"padding-bottom":"167px"
+				})
+			}
+			// console.log(c_height+""+t_height);
+	})
+</script>
+</html>

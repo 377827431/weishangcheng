@@ -1,0 +1,98 @@
+.main_bd{display:table;width:930px;margin:0 auto}
+.media_preview_area{display:table-cell;width:300px;margin:0 14px 14px 0;float:left}
+.container_box.cell_layout .col_side,.container_box.cell_layout .col_main{display:table-cell;vertical-align:top;word-wrap:break-word;word-break:break-all}
+.page_appmsg_edit .appmsg{min-height:180px}
+.appmsg{position:relative;overflow:hidden;border:1px solid #e7e7eb;background-color:#fff;color:#666;width:300px;display: inline-block;}
+.appmsg.selected{border: 2px solid #f60;}
+.editing.multi .appmsg_content{border-bottom-width:1px}
+.editing .appmsg_content{box-shadow:none;-moz-box-shadow:none;-webkit-box-shadow:none;border-bottom-width:0}
+.multi .appmsg_content{padding:0}
+.appmsg_content{padding:0 14px;position:relative}
+.appmsg_item:first-child{padding:0;height:160px;overflow:hidden;border-top:none}
+.appmsg_item:first-child .appmsg_thumb.default{display:block;color:#c0c0c0;text-align:center;line-height:160px;height:160px;font-weight:400;font-style:normal;background-color:#ececec;font-size:16px;float:none;width:100%;margin:0;padding:0}
+.appmsg_item:first-child .appmsg_thumb{height:160px;float:none;width:100%;margin:0;padding:0}
+.appmsg_item:first-child .appmsg_title{color:#fff;padding:0 8px;font-size:14px;position:absolute;bottom:0;left:0;width:100%;background:rgba(0,0,0,0.6) !important;filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#99000000',endcolorstr= '#99000000')}
+.appmsg_item:first-child .appmsg_title a{color:#fff}
+.appmsg_item:first-child .appmsg_edit_mask{line-height:160px}
+.cover_appmsg_item{position:relative;margin:0 14px 14px}
+.appmsg_title{font-weight:400;font-style:normal;font-size:16px;padding-top:10px;line-height:28px;max-height:56px;overflow:hidden;word-wrap:break-word;word-break:break-all;margin:0}
+.appmsg_title a{display:block;color:#222}
+.multi .appmsg_title{font-size:14px;padding-top:0}
+.cover_appmsg_item .appmsg_title{position:absolute;bottom:0;left:0;width:100%;background:rgba(0,0,0,0.6) !important;filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#99000000',endcolorstr= '#99000000')}
+.cover_appmsg_item .appmsg_title a{padding:0 8px;color:#fff;display:block;text-decoration:none}
+.appmsg_thumb_wrp{height:160px;overflow:hidden}
+.editing .appmsg_thumb{display:none}
+.appmsg_thumb{width:100%; height: 100%;}
+.appmsg_thumb.default{display:block;color:#c0c0c0;text-align:center;line-height:160px;font-weight:400;font-style:normal;background-color:#ececec;font-size:16px}
+.appmsg_add{margin:20px 14px}
+.create_access_primary{display:block;border:2px dotted #d9dadc;line-height:60px;font-size:0;text-align:center;margin-bottom:20px}
+.appmsg_edit_mask{display:none;position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(229,229,229,0.85) !important;filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#d9e5e5e5',endcolorstr= '#d9e5e5e5');text-align:center}
+.icon18_common.edit_gray{background:url("/images/admin/base_z284ee4.png") 0 -5310px no-repeat}
+.icon18_common.del_gray{background:url("/images/admin/base_z284ee4.png") 0 -4610px no-repeat}
+.appmsg_edit_mask a{margin-left:8px;margin-right:8px}
+.icon18_common{width:18px;height:18px;vertical-align:middle;display:inline-block;line-height:100px;overflow:hidden}
+.icon20_common.add_gray{background:url("/images/admin/base_z284ee4.png") 0 -2809px no-repeat}
+.create_access_primary i{cursor:pointer}
+.icon20_common{width:20px;height:20px;vertical-align:middle;display:inline-block;line-height:100px;overflow:hidden}
+.appmsg_item{position:relative;padding:20px 14px;border-top:1px solid #e7e7eb}
+.appmsg_item .appmsg_thumb{float:right;width:78px;height:78px;margin-left:14px;display:none}
+.appmsg_item.has_thumb .appmsg_thumb.default{display:none}
+.appmsg_item.has_thumb img.appmsg_thumb{display:block}
+.editing .appmsg_thumb.default{display:block}
+.appmsg_item .appmsg_thumb.default{line-height:78px;font-size:14px}
+.appmsg_item .appmsg_edit_mask{line-height:118px}
+.appmsg_item:after{content:"\200B";display:block;height:0;clear:both}
+.appmsg_item:hover .appmsg_edit_mask{display:block}
+.page_appmsg_edit .tool_bar{margin-left:0;margin-right:0}
+.tool_bar.border{border-top:1px solid #e7e7eb;box-shadow:none;-moz-box-shadow:none;-webkit-box-shadow:none}
+.tc{text-align:center}
+.tool_bar{padding-bottom:50px;padding-top:20px}
+.tool_bar{margin-top:40px;padding-top:20px}
+.page_appmsg_edit .tool_area{clear:both;margin:0;padding:20px 0}
+.tool_area:after{content:"\200B";display:block;height:0;clear:both}
+.tool_bar.tc .btn{margin-left:.5em;margin-right:.5em}
+.btn.btn_input{min-width:104px}
+.btn.btn_input{padding:0}
+.media_edit_area{display:table-cell;vertical-align:top;float:none;width:auto}
+.appmsg_editor{position:relative;padding-left:12px;width:583px}
+.appmsg_editor .inner{padding:20px;border:1px solid #e7e7eb;background-color:#f4f5f9;min-height:350px}
+.appmsg_edit_item{padding-bottom:1em}
+.frm_label{float:left;width:5em;margin-top:.3em;margin-right:1em;font-size:14px}
+.appmsg_edit_item .frm_label{display:block;width:auto;float:none;margin-right:0;margin-bottom:4px}
+.appmsg_edit_item .frm_label:after{content:"\200B";display:block;height:0;clear:both}
+.frm_input_box{display:inline-block;position:relative;height:30px;line-height:30px;vertical-align:middle;width:278px;font-size:14px;padding:0 10px;border:1px solid #e7e7eb;box-shadow:none;-moz-box-shadow:none;-webkit-box-shadow:none;border-radius:0;-moz-border-radius:0;-webkit-border-radius:0;background-color:#fff}
+.frm_input_box.counter_in{width:228px;padding-right:60px}
+.appmsg_edit_item .frm_input_box{display:block;width:auto;height:auto;min-height:30px;border-color:#e7e7eb}
+.frm_input,input[type="text"].frm_input{height:22px;margin:4px 0;background-color:transparent;border:0;outline:0;width:100%;box-shadow:none;padding:0}
+.frm_textarea{height:100px}
+.frm_input,.frm_textarea{width:100%;background-color:transparent;border:0;outline:0;padding:0;box-shadow:none}
+textarea{resize:none;overflow-y:auto;color:#222;overflow:auto;vertical-align:top}
+textarea:focus{border:none}
+.frm_input_box.append .frm_input_append{position:absolute;top:0;right:.8em}
+.frm_input_box.with_counter .frm_counter{width:50px;color:#8d8d8d;font-size:14px;font-weight:400;font-style:normal}
+.frm_input_box.counter_in .frm_counter{right:0;text-align:right;padding-right:10px}
+.frm_msg.fail{color:#e15f63}
+.frm_msg{display:none;overflow:hidden}
+.frm_tips,.frm_msg{padding-top:4px;width:300px}
+.appmsg_edit_item .title{font-weight:400;font-style:normal;float:left}
+.appmsg_edit_item .tips{color:#8d8d8d}
+.l{float:left}
+.appmsg_edit_item .frm_textarea_box{display:block;width:auto;border-color:#e7e7eb}
+.frm_textarea_box.with_counter{position:relative;margin-bottom:27px}
+.frm_textarea_box{display:inline-block;width:288px;padding:4px 0 4px 10px;font-size:14px;border:1px solid #e7e7eb;box-shadow:none;-moz-box-shadow:none;-webkit-box-shadow:none;border-radius:0;-moz-border-radius:0;-webkit-border-radius:0;background-color:#fff}
+.frm_textarea_box.counter_out .frm_counter{position:absolute;bottom:-27px;right:0}
+.frm_textarea_box.with_counter .frm_counter{color:#8d8d8d;font-size:14px;font-weight:400;font-style:normal}
+.appmsg_editor .arrow_out{display:inline-block;width:0;height:0;border-width:12px;border-style:dashed;border-color:transparent;border-left-width:0;border-right-color:#e7e7eb;border-right-style:solid;top:44px;left:0}
+.appmsg_editor .arrow{position:absolute}
+.appmsg_editor .arrow_in{display:inline-block;width:0;height:0;border-width:12px;border-style:dashed;border-color:transparent;border-left-width:0;border-right-color:#f4f5f9;border-right-style:solid;top:44px;left:1px}
+.page_appmsg_edit .upload_preview img{max-width:100px;max-height:100px}
+.appmsg_editor .js_cover{width:100px;height:100px;line-height:100px;cursor:pointer}
+.appmsg_editor .js_cover img{width:100px;height:100px}
+.ext_content{margin-bottom:10px}
+.ext_content .frm_input_box .frm_checkbox{position:absolute;top:6px}
+.link_dele {
+    display: inline-block;
+    vertical-align: bottom;
+    padding-left: 10px;
+    margin-bottom: 5px;
+}

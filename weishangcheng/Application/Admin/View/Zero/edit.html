@@ -1,0 +1,223 @@
+<style>
+.app-design{display:inline-block}
+.app-design .app-sidebar{position:relative;float:left;width:550px;font-size:14px}
+.app-design .app-sidebar+.app-sidebar{width:415px;margin-left:20px}
+.app-design .app-sidebar .app-sidebar-inner{padding:12px 10px;min-height:28px;background:#f8f8f8;border-radius:3px;border:1px solid #d1d1d1}
+.app-design .app-sidebar .app-sidebar-inner+.app-sidebar-inner{margin-top:14px}
+.app-design .app-sidebar .control-group:last-of-type{margin-bottom:0}
+.app-design .control-label{width:90px}
+.app-design .controls{margin-left:100px}
+.app-design .controls input[type="text"]{width:390px}
+.app-design .controls select{width:358px}
+.app-design .controls .calendar input[type="text"]{width:159px}
+.sku-table th+th,.sku-table td+td{border-left:1px solid #ddd;text-align:center}
+.sku-table input{text-align:center}
+.sku-table .input .end-num,.sku-table .input .start_num{text-align:center;border:none;box-shadow:none;font-weight:bold;line-height:16px;padding:0;height:16px;width:31px;background-color:#fff}
+.sku-table .input .end-num{color:red}
+.popover {max-width: 470px;width: 470px;}
+.goods-name{width:310px;display:inline-block;margin-bottom:0;margin-left:15px;border: 1px solid #ccc;height: 20px;line-height:20px;padding: 4px 6px;float:left;background-color: #eee;font-size:12px;color:#999999;}
+</style>
+<div id="page_loading" class="ui-page-loading"></div>
+<form action="__ACTION__" class="form-horizontal" data-validate="true" data-submit="ajax" method="post" data-success="back">
+    <input type="hidden" name="id" value="{$data['id']}">
+    <div class="app-design">
+        <div class="app-sidebar">
+            <div class="app-sidebar-inner">
+                <p>活动信息<span style="font-size:12px">(建议活动开始时间距当前时间不低于10分钟)</span></p>
+                <div style="background-color: #fff;border-radius: 3px;padding: 18px 0;border: 1px solid #ccc;">
+                    <div class="control-group">
+                        <label class="control-label must">活动名称</label>
+                        <div class="controls">
+                            <input type="text" name="title" class="required" value="{$data.title}" maxlength="100" placeholder="商品活动时的名称">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label must">活动标签</label>
+                        <div class="controls">
+                            <input type="text" name="main_tag" class="required" value="{$data.main_tag}" maxlength="5" placeholder="2-5个字符，显示在详情页价格旁" style="width:275px" >
+                            <input type="text" name="price_title" class="required" value="{$data.price_title}" maxlength="3" placeholder="列表价格标题" style="width:85px;margin-left:12px">
+                        </div>
+                    </div>
+        			<div class="control-group">
+        				<label class="control-label must">活动时间</label>
+        				<div class="controls">
+        					<div class="input-prepend calendar" data-format="yyyy-MM-dd hh:mm:ss">
+        						<span class="add-on"><i class="icon-th icon-calendar"></i></span>
+        						<input type="text" name="start_time" value="{$data.start_time}" required="required" readonly="readonly">
+        					</div>
+                            <div class="input-append calendar" data-format="yyyy-MM-dd hh:mm:ss">
+                                <input type="text" name="end_time" value="{$data.end_time}" required="required" readonly="readonly">
+                                <span class="add-on"><i class="icon-th icon-calendar"></i></span>
+                            </div>
+        				</div>
+        			</div>
+                    <div class="control-group">
+                        <label class="control-label">每人限购</label>
+                        <div class="controls">
+                            <input class="digits" min="0" max="9999" name="buy_quota" type="text" value="{$data.buy_quota}" placeholder="默认不限制" style="width:123px">
+                            <span>件，一次最少买</span>
+                            <input class="digits" min="1" max="9999" name="min_order_quantity" type="text" value="{$data.min_order_quantity}" style="width:123px">
+                            <span>件</span>
+                        </div>
+                    </div>
+                   <div class="control-group">
+                        <label class="control-label">主宣传图</label>
+                        <div class="controls">
+                            <input class="hide" type="hidden" name="pic_url" value="{$data.pic_url}">
+                            <img id="img_url" src="{$data.pic_url}" class="img-polaroid btn-up" alt="非必填" style="width: 120px; height: 120px;cursor:pointer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="app-sidebar-inner">
+                <p>商品设置<span style="font-size:12px">(活动期间请勿修改SKU信息，否则活动将自动失效)</span></p>
+                <div style="background-color: #fff;border-radius: 3px;padding: 18px 0 0 0;border: 1px solid #ccc;">
+                    <div class="control-group">
+                        <label class="control-label must">运费模板</label>
+                        <div class="controls">
+                            <select name="freight_id" id="freight_id" style="width:370px" required="required"></select>
+                            <a href="javascript:;" class="js-refresh-freight">刷新</a>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label must">活动商品</label>
+                        <div class="controls">
+                            <input type="text" id="goods_id" name="goods_id" class="required" value="{$data.goods_id}" maxlength="16" placeholder="商品ID" style="width:60px;float:left" {$canChangeGoods ? '':'readonly="readonly"'}>
+                            <label for="goods_id" class="ellipsis goods-name">{$goods.title}</label>
+                        </div>
+                    </div>
+                    <table class="table sku-table input-table" style="margin:20px 0 0 0">
+                    <notempty name="goods">
+                    <tr><th>SKU</th><th style="width:60px">库存</th><th style="width:90px">参与活动库存</th><th style="width:60px">已售出</th></tr>
+                    <foreach name="goods['products']" item="item">
+                    <tr title="成本{$item.cost}元"><td>{$item.spec}</td><td>{$item.stock}</td><td class="input"><input type="text" class="td-input" name="product[{$item.id}][total]" required="required" min="0" max="{$item.stock}" value="{$data['products'][$item['id']]['total']}"></td><td>{$data['products'][$item['id']]['sold']}<input type="hidden" name="product[{$item.id}][spec]" value="{$item.spec}"></td></tr>
+                    </foreach>
+                    <tr><td>虚拟售出数量</td><td colspan="3" class="input"><input type="text" name="vsold" value="{$data.vsold}" placeholder="影响进度条"></td></tr>
+                    </notempty>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="app-sidebar">
+            <div class="app-sidebar-inner">
+                <p>活动图文(不填则默认使用商品图文)</p>
+                <script id="image_text_container" name="detail" type="text/plain">{$data.detail}</script>
+            </div>
+        </div>
+    </div>
+    <div class="form-actions">
+      <button type="button" class="btn btn-back">返回</button>
+      <if condition="$canEdit">
+      <button type="submit" class="btn btn-primary">保存</button>
+      <else/>
+      <button type="button" class="btn btn-primary" disabled="disabled">活动已结束无法修改</button>
+      </if>
+    </div>
+</form>
+<script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="/ueditor/ueditor.all.min.js"></script>
+<script>
+$(function(){
+	var $skuTable = $('.sku-table');
+	$('#goods_id').on('change', function(){
+		var $this = $(this),
+			id = $this.val();
+		if(!/^\d+$/.test(id)){
+			$this.val('').focus();
+			return false;
+		}
+
+		$.ajax({
+			url: '__URL__/goods?id='+id+'&active={$data['id']}',
+			dataType: 'json',
+			success: function(data){
+				$('#goods_id').next().html(data.title);
+				var hasSku = data.products[0].spec == '' ? 0 : 1;
+				var html = '<tr><th>SKU</th>'+
+					'<th style="width:60px">库存</th>'+
+					'<th style="width:90px">参与活动库存</th>'+
+		            '<th style="width:60px">已售出</th>'+
+		        	'</tr>';
+				
+		    	for(var i=0; i<data.products.length; i++){
+		    		var product = data.products[i];
+					html += '<tr data-index="'+i+'" data-product_id="'+product.id+'" title="成本'+product.cost+'元">'+('<td>'+(hasSku ? product.spec : '无')+'</td>');
+					html += '<td>'+product.stock+'</td><td class="input"><input type="text" class="td-input" name="product['+product.id+'][total]" required="required" min="0" max="'+product.stock+'" placeholder=""></td>'+
+					'<td>0<input type="hidden" name="product['+product.id+'][spec]" value="'+product.spec+'"></td></tr>';
+		    	}
+		    	html += '<tr><td>虚拟售出数量</td><td colspan="3" class="input"><input type="text" name="vsold" value="'+(data.vsold ? data.vsold : '')+'" placeholder="影响进度条"></td></tr>';
+				$skuTable.html(html);
+			},
+			error: function(){
+				$this.val('');
+			}
+		});
+		return false;
+	});
+	$skuTable.on('change', 'input', function(){
+		if(this.value != '' && isNaN(this.value)){
+			this.value = '';
+		}
+		return false;
+	});
+	
+	/**************** 运费模板start *****************/
+	var $freight_id = $('#freight_id'), templateList = [];
+	$('.js-refresh-freight').on('click', function(){
+		$.ajax({
+			url: '__MODULE__/freight_template',
+			dataType: 'json',
+			success: function(list){
+				templateList = list;
+				var html = '<option value="">请选择</option>';
+				for(var i=0; i<list.length; i++){
+					html += '<option value="'+list[i].id+'"'+(list[i].id == '{$data.freight_id}' ? 'selected="selected"' : '')+'>'+list[i].name+'</option>';
+				}
+				$freight_id.html(html);
+				$('#page_loading').fadeOut(function(){$(this).remove()});
+			}
+		});
+		
+		$freight_id.popover({
+			title: '运费详情',
+			html: true,
+			placement: 'top',
+			content: '',
+			trigger: 'hover'
+		});
+		
+		$freight_id.hover(function(){
+			var template = {name: '提示', describe: '活动进行中将使用您选择的运费模板，活动结束将卸载商品活动信息，并恢复原商品价格和运费模板'},
+			    currentId = $freight_id.val();;
+			for(var i=0; i<templateList.length; i++){
+				if(templateList[i].id == currentId){
+					template = templateList[i];
+					break;
+				}
+			}
+			
+			var $tip = $freight_id.data('popover').$tip;
+			$tip.find('.popover-title').html(template.name);
+			$tip.find('.popover-content').html(template.describe);
+		});
+	}).trigger('click');
+	/**************** 运费模板over *****************/
+	
+	// 图文和上传首图
+	var $img = $('#img_url'), beforeInsertImage = function(t, list){
+		$img.prev().val(list[0]['src']);
+		$img.attr('src', list[0]['src']);
+		return true;
+	};
+	var editor = UE.getEditor('image_text_container');
+	editor.ready(function() {
+		$('#edui28').on('click', function(){
+			editor.removeListener('beforeInsertImage', beforeInsertImage);
+		});
+	});
+	$img.on('click', function(){
+		editor.getDialog("insertimage").open();
+		editor.addListener('beforeInsertImage', beforeInsertImage);
+	});
+});
+</script>

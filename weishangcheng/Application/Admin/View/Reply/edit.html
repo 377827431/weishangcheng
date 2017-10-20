@@ -1,0 +1,125 @@
+<div class="auto_replay_set">
+    <div id="js-rule-container" class="rule-group-container">
+        <div class="rule-group">
+		    <div class="ui-block-head">
+		        <h3><input type="text" class="js-rule" placeholder="规则名称" autofocus="autofocus" maxlength="8"></h3>
+		        <a href="JavaScript:;" class="btn btn-mini save_key_word_set" style="float: right;">保存</a>
+		    </div>
+            <div class="rule-body clearfix">
+                <div class="rule-keywords">
+                    <div class="header">
+                   		<span class="title">关键词过滤：</span>
+                   		<div class="pull-right">
+                    		<a href="javascript:;" class="js-add-keyword">+ 关键词</a>
+                   		</div>
+                   	</div>
+                   	<div class="keyword-container">
+                    	<div class="keyword-list"></div>
+                    </div>
+                </div>
+                
+                <div class="rule-replies">
+                     <div class="header">
+                 		<span class="title">自动回复：</span>
+                 		<div class="pull-right">
+	                  		<label class="checkbox inline"><input type="checkbox" class="js-subscribe"> 关注</label>
+	                  		<label class="checkbox inline"><input type="checkbox" class="js-default"> 默认</label>
+	                  		<label class="checkbox inline"><input type="checkbox" class="js-rand"> 随机</label>
+                 		</div>
+                 	</div>
+					<div class="reply-content-list">
+				    	<ul id="reply_content_list"></ul>
+				    </div>
+                </div>
+            </div>
+            <div style="border-top: 1px dashed #d7d7d7;height: 60px;">
+                <a href="javascript:;" class="js-add-keyword js-add-tip" style="text-align:center;width: 395px;float: left;padding-top: 5px;">
+					<i class="icon36_common add_gray"></i>
+					<strong style="display: block;">添加关键词</strong>
+				</a>
+			    <a href="javascript:;" class="js-open-material js-add-tip" style="text-align:center;float: left;width: 590px;border-left: 1px solid #ddd;padding-top: 5px;">
+					<i class="icon36_common add_gray"></i>
+					<strong style="display: block;">添加回复内容</strong>
+				</a>
+            </div>
+        </div>
+
+        <div class="form-actions text-center">
+           <button type="button" class="btn btn-primary save_key_word_set">保存</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- 图文消息素材 -->
+<div id="materialModal" class="modal hide fade modal-material" tabindex="-1" role="dialog" aria-hidden="true">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="padding: 5px 15px;">×</button>
+	<div class="tabbable">
+	  <ul class="nav nav-tabs" style="margin-bottom:0">
+	    <li class="active" style="margin-left: 300px;"><a href="#tab_news" data-toggle="tab" data-type="news">图文</a></li>
+	    <li><a href="#tab_text" data-toggle="tab" data-type="text">文字</a></li>
+	    <li><a href="#tab_voice" data-toggle="tab" data-type="voice">语音</a></li>
+	    <li><a href="#tab_video" data-toggle="tab" data-type="video">视频</a></li>
+		<li><a href="#tab_senior" data-toggle="tab" data-type="senior">高级图文</a></li>
+	  </ul>
+	  <div class="tab-content" style="overflow: visible;">
+	    <div class="tab-pane active" id="tab_news">
+	      	<div id="tab_news_content" class="material-list"></div>
+	      	<div class="modal-footer">
+		  		<button class="btn pull-right" style="margin-left: 20px;"><i class="icon-refresh"></i></button>
+		  		<div id="news-pagination"></div>
+		  	</div>
+	    </div>
+	    <div class="tab-pane" id="tab_text">
+	    	<div class="js_textArea inner no_extra" style="width: 600px;margin: 20px auto">
+               <div class="emotion_editor">
+                   <textarea class="edit_area js_editorArea" id="reply_content"></textarea>
+                   <div class="editor_toolbar">
+                       <a href="javascript:void(0);" class="icon_emotion emotion_switch js_switch">表情</a>
+                       <span class="editor_tip js_editorTip">还可以输入<em id="js_editorTip">600</em>字</span>
+                       <div id="emotion_wrp" class="emotion_wrp">
+                           <span class="hook"><span class="hook_dec hook_top"></span><span class="hook_dec hook_btm"></span></span>
+                           <ul class="emotions"></ul>
+                           <span class="emotions_preview js_emotionPreviewArea"></span>
+                       </div>
+                   </div>
+               </div>
+           </div>
+           <div class="modal-footer">
+           		<button type="button" class="btn btn-primary js-text-ok">确定</button>
+		  	</div>
+	    </div>
+	    <div class="tab-pane" id="tab_voice">
+	    	<div id="tab_voice_content"  class="material-list"></div>
+	      	<div class="modal-footer">
+		  		<button class="btn pull-right" style="margin-left: 20px;"><i class="icon-refresh"></i></button>
+		  		<div id="voice-pagination"></div>
+		  	</div>
+	    </div>
+	    <div class="tab-pane" id="tab_video">
+	    	<div id="tab_video_content"  class="material-list"></div>
+	      	<div class="modal-footer">
+		  		<button class="btn pull-right" style="margin-left: 20px;"><i class="icon-refresh"></i></button>
+		  		<div id="video-pagination"></div>
+		  	</div>
+	    </div>
+	    <div class="tab-pane" id="tab_senior">
+			<div id="tab_senior_content"  class="material-list"></div>
+			<div class="modal-footer">
+				<button class="btn pull-right" style="margin-left: 20px;"><i class="icon-refresh"></i></button>
+				<div id="senior-pagination"></div>
+			</div>
+		</div>
+	  </div>
+	</div>
+</div>
+<link rel="stylesheet" type="text/css" href="/css/weixin.css">
+<link rel="stylesheet" type="text/css" href="/css/appmsg.css">
+<script src="/js/pagination.js"></script>
+<script type="text/javascript" src="/js/wx-reply.js"></script>
+
+<script type="text/javascript">
+$(function(){
+	AutoReply.init({$data});
+});
+</script>

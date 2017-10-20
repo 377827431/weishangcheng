@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <include file="_layout/mall.head.html" title="必填信息" />
+</head>
+<style>
+    #smrz,
+    .smrz_input_box_center,
+    #skm,
+    .skm_input_box_center {
+        padding: 10px 15px;
+    }
+
+    .color_db8e40 {
+        color: #db8e40;
+        font-size: 14px;
+    }
+
+    .wen {
+        width: 15px;
+        position: relative;
+        top: .2rem;
+        margin: 0px 10px 0px 3px;
+    }
+
+    .smrz_input_box,
+    .skm_input_box {
+        width: 100%;
+        background: #ffffff;
+    }
+
+    .smrz_input-cell,
+    .skm_input-cell {
+        position: relative;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+        border-bottom: 1px solid #F2F2F2;
+        padding-bottom: 10px;
+        line-height: 30px;
+    }
+
+    .smrz_input-label,
+    .skm_input-label {
+        display: block;
+        width: 87px;
+        word-wrap: break-word;
+        word-break: break-all;
+        font-size: 14px !important;
+    }
+
+    .smrz_input-input,
+    .skm_input-input {
+        width: 100%;
+        border: 0;
+        outline: 0;
+        -webkit-appearance: none;
+        background-color: transparent;
+        font-size: inherit;
+        color: inherit;
+        height: 1.47058824em;
+        line-height: 1.47058824;
+        color: #9c9c9c;
+    }
+
+    input::-webkit-input-placeholder {
+        color: #9c9c9c;
+    }
+
+    .weui-cell__bd {
+        -webkit-box-flex: 1;
+        -webkit-flex: 1;
+        flex: 1;
+        font-size: 14px;
+    }
+
+    .weui-cell_access .weui-cell__ft {
+        padding-right: 13px;
+        position: relative;
+        max-height: 30px;
+        overflow: hidden;
+    }
+
+    .weui-cell__ft {
+        text-align: right;
+        color: #999999;
+    }
+
+    .weui-cell_access .weui-cell__ft:after {
+        content: " ";
+        display: inline-block;
+        height: 6px;
+        width: 6px;
+        border-width: 2px 2px 0 0;
+        border-color: #C8C8CD;
+        border-style: solid;
+        -webkit-transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+        transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+        position: relative;
+        top: -2px;
+        position: absolute;
+        top: 50%;
+        margin-top: -4px;
+        right: 2px;
+    }
+
+    .weui-uploader__input {
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+
+    .weui-cell__ft img {
+        width: 30px;
+        height: 30px;
+    }
+
+    .upload_img {
+        display: none;
+    }
+    #Authent_dailog,
+    #Authent_dailogs,
+    #Authent_dailogss,
+    #Authent_dailogsss{
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+     }
+     .Authent_dailog_box{
+        position: fixed;
+        z-index: 5000;
+        width: 80%;
+        max-width: 300px;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        background-color: #FFFFFF;
+        text-align: left;
+        border-radius: 6px;
+        overflow: hidden;
+     }
+     .Authent_dailog_bd{
+        font-size: 14px;
+        line-height: 1.5;
+        word-wrap: break-word;
+        word-break: break-all;
+        color: #000;
+        padding: 20px;
+     }
+     .Authent_dailog_ft{
+        position: relative;
+        line-height: 39px;
+        font-size: 14px;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex;
+        text-align: center;
+     }
+     .Authent_dailog_btn{
+        display: block;
+        -webkit-box-flex: 1;
+        -webkit-flex: 1;
+        flex: 1;
+        color: #ffffff;
+        text-decoration: none;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        position: relative;
+        background: #DD8C3A;
+     }
+     .Authent_dailog_bd p{
+         text-align: center;
+     }
+     img{
+         cursor: pointer;
+     }
+</style>
+
+<body>
+    <div id="upload_pay_dailog" style="position: absolute; top: 0px; left: 0px; z-index: 1000000; width: 100%; display:none">
+        <img style="width:100%;display:block;" alt="" src="">
+        <img style="width:100%;display:block;" alt="" src="">
+        <img style="width:100%;display:block;" alt="" src="">
+        <img style="width:100%;display:block;padding-bottom:120px;" alt="" src="https://seller.xingyebao.com/img/seller/4.jpg">
+        <div style="background-color:white;position:fixed;bottom:0px;width:100%;padding:10px 0px;border-top:1px solid #8b8b8b;">
+            <p style="color:#da8f3c;width:100%;text-align:center;line-height:20px;font-size:14px;"></p>
+            <p style="color:#da8f3c;width:100%;text-align:center;line-height:20px;font-size:14px;"></p>
+            <div class="upload_pay_button" style="width:80%;height:40px;line-height:40px;color:white;font-size:16px;background-color:#da8f3c;border-radius:6px;margin:10px auto;text-align:center;"></div>
+            <input type="file" class="upfile" data-from-where="manager_pay_qr" id="upfile" style="width:100%;height:100%;position:absolute;top:0px;opacity:0;">
+        </div>
+    </div>
+     <!-- 实名认证弹窗 -->
+     <div id="Authent_dailog" style="display:none">
+        <div class="Authent_dailog_box">
+            <div class="Authent_dailog_bd">根据国家相关法律法规，共同维护互联网交易环境，需实名认证审核后才能继续使用小店。请先填写重要信息。</div>
+            <div class="Authent_dailog_ft">
+                <a href="javascript:void(0)" type="0" class="Authent_dailog_btn">继续完善</a>
+            </div>
+        </div>
+    </div>
+    <div id="Authent_dailogs" style="display:none">
+        <div class="Authent_dailog_box">
+            <div class="Authent_dailog_bd"></div>
+        </div>
+    </div>
+    <div id="Authent_dailogsss" style="display:none">
+        <div class="Authent_dailog_box">
+            <div class="Authent_dailog_bd">
+                <p style="font-size:15px; font-weight:bold">验证通过</p>
+                <p>恭喜您，通过验证</p>
+            </div>
+        </div>
+    </div>
+    <div id="Authent_dailogss" style="display:none">
+        <div class="Authent_dailog_box">
+            <div class="Authent_dailog_bd">
+                <p style="font-size:15px; font-weight:bold">未通过验证</p>
+                <p>请仔细核对您的认证信息</p>
+                <p>请保证姓名与身份证号码为同一人</p>
+            </div>
+            <div class="Authent_dailog_ft">
+                <a href="javascript:void(0)" type="2" class="Authent_dailog_btn">修改认证信息</a>
+            </div>
+        </div>
+    </div>
+    <!-- /实名认证弹窗 -->
+    <!-- 必填信息 -->
+    <div id="information" style="overflow:hidden">
+        <!-- 实名认证 -->
+        <div id="smrz">
+            <p>
+                <span class="color_db8e40">实名认证
+                    <img class="wen" src="/img/seller/wen.png" alt="">
+                </span>
+                <span style="color:#9c9c9c">请保证姓名,身份证为一人</span>
+            </p>
+        </div>
+        <div class="smrz_input_box">
+            <div class="smrz_input_box_center">
+                <div class="smrz_input-cell">
+                    <div class="smrz_input__hd">
+                        <label class="smrz_input-label">真实姓名</label>
+                    </div>
+                    <div class="smrz_input__bd">
+                        <input class="smrz_input-input uname" type="text" placeholder="请填写真实姓名" value="{$re['name']}">
+                    </div>
+                </div>
+
+                <div class="smrz_input-cell" style="padding-top:10px;  border-bottom:none; padding-bottom: 0px;">
+                    <div class="smrz_input__hd">
+                        <label class="smrz_input-label">身份证号</label>
+                    </div>
+                    <div class="smrz_input__bd">
+                        <input onkeypress="return (/^([0-9|x|X]+)/.test(String.fromCharCode(event.keyCode)))" class="smrz_input-input uxfz"
+                            type="text" placeholder="请填写身份证号码"  value="{$re['cert_no']}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /实名认证 -->
+
+
+        <if condition="$is_show eq 0">
+            <!-- 上传收款码 -->
+            <div id="skm">
+                <p>
+                <span class="color_db8e40">上传收款码
+                    <img class="wen" src="/img/seller/wen.png" alt="">
+                </span>
+                </p>
+            </div>
+            <div class="skm_input_box">
+                <div class="skm_input_box_center">
+                    <div class="skm_input-cell weui-cell_access">
+                        <div class="weui-cell__bd">
+                            <span style="vertical-align: middle">支付宝收款码</span>
+                        </div>
+                        <div class="weui-cell__ft">
+                            <!-- 未上传 -->
+                            <span class="upload_text" data-from-where="dianzhu_pay_zfb" {$re['zfb'] ? 'style="display:none"' : 'style="display:block"'}>未上传</span>
+                            <span class="upload_img" data-from-where="dianzhu_pay_zfb" {$re['zfb'] ? 'style="display:block"' : 'style="display:none"'}>
+                            <img src="{$re['zfb']}" alt="">
+                        </span>
+                        </div>
+                    </div>
+                    <div class="skm_input-cell weui-cell_access" style="padding-top:10px;  border-bottom:none; padding-bottom: 0px;">
+                        <div class="weui-cell__bd">
+                            <span style="vertical-align: middle">微信收款码</span>
+                        </div>
+                        <div class="weui-cell__ft">
+                            <span class="upload_text" data-from-where="dianzhu_pay_qr" {$re['wx'] ? 'style="display:none"' : 'style="display:block"'}>未上传</span>
+                            <span class="upload_img" data-from-where="dianzhu_pay_qr" {$re['wx'] ? 'style="display:block"' : 'style="display:none"'}>
+                            <img src="{$re['wx']}" alt="">
+                        </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </if>
+
+        <input type="hidden" class="zfb_in" value="{$re['zfb']}">
+        <input type="hidden" class="wx_in" value="{$re['wx']}">
+        <input type="hidden" class="from_in" value="{$from}">
+        <!-- /上传收款码 -->
+        <if condition="$con eq 1">
+            <!-- 提交 -->
+            <a id="Submit_yz" class="btn btn-block" style="background-color:#da8f3e;color:white; width: 92%; margin: 20px auto; display: block;"href="javascript:void(0)">确认并提交</a>
+            <!-- 提交 -->
+        </if>
+        <if condition="$con eq 0">
+            <!-- 返回 -->
+            <a class="btn btn-block" style="background-color:#ffffff;color:#da8f3e; border:1px solid #da8f3e; width: 92%; margin: 20px auto; display: block;"href="/seller/shop">返回</a>
+            <!-- /返回 -->
+        </if>
+    </div>
+    <!-- /必填信息 -->
+</body>
+<script>
+    require(['jquery', 'lrz'], function () {
+        $(function () {
+            //提交
+//            var zfb_in = $(".zfb_in").val();
+//            if (zfb_in != ''){
+//                $(".weui-cell__ft span.upload_text[data-from-where='dianzhu_pay_zfb']").hide();
+//                $(".weui-cell__ft span.upload_img[data-from-where='dianzhu_pay_zfb']").show();
+//            }
+//            var wx_in = $(".wx_in").val();
+//            if (wx_in != ''){
+//                $(".weui-cell__ft span.upload_text[data-from-where='dianzhu_pay_qr']").hide();
+//                $(".weui-cell__ft span.upload_img[data-from-where='dianzhu_pay_qr']").show();
+//            }
+            $("#Submit_yz").on("click", function () {
+                var uname = $(".uname").val(); //姓名
+                var uxfz = $(".uxfz").val(); //身份证
+                var zfb = $(".weui-cell__ft span[data-from-where='dianzhu_pay_zfb']").find("img").attr("src"); //支付宝收款码
+                var wx =  $(".weui-cell__ft span[data-from-where='dianzhu_pay_qr']").find("img").attr("src"); // 微信收款码
+                if(uname == "" || uxfz == ""){
+                    $("#Authent_dailog .Authent_dailog_bd").css("text-align","center").text("信息不全！");
+                    $("#Authent_dailog").fadeIn(300);
+                    return false;
+                }else if (!(/(^\d{15}$)|(^\d{17}([0-9]|X)$)/.test(uxfz))) {
+                    $("#Authent_dailog .Authent_dailog_bd").css("text-align","center").text("你输入的身份证有误!");
+                    $("#Authent_dailog").fadeIn(300);
+                    return false;
+                }else if(zfb == "" && wx == ""){
+                    $("#Authent_dailog .Authent_dailog_bd").css("text-align","center").text("至少上传一种付款码!");
+                    $("#Authent_dailog").fadeIn(300);
+                    return false;
+                }
+                $.ajax({
+                    url: "/seller/certification/verify",
+                    data: {name: uname, cert_no: uxfz, zfb: zfb, wx: wx},
+                    type: 'post',
+                    success: function(data){
+                        if (data.code == 1){
+                            $('#Authent_dailogsss').show();
+                            setTimeout(function () {
+                                var from = $('.from_in').val();
+                                if (from == 'index'){
+                                    window.location.href = '/seller'
+                                }
+                                if (from == 'shop'){
+                                    window.location.href = '/seller/shop'
+                                }
+                            },2000);
+                        }else{
+                            $('#Authent_dailogss').show();
+                            return false;
+                        }
+                    }
+                });
+            })
+        })
+        $(".weui-cell__ft span").click(function(){
+            var data_type = $(this).attr("data-from-where");
+            $("#upfile").attr("data-from-where",data_type);
+            // if(isInit == "false" && data_open == 1){
+            //     $(".upload_pay_button").text("上传支付宝收款二维码")
+            // }else if(isInit == "true" && data_open == 1){
+            //     $(".upload_pay_button").text("修改支付宝收款二维码")
+            // }else if(isInit == "false" && data_open == 0){
+            //     $(".upload_pay_button").text("上传微信收款二维码")
+            // }else{
+            //     $(".upload_pay_button").text("修改微信收款二维码")
+            // }
+            if(data_type == "dianzhu_pay_qr"){
+                $("#upload_pay_dailog img").eq(3).show();
+                $("#upload_pay_dailog img").eq(0).removeAttr("src").attr("src","__CDN__/img/seller/1.png");
+                $("#upload_pay_dailog img").eq(1).removeAttr("src").attr("src","__CDN__/img/seller/2.png");
+                $("#upload_pay_dailog img").eq(2).toggleClass("last",false).removeAttr("src").attr("src","__CDN__/img/seller/3.png");
+                $("#upload_pay_dailog img").eq(3).removeAttr("src").attr("src","__CDN__/img/seller/4.jpg");
+                $("#upload_pay_dailog p").eq(0).text("请上传您真实有效的微信收款二维码图片");
+                $("#upload_pay_dailog p").eq(1).text("以便客户购买您的商品后能立即向您付款");
+                $(".upload_pay_button").text("上传微信收款二维码");
+            }else{
+                $("#upload_pay_dailog img").eq(3).hide();
+                $("#upload_pay_dailog img").eq(0).removeAttr("src").attr("src","__CDN__/img/seller/zf1.png");
+                $("#upload_pay_dailog img").eq(1).removeAttr("src").attr("src","__CDN__/img/seller/zf2.png");
+                $("#upload_pay_dailog img").eq(2).addClass("last").removeAttr("src").attr("src","__CDN__/img/seller/zf3.png");
+                $("#upload_pay_dailog p").eq(0).text("请上传您真实有效的支付宝收款二维码图片");
+                $("#upload_pay_dailog p").eq(1).text("以便客户购买您的商品后能立即向您付款");
+                $(".upload_pay_button").text("上传支付宝收款二维码")
+                
+            }
+            $("#upload_pay_dailog").show();
+        })
+        //收款码文件上传
+        $("input[type='file']").on("change", function () {
+            from_where = $(this).attr("data-from-where");
+            var oFile = $(this).get(0).files[0];
+            $(this).val('');
+            lrz(oFile).then(function (rst) {
+                var imgBase64 = rst.base64;
+                var fd = new FormData();
+                fd.append("upfile", 1);
+                fd.append("upfile", imgBase64);
+                $.ajax({
+                    url: "__CDN__/ueditor?action=uploadscrawl",
+                    type: "POST",
+                    processData: false,
+                    contentType: false,
+                    data: fd,
+                    success: function (d) {
+                        var dd = JSON.parse(d);
+                        if (dd.state == 'SUCCESS'){
+                            switch(from_where){
+                                case "dianzhu_pay_zfb":{
+                                    $(".weui-cell__ft span[data-from-where='dianzhu_pay_zfb']").find("img").attr("src",dd.url);
+                                    $(".weui-cell__ft span.upload_text[data-from-where='dianzhu_pay_zfb']").hide();
+                                    $(".weui-cell__ft span.upload_img[data-from-where='dianzhu_pay_zfb']").show();
+                                    $("#upload_pay_dailog").hide();
+                                    toast.show("上传成功");
+                                    break;
+                                }
+                                case "dianzhu_pay_qr":{
+                                    $(".weui-cell__ft span[data-from-where='dianzhu_pay_qr']").find("img").attr("src",dd.url);
+                                    $(".weui-cell__ft span.upload_text[data-from-where='dianzhu_pay_qr']").hide();
+                                    $(".weui-cell__ft span.upload_img[data-from-where='dianzhu_pay_qr']").show();
+                                    toast.show("上传成功");
+                                    $("#upload_pay_dailog").hide();
+                                    break;
+                                }
+                            }
+                            
+                        }
+                    }
+                });
+            })
+        })
+        $("#smrz p img").click(function(){
+            $(".Authent_dailog_bd").text("根据国家相关法律法规，共同维护互联网交易环境，需实名认证审核后才能继续使用小店。请先填写重要信息。")
+            $("#Authent_dailogs").fadeIn(300);
+        })
+        $("#skm p img").click(function(){
+            $("#Authent_dailogs .Authent_dailog_bd").text("上传您用于收款的二维码，以保证客户可以对商品完成支付，您需要至少上传一种");
+            $("#Authent_dailogs").fadeIn(300);
+        })
+        $("#Authent_dailogs").click(function(){
+            $("#Authent_dailogs").hide();
+            $("#Authent_dailogs .Authent_dailog_bd").text("");
+        })
+        $(".Authent_dailog_btn").click(function(){
+            if($(this).attr("type") == 2){
+                $("#Authent_dailogss").hide();
+            }else{
+                $("#Authent_dailog").hide();
+            }
+           
+        })
+    });
+</script>
+
+</html>

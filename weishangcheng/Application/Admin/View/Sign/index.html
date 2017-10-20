@@ -1,0 +1,161 @@
+<style>
+.checkin-edit hr{}
+.checkin-edit .delete_btn{margin-left:250px}
+.checkin-edit .checkin-rule-list-opt a.js-add{margin-left:50px}
+.checkin-rule-list-opt{padding:10px 10px 0 10px;text-align:center;border-top:1px solid #ddd}
+.sign-item{width:225px;float:left;text-align:center;padding:10px 0;margin-right:10px;position:relative;border:1px solid transparent}
+.sign-remove{position:absolute;top:-8px;right:-7px;border:1px solid #ccc;border-radius:50%;width:15px;height:15px;line-height:15px;background-color:#ddd;color:#fff;display:none}
+.sign-item:hover{background-color:#eee;border:1px solid #ddd}
+.sign-item:hover .sign-remove{display:inline-block}
+</style>
+<div class="checkin-edit">
+    <form method="post" action="__URL__/save" class="form-horizontal edit-form" data-validate="true">
+    	<input type="hidden" name="id" value="{$data.id}">
+        <div class="form-group">
+        	<div class="form-title">活动信息</div>
+			<div class="control-group form-item">
+			    <label class="control-label must">活动名称</label>
+			    <div class="controls">
+			        <input class="required" type="text" name="title" value="{$data.title}" maxlength="25">
+			    </div>
+			</div>
+			<div class="control-group form-item">
+				<label class="control-label must">每日赠送</label>
+				<div class="controls">
+				    <input class="required number" min="0" type="text" name="money" max="1" value="{$data.money}" placeholder="最多1元" style="width:180px"> 积分
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">活动说明</label>
+				<div class="controls">
+				    <textarea name="notice" maxlength="300" style="margin-left: 0px; margin-right: 0px; width: 700px;">{$data.notice}</textarea>
+				</div>
+			</div>
+			<div class="control-group form-item">
+			    <label class="control-label must">活动状态</label>
+			    <div class="controls">
+			       	<label class="radio inline"><input type="radio" name="enabled" value="1"{$data['enabled'] == 1 ? ' checked="checked"' : ''}> 启用</label>
+			       	<label class="radio inline"><input type="radio" name="enabled" value="0"{$data['enabled'] == 1 ? '' : ' checked="checked"'}> 禁用</label>
+			    </div>
+			</div>
+			<notempty name="data['id']">
+			<div class="control-group form-item">
+				<div class="controls" style="font-size: 14px;color: #f60;margin-left: 0;text-align: right;width: 400px;line-height: 30px;">
+				    已发{$data.sended_fee}元，累计签到{$data.played_uv}人/{$data.played_pv}次
+				</div>
+			</div>
+			</notempty>
+        </div>
+        
+        <div class="form-group">
+        	<div class="form-title">设置连续签到</div>
+        	<ul class="js-rule-container clearfix"></ul>
+            <p class="checkin-rule-list-opt"><a href="javascript:;" class="js-add">增加一条</a></p>
+        </div>
+        <if condition="$canSave">
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">保存</button>
+        </div>
+        </if>
+    </form>
+</div>
+
+<if condition="$canSave">
+<script type="text/javascript">
+	var days = {$days};
+	var totalScore = 0;
+	var rules = {$data['rules']};
+	var $ruleContainer = null;
+	
+	function resetTotal(){
+		totalScore = 0;
+		$ruleContainer.find('.js-score').each(function(i){
+			if(this.value != ''){
+				totalScore += this.value * 1;
+			}
+		});
+		alertMsg(totalScore.toFixed(2));
+	}
+	
+	function appendRule(list){
+		var html = '';
+		for(var day in list){
+			html += '<li class="sign-item">';
+	        html += '	<input type="text" class="js-day input-mini text-center" name="" value="'+day+'" maxlength="3" placeholder="连续"> 天';
+	       	html +=	'	<input type="text" class="js-score input-mini text-center" name="" value="'+list[day]+'" maxlength="4" placeholder="奖励"> 积分';
+	       	html += '	<a class="js-sign-remove sign-remove">×</a>';
+	        html += '</li>';
+    	}
+		
+        $ruleContainer.append(html);
+        resetTotal();
+	}
+	
+    $(function(){
+    	$ruleContainer = $('.js-rule-container');
+    	
+    	// 初始化数据
+    	appendRule(rules);
+    	
+    	$ruleContainer.on('change', '.js-day',function(){
+    		var value = this.value;
+    		if(value == '' || !/^\d+$/.test(value) || value < 1){
+    			value = '';
+    		}else if(value > days){
+    			value = days;
+    		}
+    		this.value = value;
+    		return false;
+    	}).on('change', '.js-score', function(){
+    		var value = this.value;
+    		if(value == '' || isNaN(value)){
+    			value = '';
+    		}else if(value < 0.01){
+    			value = 0.01;
+    		}else if(value > 10){
+    			value = 10;
+    		}
+    		this.value = value;
+    		resetTotal();
+    		return false;
+    	}).on('click', '.js-sign-remove', function(){
+    		$(this).parent().remove();
+    		resetTotal();
+    		return false;
+    	});
+    	
+        $(".js-add").on('click', function(){
+        	var $children = $ruleContainer.children();
+        	if($children.length >= days){
+        		return alertMsg('最多'+days+'条'), false
+        	}
+        	
+        	var $last = $children.last()
+     	   		,day = $last.length == 0 ? 1 : $last.find('.js-day').val() * 1 + 1
+            	,score = $last.length == 0 ? 0.1 : $last.find('.js-score').val() * 1 + 0.1;
+        	
+        	var data = {};
+        	data[day] = score.toFixed(2)
+            appendRule(data);
+        });
+        
+        // 表单提交
+		$('.edit-form').on('valid', function(e, data){
+			rules = {};
+			var $day = $ruleContainer.find('.js-day')
+				,day = '', score = 0;
+			$ruleContainer.find('.js-score').each(function(i){
+				if(this.value != ''){
+					score = this.value * 1;
+					day = $day.eq(i).val();
+					if(day != ''){
+						rules[day] = score;
+					}
+				}
+			});
+			
+			data.rules = rules;
+    	});
+    })
+</script>
+</if>

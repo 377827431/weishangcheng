@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>联系商家付款</title>
+	</head>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+		body{
+			background: #EEEEEE;
+		}
+		.payseller_box{
+			width: 100%;
+			background: #fff;
+			color: #0F0F0F;
+			overflow: hidden;
+		}
+		.payseller_info_box{
+			width: 100%;
+			background: #fff;
+			margin-top: 15px;
+			overflow: hidden;
+		}
+		.payseller_box_ts{
+			width: 93%;
+			margin: 0 auto;
+			padding: 20px 0px;
+		}
+		.payseller_info_box_ms{
+			width: 93%;
+			margin: 20px auto;
+			display: flow-root;
+			margin-top: 0px;
+		}
+		.payseller_info_box_ms ul li{
+			border-bottom: 1px solid #BABABA;
+		}
+		.payseller_info_box_ms ul li p{
+			color: #E4BC91;
+			margin: 10px auto;
+			display: flow-root;
+			font-size: 14px;
+		}
+		.flex_left{
+			color: #0F0F0F !important;
+			font-size: 14px;
+			float: left;
+		}
+		.flex_right{
+			font-size: 14px;
+			float: right;
+		}
+		.color_ad{
+			color: #ADADAD !important;
+		}
+		.payseller_info_box_ms a{
+			width: 45%;
+			margin: 20px auto;
+			font-size: 14px;
+			text-align: center;
+			padding: 6px 0px;
+			text-decoration: none;
+			color: #0F0F0F;
+			margin-bottom: 0px;
+		}
+		.payseller_info_box_ms a img{
+			width: 25px;
+			height: 25px;
+			margin-right: 8px;
+			position: relative;
+    		top: .1rem;
+		}
+		.payseller_code{
+			float: left;
+			border: 1px solid #BDBDBD;
+		}
+		.payseller_tel{
+			float: right;
+			border: 1px solid #BDBDBD;
+		}
+		.top_rem{
+			position: relative;
+    		top: -.4rem;
+		}
+		.footer_nav{
+			width: 100%;
+			background: #fff;
+			position: fixed;
+			bottom: 0px;
+			right: 0px;
+			overflow: hidden;
+		}
+		.footer_center{
+			width: 93%;
+		    margin: 10px auto;
+		    display: flow-root;
+		}
+		.footer_left{
+			float: left;
+		    width: 50%;
+		    padding: 10px 0px;
+		    color: #DF862A;
+		}
+		.footer_right{
+			width: 33%;
+		    background: #E4BC91;
+		    float: right;
+		    text-align: center;
+		    font-size: 14px;
+		    color: #fff;
+		    padding: 8px 0px;
+		    border-radius: 6px;
+		}
+		.color_A0{
+			color: #A0A0A0 !important;
+		}
+		.payseller_zy{
+			width: 93%;
+			margin: 20px auto;
+			font-size: 13px;
+		}
+		
+	</style>
+	<body>
+		<!--提示-->
+		<div class="payseller_box">
+			<div class="payseller_box_ts">
+				<p style="font-size: 14px;">提示</p>
+				<p style="font-size: 12px; margin-top: 10px;">下单后请于8小时内联系店家微信去付款，逾期订单将自动关闭</p>
+			</div>
+		</div>
+		<!--/提示-->
+		<!--发货信息-->
+		<div class="payseller_info_box">
+			<div class="payseller_info_box_ms">
+				<ul>
+					<li>
+						<p style="color: #DF862A !important;">与商家联系付款、发货</p>
+					</li>
+					<!-- <li>
+						<p>
+							<span class="flex_left">商家微信昵称  :</span>
+							<span class="flex_right">超灬</span>
+						</p>
+					</li> -->
+					<li>
+						<p>
+							<span class="flex_left">商家微信号  :&nbsp;&nbsp;&nbsp;<span class="color_ad">( 点击可复制 )</span></span>
+							<span class="flex_right">714992729</span>
+						</p>
+					</li>
+				</ul>
+				
+				<a href="javascript:void(0)" class="payseller_code">
+					<img src="/img/box_code.png"/><span class="top_rem">微信二维码</span>
+				</a>
+				<a href="tel:13804527100" class="payseller_tel">
+					<img src="/img/tel.png"/><span class="top_rem">拨打电话</span>
+				</a>
+			</div>
+		</div>
+		<!--/发货信息-->
+		<div class="payseller_zy color_A0">
+			<p>1. 请与商家联系并付款。平台不提供支付担保,请谨慎交易;</p>
+			<p style="margin-top: 2px;">2. 微信二维码 : 二维码图片可保存到手机相册,发送到微信中可长按识别二维码添加商城微信。</p>
+		</div>
+		<!--footer-->
+		<div class="footer_nav">
+			<div class="footer_center">
+				<div class="footer_left">
+					<span style="font-size: 13px;">应付金额 :</span>
+					<span style="font-size: 16px;">￥ <span>108.00</span>元</span>
+				</div>
+				<div class="footer_right">请联系商家付款</div>
+			</div>
+		</div>
+		<!--/footer-->
+	</body>
+</html>

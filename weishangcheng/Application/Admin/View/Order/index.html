@@ -1,0 +1,187 @@
+<style>
+.toolbar .form-horizontal .filter-groups .control-label{width:100px}
+.toolbar .form-horizontal .filter-groups .controls{margin-left:105px}
+.toolbar{margin-bottom:15px}
+.ui-table-order{width:100%;text-align:left;margin-bottom:0}
+.ui-table-order .separation-row{border:none;height:10px}
+.ui-table-order .separation-row td{padding:0}
+.ui-table-order .header-row{background:#fff;height:30px}
+.ui-table-order tr{border:1px solid #f2f2f2}
+.ui-table-order th,.ui-table-order td{padding:10px;vertical-align:top;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
+.ui-table-order .remark-row.buyer-msg{background:#FDEEEE;color:#ED5050}
+.ui-table-order .remark-row.buyer-msg td,.ui-table-order .remark-row.seller-msg td{padding:5px 10px}
+.ui-table-order .price-cell{border-right:1px solid #f2f2f2}
+.ui-table-order .aftermarket-cell,.ui-table-order .customer-cell,.ui-table-order .time-cell,.ui-table-order .status-cell,.ui-table-order .pay-price-cell{text-align:center}
+.ui-table-order .aftermarket-cell{width:100px}
+.ui-table-order .content-row .image-cell{text-align:center;padding:10px 0 10px 10px}
+.ui-table-order .content-row .image-cell img{width:76px;height:76px}
+.ui-table-order .title-cell .goods-title{width:297px;font-size:13px}
+.ui-table-order .title-cell .goods-title a{color:#333}
+.ui-table-order .price-cell,.ui-table-order .number-cell{text-align:right}
+.ui-table-order th,.content-row,.seller-msg{background-color:#fff}
+.ui-table-order th{font-size:14px}
+.send-modal{}
+.send-modal .control-label{width:80px;text-align:left}
+.send-modal .controls{margin-left:80px}
+.send-modal input[disabled]{border:none;background-color:#fff;box-shadow:none;padding-top:6px}
+.send-modal .control-group{margin-bottom:0px}
+.send-modal form{margin:0}
+.send-modal table{margin-bottom:10px;border-bottom:1px solid #ddd}
+.order-price-table{margin-bottom:0}
+.order-price-table thead tr>th{background-color:#f5f5f5}
+.c-gray{color:#999}
+.final p{margin:0}
+.order-no{color:#333}
+.order-no-1688{display:inline-block}
+.order-no-1688 a{margin-left:5px}
+.express{}
+.express-no{margin-left:5px;color:#888}
+.create_time{color:#888;margin-left:5px}
+.buyer_nick{display:block;max-width:100px}
+.postage,.goods-spec{color:#888}
+.goods-spec{font-size:12px}
+.pagination{margin:10px 0 0 0;background-color:#fff;padding:15px}
+</style>
+<div id="toolbar" class="toolbar">
+	<form id="order_search" class="form-horizontal" style="margin:0">
+		<div class="clearfix">
+			<div class="filter-groups">
+				<div class="control-group">
+                    <label class="control-label">订单关键词</label>
+                    <div class="controls">
+                        <input type="text" name="kw" value="{$search.kw}" style="width:230px" maxlength="20" placeholder="订单号/商品关键词/收货人手机等...">
+						<select name="status" class="js-status" style="width:111px">
+							<option value="">全部</option>
+							<foreach name="order_status" key="sid" item="item">
+							<option value="{$sid}" <if condition="$search['status'] eq $sid">selected="selected"</if>>{$item.title}</option>
+							</foreach>
+                            <option value="refunding">退货退款中</option>
+                            <!-- <option value="error1688">1688异常订单</option> -->
+						</select>
+                    </div>
+                </div>
+				<div class="control-group">
+					<label class="control-label">下单人手机</label>
+					<div class="controls">
+                        <input type="text" name="buyer_mobile" maxlength="11" placeholder="手机号" style="width:230px">
+						<input type="text" name="buyer_id" maxlength="11" placeholder="会员ID" style="width:97px" value="{$search.buyer_id}">
+					</div>
+				</div>
+			</div>
+			<div class="filter-groups" style="float:right;margin-right:50px">
+				<div class="control-group">
+					<label class="control-label">下单时间</label>
+					<div class="controls">
+                        <div class="data-range">
+                            <input type="text" name="date_range" data-start-date="{$search.start_time}" data-end-date="{$search.end_time}" data-max-date="{:date('Y-m-d')} 23:59:59" data-toggle="daterange" style="width:345px" readonly="readonly">
+                        </div>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">订单类型</label>
+					<div class="controls">
+					 	<select name="type" style="width: {$shops ? '120' : '360'}px">
+                            <option value="0">全部类型</option>
+                            <option value="1">普通</option>
+                            <option value="3">货到付款</option>
+                            <option value="7">会员卡</option>
+                        </select>
+						<notempty name="shops">
+						<select name="shop_id" style="width: 235px" id="all_shop">
+							<option value="all">全部店铺</option>
+							<foreach name="shops" item="vo">
+							<option value="{$vo.id}"{$currentShopId == $vo['id'] ? ' selected="selected"' : ''}>{$vo.name}</option>
+							</foreach>
+						</select>
+						</notempty>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="text-center">
+			<if condition="$show_out_stock_btn">
+				<button type="button" id="out_stock" class="btn btn-danger" title="导出当前条件下所有待发货的订单">出库打单</button>
+			</if>  
+			<button type="button" id="printOrder" class="btn btn-primary">导出订单</button>
+            <input class="btn" type="submit" value="查询">
+		</div>
+	</form>
+</div>
+<table id="order_list_table" class="ui-table-order" style="padding: 0px">
+	<thead class="js-list-header-region tableFloatingHeaderOriginal" style="position: static; top: 0px; margin-top: 0px; left: 150px; z-index: 1; width: 849px">
+        <tr class="widget-list-header">
+            <th colspan="2" style="width: 367px">商品</th>
+            <th style="width: 80px">单价/数量</th>
+            <th class="customer-cell" style="width: 120px">买家</th>
+            <th class="time-cell" style="width:90px">下单时间</th>
+            <th class="status-cell" style="width: 110px">订单状态</th>
+            <th class="pay-price-cell" style="width: 130px">总金额</th>
+        </tr>
+	</thead>
+	<tbody>
+		<tr class="header-row">
+			<td colspan="7" class="text-center"></td>
+		</tr>
+	</tbody>
+</table>
+
+<script>var MODULE = '__MODULE__';</script>
+<script src="/js/pagination.js"></script>
+<script src="//cdn.bootcss.com/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.18.1/moment.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap-daterangepicker/2.1.25/daterangepicker.min.js"></script>
+<link href="https://cdn.bootcss.com/bootstrap-daterangepicker/2.1.25/daterangepicker.min.css" rel="stylesheet">
+<script src="/js/admin.order.js"></script>
+<script>
+$(function(){
+	//退款
+	var $table = $('#table');
+	$table.on('click', '.js-detail', function(){
+		 var tid = $(this).attr('data-tid');
+		 refund(tid);
+	})
+});
+function refund(tid,callback, has_changed){
+	if(has_changed || $('#refund_container').length == 0){
+		$.get('__MODULE__/refund/detail?tid='+tid, function(html){
+			$('#refund_container').remove();
+			$('body').append('<div id="refund_container">'+html+'</div>');
+
+			var $container = $('#refund_container'), $modal = $container.find('.modal');
+			$modal.modal({keyboard: false}).on('hide', function(){
+				$container.remove();
+				if(has_changed){
+					callback();
+				}
+			});
+			ov.refund(tid, callback);
+		});
+		return;
+	}
+	
+	var $container = $('#refund_container'), $modal = $container.find('.modal');
+	
+	var $refundContainer = $container.find('.refund-list');
+	$container.find('.refund-table-header').css('margin-right', $refundContainer[0].offsetWidth - $refundContainer[0].clientWidth);
+	
+	var $script = $('#trade_refund_orders'),
+	orders = $script.html(),
+	order = {}, actions = [];
+	$script.remove();
+	orders = eval(orders);
+	// 必须控件
+	var $reason  = $modal.find('.js-reason'),
+	$refund_fee  = $modal.find('.js-refund_fee'),
+	$refund_post = $modal.find('.js-refund_post'),
+	$remark      = $modal.find('.js-remark'),
+	$sremark     = $modal.find('.js-refund_sremark'),
+	$images      = $modal.find('.js-images'),
+	$actions     = $modal.find('.js-action'),
+	$name        = $modal.find('.js-receiver_name'),
+	$mobile      = $modal.find('.js-receiver_mobile'),
+	$address     = $modal.find('.js-receiver_address'),
+	$type        = $modal.find('.js-refund_type'),
+	$expressNo   = $modal.find('.js-express_no'),
+	$refund_quantity = null;
+}
+</script>

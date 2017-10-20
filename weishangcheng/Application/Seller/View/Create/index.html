@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="我的超级微店" />
+    <link rel="stylesheet" href="__CDN__/css/seller/keyshop.css?20170901">
+    <style>
+        .thisput{border:none;outline:none;text-align:right;padding-right:4px;display:inline-block;padding-top:0px;padding-bottom:0px;color:#878787;}
+        .thisput:focus{color:black;}
+    </style>
+</head>
+
+<body class="body-fixed-bottom">
+<div class="container">
+    <div class="content ">
+        <div class="content-body">
+            <ul class="create_shop_ul">
+                <li class="first_shop_logo_li">
+                    <a href="">
+                        <div class="clearfix">
+                            <span class="left">店铺logo</span><span class="right right_content"><img class="shop_logo" src="__CDN__/img/seller/shop_logo.png"/></span>
+                        </div>
+                    </a>
+                    <input id="upfile" type="file" style="position: absolute;top: 0px;left: 0px;width: 100%;height: 49px;opacity: 0;">
+                </li>
+                <!--<li>-->
+                    <!--<a href="">-->
+                        <!--<div class="clearfix">-->
+                            <!--<span class="left">店铺名称</span><span class="right right_content">美妙人生</span>-->
+                        <!--</div>-->
+                    <!--</a>-->
+                <!--</li>-->
+                <li>
+                    <div class="clearfix" style="padding: 17px 10px;display: block;font-size: 14px;color: #303030;">
+                        <span class="left">店铺名称</span>
+                        <input class="thisput" id="js-shop" type="text" style="float:right;"  placeholder="未填写">
+                    </div>
+                </li>
+                <li class="change_mobile">
+                    <a href="">
+                        <div class="clearfix">
+                            <span class="left">手机号</span><span id="js-mobile" class="right right_content">{$user['mobile'] != '' ? 已绑定 : 未绑定}</span>
+                        </div>
+                    </a>
+                </li>
+                <!--<li>-->
+                    <!--<a href="">-->
+                        <!--<div class="clearfix">-->
+                            <!--<span class="left">微信号</span><span class="right right_content">未填写</span>-->
+                        <!--</div>-->
+                    <!--</a>-->
+                <!--</li>-->
+                <li>
+                    <div class="clearfix" style="padding: 17px 10px;display: block;font-size: 14px;color: #303030;">
+                        <span class="left">微信号</span>
+                        <input class="thisput" id="js-weixinid" type="text" style="float:right;" placeholder="未填写">
+                    </div>
+                </li>
+            </ul>
+
+            <div class="bottom_btn_box js-cshop"><button class="btn btn-orange-dark btn-block">创建微店</button></div>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+require(['jquery','lrz'],function(){
+    $('li.first_shop_logo_li input[type="file"]').on('change',function(){
+        var fd = new FormData();
+        fd.append("upload", 1);
+        oFile = $("#upfile").get(0).files[0];
+        imgSize = oFile.size;
+        $("#upfile").val('');
+        if(imgSize < 250000){
+            fd.append("upfile", oFile);
+        } else {
+            lrz(oFile,{width:500,height:500})
+                .then(function(rst){
+                    //测试压缩后的图片有多大
+                    console.log('图片经过压缩后，大小为：'+(rst.base64.length / 1024)+'KB');
+                    fd.append("upfile", rst.base64);
+                    $.ajax({
+                        url: "__CDN__/ueditor?action=uploadscrawl",
+                        type: "POST",
+                        processData: false,
+                        contentType: false,
+                        data: fd,
+                        success: function(d) {
+                            var dd = JSON.parse(d);
+                            if (dd.state == 'SUCCESS'){
+                                $('img.shop_logo').attr('src', dd.url);
+                            }
+                            console.log(dd);
+                        }
+                    });
+                })
+            return;
+        }
+        $.ajax({
+            url: "__CDN__/ueditor?action=uploadimage",
+            type: "POST",
+            processData: false,
+            contentType: false,
+            data: fd,
+            success: function(d) {
+                var dd = JSON.parse(d);
+                if (dd.state == 'SUCCESS'){
+                    $('img.shop_logo').attr('src', dd.url);
+                }
+                console.log(dd);
+            }
+        });
+    })
+
+    var user = {:json_encode($user)};
+    var $mobile = $('.change_mobile');
+    $mobile.on('click', function(){
+        require(['h5/view/create/mobile'], function(view){
+            view.show(user, function(data){
+                $.ajax({
+                    url: "/seller/create/save",
+                    data: {data:data},
+                    type: 'post',
+                    datatype: 'text',
+                    success: function(){
+                        user = $.extend(user, data);
+                        if (user.mobile.length > 0){
+                            $('li.change_mobile span.right_content').html('已绑定');
+                        }
+                    }
+                });
+            })
+        });
+        return false;
+    });
+
+    $('.js-cshop').on('click', function(){
+        var logo = $('img.shop_logo').attr('src');
+        var shop_name = $('#js-shop').val();
+        if (shop_name == ''){
+            toast.show('请填写店铺名称');
+            return false;
+        }
+        var mobile = $('#js-mobile').html();
+        if (mobile != '已绑定'){
+            toast.show('请绑定手机号');
+            return false;
+        }
+        var weixinid = $('#js-weixinid').val();
+        if (mobile == ''){
+            toast.show('请填写微信号');
+            return false;
+        }
+        $.ajax({
+            url: "/seller/create/index",
+            data: {logo: logo, name:shop_name, wxid:weixinid},
+            type: 'post',
+            success: function(){
+                window.location.href = "/seller";
+            }
+        });
+    });
+
+})
+
+
+</script>
+
+</body>
+</html>

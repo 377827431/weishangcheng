@@ -1,0 +1,91 @@
+<style>
+.app-design{display:inline-block}
+.app-design .app-sidebar{position:relative;float:left;width:550px;font-size:14px}
+.app-design .app-sidebar+.app-sidebar{width:415px;margin-left:20px}
+.app-design .app-sidebar .app-sidebar-inner{padding:12px 10px;min-height:28px;background:#f8f8f8;border-radius:3px;border:1px solid #d1d1d1}
+.app-design .app-sidebar .app-sidebar-inner+.app-sidebar-inner{margin-top:14px}
+.app-design .app-sidebar .control-group:last-of-type{margin-bottom:0}
+.app-design .control-label{width:90px}
+.app-design .controls{margin-left:100px}
+.app-design .controls input[type="text"]{width:390px}
+.app-design .controls select{width:358px}
+.app-design .controls .calendar input[type="text"]{width:159px}
+.sku-table th+th,.sku-table td+td{border-left:1px solid #ddd;text-align:center}
+.sku-table input{text-align:center}
+.sku-table .input .end-num,.sku-table .input .start_num{text-align:center;border:none;box-shadow:none;font-weight:bold;line-height:16px;padding:0;height:16px;width:31px;background-color:#fff}
+.sku-table .input .end-num{color:red}
+.popover {max-width: 470px;width: 470px;}
+.goods-name{width:310px;display:inline-block;margin-bottom:0;margin-left:15px;border: 1px solid #ccc;height: 20px;line-height:20px;padding: 4px 6px;float:left;background-color: #eee;font-size:12px;color:#999999;}
+</style>
+<div id="page_loading" class="ui-page-loading"></div>
+<form action="__ACTION__" class="form-horizontal" data-validate="true" data-submit="ajax" method="post" data-success="back">
+    <input type="hidden" name="id" value="{$data['id']}">
+    <div class="app-design">
+        <div class="app-sidebar">
+            <div class="app-sidebar-inner">
+                <p>问题信息<span style="font-size:12px"></span></p>
+                <div style="background-color: #fff;border-radius: 3px;padding: 18px 0;border: 1px solid #ccc;">
+                    <div class="control-group">
+                        <label class="control-label must">客服问题</label>
+                        <div class="controls">
+                            <input type="text" name="question" class="required" value="{$data.question}" maxlength="200" placeholder="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="app-sidebar-inner">
+                <p>问题类型设置<span style="font-size:12px"></span></p>
+                <div style="background-color: #fff;border-radius: 3px;padding: 18px 0 0 0;border: 1px solid #ccc;">
+                    <div class="control-group" style='margin:0 0 20px 0'>
+                        <label class="control-label must">问题类型</label>
+                        <div class="controls">
+                            <select name="type" id="type" style="width:370px" required="required"></select>
+                            <a href="javascript:;" class="js-refresh-freight">刷新</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="app-sidebar">
+            <div class="app-sidebar-inner">
+                <p>问题答案</p>
+                <script id="image_text_container" name="answer" type="text/plain">{$data.answer}</script>
+            </div>
+        </div>
+    </div>
+    <div class="form-actions">
+      <button type="button" class="btn btn-back">返回</button>
+      <button type="submit" class="btn btn-primary">保存</button>
+    </div>
+</form>
+<script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="/ueditor/ueditor.all.min.js"></script>
+<script>
+$(function(){
+	
+	/**************** 运费模板start *****************/
+	var $freight_id = $('#type'), templateList = [];
+	$('.js-refresh-freight').on('click', function(){
+		$.ajax({
+			url: '__MODULE__/helper/typelist',
+			dataType: 'json',
+			success: function(list){
+				templateList = list;
+				var html = '<option value="">请选择</option>';
+				for(var i=0; i<list.length; i++){
+					html += '<option value="'+list[i].id+'"'+(list[i].id == '{$data.type}' ? 'selected="selected"' : '')+'>'+list[i].type_name+'</option>';
+				}
+				$freight_id.html(html);
+				$('#page_loading').fadeOut(function(){$(this).remove()});
+			}
+		});
+	}).trigger('click');
+	/**************** 运费模板over *****************/
+	var editor = UE.getEditor('image_text_container');
+	editor.ready(function() {
+		$('#edui28').on('click', function(){
+			editor.removeListener('beforeInsertImage', beforeInsertImage);
+		});
+	});
+});
+</script>

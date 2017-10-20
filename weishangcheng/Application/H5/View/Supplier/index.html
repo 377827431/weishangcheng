@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<include file="_layout/mall.head.html" title="供应商入住" />
+<literal>
+<style>
+.must{}
+.must:after{content:'*'; color:red}
+.top-content{text-align:center;padding:0 10px;background-color:#fff}
+.top-banner{position:relative;width:60%;background-size:cover;margin:30px auto 20px}
+.declaration{font-size:14px;color:#555;font-weight:bold;padding-bottom:30px;max-width:300px;margin:0 auto}
+.section-case{padding:20px 0 0;position:relative}
+.section-case .section-intro,.section-case .section-notice{color:#555;font-size:12px;line-height:18px;padding:10px;font-weight:100;background-color:#fff}
+.section-case .section-intro h4,.section-case .section-notice h4{text-align:center;font-size:14px;font-weight:bold;margin-bottom: 10px;}
+.section-case .service-block{color:#555;font-size:14px;white-space:nowrap;width:100%;overflow:scroll;background-color:#fff;padding-bottom:10px}
+.section-case .service-block li{display:inline-block;width:270px;margin-right:10px;background-color:#fff;border-radius:4px;white-space:normal;border:1px solid #f0f0f0;overflow:hidden}
+.section-case .service-block li:first-child{margin-left:10px}
+.section-case .service-block .shop-logo{height:75px;background-repeat:no-repeat;background-size:contain;background-position:center}
+.section-case .service-block .case-wrap{padding:10px 10px 20px;font-weight:100}
+.section-case .service-block .case-wrap h4{padding:0 0 4px;font-weight:bold}
+.section-case .service-block .case-wrap p{line-height:22px;margin-bottom:25px;height:180px}
+.section-case .service-block .case-wrap .strong{font-weight:bold;margin-bottom:2px;line-height:28px}
+.section-case .service-block .case-wrap .tag{margin-right:8px}
+.section-case .section-notice{margin-top:20px}
+.section-case .section-notice ul{text-align:left;list-style-type:decimal}
+.section-case .section-notice ul li{margin-left:20px}
+.section-case .service-block::-webkit-scrollbar {display: none}
+.checkbox{min-width: 60px;position:relative;display:inline-block;margin-right:10px}
+.icon-check{position: relative;top: 2px;width:15px;height:15px;background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAABQCAYAAABrjzfBAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyNpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChNYWNpbnRvc2gpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkE2OTc1MEVGNkJEODExRTRCOTQwQjhDMDUzMzlCNTcyIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkE2OTc1MEYwNkJEODExRTRCOTQwQjhDMDUzMzlCNTcyIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTY5NzUwRUQ2QkQ4MTFFNEI5NDBCOEMwNTMzOUI1NzIiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTY5NzUwRUU2QkQ4MTFFNEI5NDBCOEMwNTMzOUI1NzIiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz575pw/AAAIe0lEQVR42sxZa2wV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");background-repeat:no-repeat;background-position:0 0;background-size:15px auto;display:inline-block}
+.icon-check.icon-checked {background-position: 0 -15px}
+.label-content{display:table-cell;padding:10px 0;vertical-align:middle;}
+</style>
+</literal>
+</head>
+
+<body>
+	<div class="top-content">
+		<img src="__CDN__/img/fywc_h_logo.png" class="top-banner">
+		<p class="declaration">专业的微商团队,每年服务超过500万消费者</p>
+	</div>
+	<div class="section-case">
+		<div class="section-intro">
+			<h4>客户案例</h4>
+		</div>
+		<ul class="service-block">
+			<li>
+				<div class="shop-logo"
+					style="background-image: url('https://static.koudaitong.com/v2/image/intro/new_dashboard/case/lppz@2x.png'); background-color: #e70206"></div>
+				<div class="case-wrap">
+					<h4>有赞商家版让门店百万粉丝更快乐</h4>
+					<p>有赞强大的客户管理功能帮助我们勾勒出百万门店粉丝的用户画像，精准营销为门店顾客提供了第二种购买路径的愉悦体验，同时使门店顾客电子数据化，指导门店商品的最佳陈列，高效满足用户购买需求，给良品铺子O2O战略落地提供坚实的基础，有你，有赞！</p>
+					<span class="strong">揭晓峰</span><br> <span class="tag">良品铺子集团</span><span
+						class="tag">副总裁</span>
+				</div>
+			</li>
+			<li>
+				<div class="shop-logo"
+					style="background-image: url('https://static.koudaitong.com/v2/image/intro/new_dashboard/case/queen@2x.png'); background-color: #e72a93"></div>
+				<div class="case-wrap">
+					<h4>双屏互动实现T20新玩法</h4>
+					<p>“我是大美人”采用节目+视频直播+社区+网购的“重”玩法来实现T20产业链闭环。背靠湖南卫视，“我是大美人”有创业公司不具备的电视节目制作资源和粉丝基数，且签约的美妆达人在直播中有多机位拍摄和切换，来确保视频质量。直播过程中，会出现产品购买链接，将用户导入有赞微商城，实现即看即买。</p>
+					<span class="strong">胡智翔</span><br> <span class="tag">快乐讯(我是大美人)</span><span
+						class="tag">副总经理</span>
+				</div>
+			</li>
+		</ul>
+		<div class="section-notice">
+			<h4>入住须知</h4>
+			<ul>
+				<li>合作商家须遵守我国现行法律法规，无不良或违反法律法规行为记录。</li>
+				<li>所有在微商联盟销售的商品须符合国家有关规定，严禁出售违法违规及侵害消费者权益的不合格商品</li>
+				<li>商家须保证签约合同内所附属信息的真实性，完整性，有效性和合法性。</li>
+				<li>商家与微商联盟签署合作协议后，须切实履行合作协议中的义务条款。</li>
+			</ul>
+		</div>
+		<form class="section-notice form" method="post" action="/h5/address/edit">
+			<h4 style="line-height:30px">立即报名</h4>
+			<div class="block">
+				<div class="block-item no-top-border">
+					<label>公司名称</label>
+					<input type="text" name="company">
+				</div>
+				<div class="block-item">
+					<label>公司人数</label>
+					<input type="text" name="company">
+				</div>
+				<div class="block-item">
+					<label>年营业额</label>
+					<input type="text" name="company">
+				</div>
+				<div class="block-item">
+					<label class="must">联 系 人</label>
+					<input type="text" name="company">
+				</div>
+				<div class="block-item">
+					<label class="must">联系电话</label>
+					<input type="tel" name="mobile" required="required" data-rule-mobile="mobile" data-msg-required="请输入联系电话" data-msg-mobile="请输入正确的手机号" maxlength="11">
+				</div>
+				<div class="block-item">
+					<label>联系邮箱</label>
+					<input type="email" name="email">
+				</div>
+				<div class="block-item">
+					<label>职　　务</label>
+					<input type="text" name="company">
+				</div>
+				<div class="block-item">
+					<label>详细地址</label> <input type="text" name="detail" placeholder="省市区街道信息">
+				</div>
+			</div>
+			<h4 style="line-height:30px">产品资料</h4>
+			<div class="block">
+				<div class="block-item no-top-border">
+					<label class="must">产品名称</label>
+					<input type="text" name="company">
+				</div>
+				<div class="block-item">
+					<label class="must">所属类目</label>
+					<input type="text" name="company">
+				</div>
+				<div class="block-item">
+					<label class="must">自有品牌</label>
+					<div class="label-content">
+						<label class="checkbox"><input type="checkbox" style="display:none"><i class="icon-check icon-checked"></i> 是</label>
+						<label class="checkbox"><input type="checkbox" style="display:none"><i class="icon-check"></i> 否</label>
+					</div>
+				</div>
+				<div class="block-item">
+					<label class="must">一键代发</label>
+					<div class="label-content">
+						<label class="checkbox"><input type="checkbox" style="display:none"><i class="icon-check icon-checked"></i> 支持</label>
+						<label class="checkbox"><input type="checkbox" style="display:none"><i class="icon-check"></i> 不支持</label>
+					</div>
+				</div>
+			</div>
+			<div>
+				<div class="action-container">
+					<button type="submit"
+						class="js-address-save btn btn-block btn-red">提交</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</body>
+<script type="text/javascript">
+require(['jquery'], function(){
+	$('.checkbox').on('click', function(){
+		var $this = $(this);
+		$this.siblings('.checkbox').find('.icon-check').removeClass('icon-checked');
+		$this.find('.icon-check').addClass('icon-checked');
+	});
+});
+</script>
+</html>

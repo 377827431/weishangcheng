@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<include file="_layout/mall.head.html" />
+<literal>
+<link rel="stylesheet" href="__CDN__/css/shopnav.css" type="text/css">
+<style>
+.tabber.tabber-n4 button, .tabber.tabber-n6 a {width: 16.66%;}
+.opt-btn{display:inline-block;margin-top:-6px;float:right}
+.opt-btn .btn {margin-left: 5px;}
+#present-list-container{margin-top:15px;padding-bottom: 15px;}
+.name-card.name-card-3col .sum-desc{margin-left:68px;position:relative;width:100%}
+.name-card.name-card-3col .sum-desc .pull-right{margin-right:-8px}
+.tabber{position:fixed;top:0;right:0;left:0;z-index:999}
+</style>
+</literal>
+</head>
+<body class="body-fixed-bottom">
+	<div class="container ">
+		<div class="content clearfix ">
+			<div id="present-list-container">
+        		<div id="present_all">
+					<ul class="js-list b-list"></ul>
+        		</div>
+			</div>
+		</div>
+	</div>
+	<div id="shop-nav">
+		<include file="_layout/mall.footer.html" />
+	</div>
+	<script type="text/javascript">
+	require(['view/present/list']);
+	</script>
+</body>
+</html>

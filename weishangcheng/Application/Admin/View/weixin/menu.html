@@ -1,0 +1,320 @@
+	<link rel="stylesheet" type="text/css" href="/css/weixin.css">
+	<style>
+	ul{margin:0}
+	.size1of2{width:50%}
+	.global_mod .global_extra{text-align:right}
+	.global_mod.float_layout .global_info{float:left;margin:0;font-size:inherit}
+	.menu_form_bd{margin-top:20px}
+	.form-horizontal .control-label{float:left;width:90px;padding-top:5px;text-align:left}
+	.form-horizontal .controls{margin-left:90px}
+	.form-horizontal .control-group{margin-bottom:10px}
+	.pagination{margin:0}
+	.nav-tabs>.active>a, .nav-tabs>.active>a:hover, .nav-tabs>.active>a:focus{background-color:#f8f8f8}
+	</style>
+	<div class="menu_setting_area js_editBox" style="display: block;">
+		<div class="menu_preview_area">
+			<div class="mobile_menu_preview">
+				<div class="mobile_hd tc">
+				<span>{$applist[$appid]}</span>
+				<select id="applist">
+			        <foreach name="applist" key="_appid" item="_name">
+			        <option value="{$_appid}"{$_appid==$appid?' selected="selected"':''}>{$_name}</option>
+			        </foreach>
+			   </select>
+				</div>
+				<div class="mobile_bd">
+					<ul class="pre_menu_list grid_line ui-sortable ui-sortable-disabled" id="menuList">
+						<li class="js_addMenuBox pre_menu_item grid_item no_extra" style="width:100%" id="add_menu">
+							<a href="javascript:void(0);" class="pre_menu_link" title="最多添加3个一级菜单">
+								<i class="icon14_menu_add"></i>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="menu_form_area">
+			<div id="js_rightBox" class="portable_editor to_left" style="display: none;">
+				<div class="editor_inner">
+					<div class="global_mod float_layout menu_form_hd js_second_title_bar">
+						<a id="jsDelBt" class="global_info" href="javascript:;">删除菜单</a>
+						<div class="global_extra">
+							<a href="javascript:void(0);" data-appid="{$appid}" id="jsSaveBt">保存</a>
+						</div>
+					</div>
+					<div id="view" class="menu_form_bd form-horizontal">
+						<div class="control-group">
+							<label class="control-label global_menu_name">菜单名称</label>
+							<div class="controls">
+							  <input type="text" maxlength="8" class="js_menu_name">
+							  <p class="help-block">字数不超过4个汉字或8个字母</p>
+							</div>
+						 </div>
+						 <div class="control-group">
+							<label class="control-label global_menu_content">菜单内容</label>
+							<div class="controls js-event-type">
+							  <label class="radio inline"><input type="radio" name="type" value="view" checked="checked">跳转网页</label>
+							  <label class="radio inline"><input type="radio" name="type" value="news">发送消息</label>
+							  <label class="radio inline"><input type="radio" name="type" value="scan">扫码</label>
+							  <label class="radio inline"><input type="radio" name="type" value="pic">上传图片</label>
+							  <label class="radio inline"><input type="radio" name="type" value="event">自定义事件</label>
+							</div>
+						 </div>
+						 <div class="menu_content_container">
+							<div class="js-view menu_content" style="display: block;">
+								<p class="menu_content_tips tips_global">订阅者点击该子菜单会跳到以下链接</p>
+								<div class="control-group">
+									<label class="control-label">页面地址</label>
+									<div class="controls">
+									  <input type="text" class="js_menu_url"/>
+									  <a class="help-block">从公众号图文消息中选择</a>
+									</div>
+								</div>
+							</div>
+							<div class="js-news menu_content" style="display: none;">
+								<div class="msg_sender">
+									<div class="msg_tab">
+										<div class="tab_navs_panel">
+											<div class="tab_navs_wrp">
+												<ul class="tab_navs js_tab_navs" style="margin-left:0;">
+													<li class="tab_nav tab_appmsg width5 selected js-news" data-type="10" data-tab=".js_appmsgArea">
+														<a href="javascript:void(0);">&nbsp;
+															<i class="icon_msg_sender"></i>
+															<span class="msg_tab_title">图文消息</span>
+														</a>
+													</li>
+													<li class="tab_nav tab_text width5 js-text" data-tab=".js_textArea" data-tooltip="文字">
+														<a href="javascript:void(0);">&nbsp;
+															<i class="icon_msg_sender"></i>
+															<span class="msg_tab_title">文字</span>
+														</a>
+													</li>
+													<li class="tab_nav tab_audio width5 js-voice" data-tab=".js_audioArea">
+														<a href="javascript:void(0);">&nbsp;
+															<i class="icon_msg_sender"></i>
+															<span class="msg_tab_title">语音</span>
+														</a>
+													</li>
+													<li class="tab_nav tab_video width5 no_extra js-video" data-tab=".js_videoArea">
+														<a href="javascript:void(0);">&nbsp;
+															<i class="icon_msg_sender"></i>
+															<span class="msg_tab_title">视频</span>
+														</a>
+													</li>
+												</ul>
+											</div>
+										</div>
+										<div class="tab_panel">
+											<div class="tab_content">
+												<div class="js_appmsgArea inner ">
+													<!--type 10图文 2图片 3语音 15视频 11商品消息-->
+													<div class="tab_cont_cover jsMsgSendTab" data-index="0">
+														<div class="media_cover">
+															<span class="create_access">
+																<a class="add_gray_wrp js-open-media" href="javascript:;" data-type="news">
+																	<i class="icon36_common add_gray"></i>
+																	<strong>从素材库中选择</strong>
+																</a>
+															</span>
+														</div>
+														<div class="media_cover">
+															<span class="create_access">
+																<a target="_blank" class="add_gray_wrp" href="https://mp.weixin.qq.com">
+																	<i class="icon36_common add_gray"></i>
+																	<strong>新建图文消息</strong>
+																</a>
+															</span>
+														</div>
+													</div>
+													<div id="news_selected" style="display:none">
+														<a href="javascript:;" class="link_dele js-open-media" data-type="news">重选</a>
+														<a href="https://mp.weixin.qq.com" class="link_dele" target="_blank">新建</a>
+													</div>
+												</div>
+											</div>
+											<div class="tab_content" style="display: none;">
+												<div class="js_textArea inner no_extra">
+													<div class="emotion_editor">
+														<div class="edit_area js_editorArea" style="display: none;"></div>
+														<textarea class="edit_area js_editorArea" id="reply_content" style="width:515px"></textarea>
+														<div class="editor_toolbar">
+															<a href="javascript:void(0);" class="icon_emotion emotion_switch js_switch">表情</a>
+															<p class="editor_tip js_editorTip">还可以输入<em id="js_editorTip">600</em>字</p>
+															<div id="emotion_wrp" class="emotion_wrp">
+																<span class="hook"><span class="hook_dec hook_top"></span><span class="hook_dec hook_btm"></span></span>
+																<ul class="emotions"></ul>
+																<span class="emotions_preview js_emotionPreviewArea"></span>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="tab_content" style="display: none;">
+												<div class="js_audioArea inner ">
+													<div class="tab_cont_cover">
+														<div class="media_cover">
+															<span class="create_access">
+																<a class="add_gray_wrp js-open-media" href="javascript:;" data-type="voice">
+																	<i class="icon36_common add_gray"></i>
+																	<strong>从素材库中选择</strong>
+																</a>
+															</span>
+														</div>
+														<div class="media_cover">
+															<span class="create_access">
+																<a class="add_gray_wrp " href="https://mp.weixin.qq.com" target="_blank">
+																	<i class="icon36_common add_gray"></i>
+																	<strong>新建语音</strong>
+																</a>
+															</span>
+														</div>
+													</div>
+													<div id="voice_selected" style="display:none">
+														<a href="javascript:;" class="link_dele js-open-media" data-type="voice">重选</a>
+														<a href="https://mp.weixin.qq.com" class="link_dele" target="_blank">新建</a>
+													</div>
+												</div>
+											</div>
+											<div class="tab_content" style="display: none;">
+												<div class="js_videoArea inner ">
+													<div class="tab_cont_cover">
+														<div class="media_cover">
+															<span class="create_access">
+																<a class="add_gray_wrp js-open-media" href="javascript:;" data-type="video">
+																	<i class="icon36_common add_gray"></i>
+																	<strong>从素材库中选择</strong>
+																</a>
+															</span>
+														</div>
+														<div class="media_cover">
+															<span class="create_access">
+																<a target="_blank" class="add_gray_wrp" href="https://mp.weixin.qq.com">
+																	<i class="icon36_common add_gray"></i>
+																	<strong>新建视频</strong>
+																</a>
+															</span>
+														</div>
+													</div>
+													<div id="video_selected" style="display:none">
+														<a href="javascript:;" class="link_dele js-open-media" data-type="video">重选</a>
+														<a href="https://mp.weixin.qq.com" class="link_dele" target="_blank">新建</a>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="js-scan menu_content" style="display: none;">
+								扫码推事件<br>
+								用户点击按钮后，微信客户端将调起扫一扫工具，完成扫码操作后显示扫描结果<br>（如果是URL，将进入URL），且会将扫码的结果传给开发者，开发者可以下发消息。
+							</div>
+							<div class="js-pic menu_content" style="display: none;">
+								<label class="radio"><input type="radio" name="pic" value="pic_photo_or_album" checked="checked">拍照或相册</label>
+								<label class="radio"><input type="radio" name="pic" value="pic_sysphoto">仅用拍照</label>
+								<label class="radio"><input type="radio" name="pic" value="pic_weixin">仅用相册</label>
+							</div>
+							<div class="js-event menu_content" style="display: none;">
+								<p class="menu_content_tips tips_global">开发者自定义事件</p>
+								<div class="control-group">
+									<label class="control-label">自定义事件</label>
+									<div class="controls">
+									  <input type="text" class="js_menu_event"/>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<span class="editor_arrow_wrp">
+					<i class="editor_arrow editor_arrow_out"></i>
+					<i class="editor_arrow editor_arrow_in"></i>
+				</span>
+			</div>
+		</div>
+	</div>
+
+	<!-- 图文消息素材 -->
+	<div id="newsModal" class="modal hide fade modal-material" tabindex="-1" role="dialog" aria-hidden="true" style="width: 1000px;margin-left: -500px;">
+		<div class="modal-header" style="padding: 9px 15px 0 15px;border-bottom: 1px solid #ddd;">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<div style="margin: 0;line-height: 30px;">
+				<ul class="nav nav-tabs" style="margin-bottom: 0;border-bottom:none">
+					<li class="active" style="margin-left: 380px;width: 90px;text-align: center;">
+						<a href="javascript:;">素材库</a>
+					</li>
+					<li style="width: 90px;text-align: center;">
+						<a href="https://mp.weixin.qq.com" target="_blank">新建图文</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="modal-body" style="background-color: #f8f8f8;height:400px"></div>
+		<div class="modal-footer">
+			<button class="btn pull-right" style="margin-left: 20px;"><i class="icon-refresh"></i></button>
+			<div id="news-pagination" class="pull-right"></div>
+		</div>
+	</div>
+	
+	<!-- 语音素材 -->
+	<div id="voiceModal" class="modal hide fade modal-material" tabindex="-1" role="dialog" aria-hidden="true" style="width: 1000px;margin-left: -500px;">
+		<div class="modal-header" style="padding: 9px 15px 0 15px;border-bottom: 1px solid #ddd;">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<div style="margin: 0;line-height: 30px;">
+				<ul class="nav nav-tabs" style="margin-bottom: 0;border-bottom:none">
+					<li class="active" style="margin-left: 380px;width: 90px;text-align: center;">
+						<a href="javascript:;">语音素材</a>
+					</li>
+					<li style="width: 90px;text-align: center;">
+						<a href="https://mp.weixin.qq.com" target="_blank">新建语音</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="modal-body" style="background-color: #f8f8f8;height:400px"></div>
+		<div class="modal-footer">
+			<button class="btn pull-right" style="margin-left: 20px;"><i class="icon-refresh"></i></button>
+			<div id="voice-pagination" class="pull-right"></div>
+		</div>
+	</div>
+	
+	<!-- 视频素材 -->
+	<div id="videoModal" class="modal hide fade modal-material" tabindex="-1" role="dialog" aria-hidden="true" style="width: 1000px;margin-left: -500px;">
+		<div class="modal-header" style="padding: 9px 15px 0 15px;border-bottom: 1px solid #ddd;">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<div style="margin: 0;line-height: 30px;">
+				<ul class="nav nav-tabs" style="margin-bottom: 0;border-bottom:none">
+					<li class="active" style="margin-left: 380px;width: 90px;text-align: center;">
+						<a href="javascript:;">视频素材</a>
+					</li>
+					<li style="width: 90px;text-align: center;">
+						<a href="https://mp.weixin.qq.com" target="_blank">新建视频</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="modal-body" style="background-color: #f8f8f8;height:400px"></div>
+		<div class="modal-footer">
+			<button class="btn pull-right" style="margin-left: 20px;"><i class="icon-refresh"></i></button>
+			<div id="video-pagination" class="pull-right"></div>
+		</div>
+	</div>
+	
+	
+	<link rel="stylesheet" type="text/css" href="/css/appmsg.css">
+	<script src="/js/pagination.js"></script>
+	<script type="text/javascript" src="/js/wx-menu.js"></script>
+	<script type="text/javascript">
+	$(function(){
+		$('#applist').on('change', function(){
+			if(confirm('确定离开吗？')){
+				window.location.replace('__MODULE__/weixin/menu?appid='+this.value);
+			}else{
+				this.value = '{$appid}'
+			}
+			return false;
+		});
+		Menu.init({$menu.button}, '{$menu.id}');
+	});
+	</script>
+	

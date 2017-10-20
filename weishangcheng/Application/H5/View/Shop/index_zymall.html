@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" />
+</head>
+<body class="body-fixed-bottom">
+    <div class="container">
+        <include file="_layout/mall.search.html" class="transparent" />
+        <div class="content">
+            <div class="content-body">
+                <if condition="$show_watch_weixin">
+                <include file="_layout/mall.subscribe.html" />
+                </if>
+                <!-- <notempty name="topbanners">
+                <div class="scale_wh scale_4_3">
+                     <div class="scale_content">
+                        <div class="js-banner swiper-container">
+                            <div class="swiper-wrapper">
+                                <foreach name="topbanners" item="item">
+                                <div class="swiper-slide"><a href="{$item.url|default='javascript:;'}"><img src="{$item.img_url}"></a></div>
+                                </foreach>
+                            </div>
+                            <div class="pagination rectangle"></div>
+                        </div>
+                     </div>
+                </div>
+                </notempty> -->
+                <div class="scale_wh scale_4_3">
+                     <div class="scale_content">
+                        <div class="js-banner swiper-container">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide"><img src="{$shop_info.shop_sign}"></div>
+                            </div>
+                            <div class="pagination rectangle"></div>
+                        </div>
+                     </div>
+                </div>
+                <section class="table-nav">
+                    <table>
+                        <tr>
+                            <td><a href="/dd-csdp/category"><img src="__CDN__/img/mall/1.png"/><p>全部分类</p></a></td>
+                            <td><a href="/dd-csdp/mall?tag_id=10091"><img src="__CDN__/img/mall/2.png"/><p>家电特惠</p></a></td>
+                            <td><a href="/dd-csdp/mall?tag_id=10092"><img src="__CDN__/img/mall/3.png"/><p>精品家具</p></a></td>
+                            <td><a href="/dd-csdp/mall?tag_id=10093"><img src="__CDN__/img/mall/4.png"/><p>超市热卖</p></a></td>
+                            <td><a href="/dd-csdp/mall?tag_id=10094"><img src="__CDN__/img/mall/5.png"/><p>产地直采</p></a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="/dd-csdp/mall?tag_id=10096"><img src="__CDN__/img/mall/6.png"/><p>母婴用品</p></a></td>
+                            <td><a href="/dd-csdp/mall?tag_id=10097"><img src="__CDN__/img/mall/7.png"/><p>精选优品</p></a></td>
+                            <td><a href="javascript:alert('敬请期待');"><img src="__CDN__/img/mall/8.png"/><p>正阳头条</p></a></td>
+                            <td><a href="/dd-csdp/mall?tag_id=10099"><img src="__CDN__/img/mall/9.png"/><p>新品推荐</p></a></td>                
+                            <td><a href="/dd-csdp/mall?tag_id=10100"><img src="__CDN__/img/mall/10.png"/><p>特价专区</p></a></td>
+                        </tr>
+                    </table>
+                </section>
+                <div class="split-line"></div>
+                <include file="_layout/mall.news.html" />
+                <div class="split-line"></div>
+                <!-- <section class="horizontal-view">
+                    <a href="/goods?id=2358" style="width:37.5%;display:block">
+                        <img src="__CDN__/img/mall/ddwdb.jpg?modify=20161203" style="width:100%">
+                    </a>
+                    <div class="vertical-view" style="width:62.5%">
+                        <a href="/list?tag_id=1001" style="display:block">
+                            <img src="__CDN__/img/mall/home_pintuan.jpg" style="width:100%">
+                        </a>
+                        <div class="horizontal-view">
+                            <a href="/list?tag_id=score" style="display:block;width:50%">
+                                <img src="__CDN__/img/mall/home_score.jpg" style="width:100%">
+                            </a>
+                            <a href="/list?tag_id=1002" style="display:block;width:50%">
+                                <img src="__CDN__/img/mall/home_1002.jpg" style="width:100%">
+                            </a>
+                        </div>
+                    </div>
+                </section> -->
+                <div class="split-line"></div>
+                <if condition="count($bottombanners) gt 0">
+                <!-- 底部大图广告 -->
+                <section class="bottom-banner">
+                <foreach name="bottombanners" item="item">
+                    <a href="{$item.url|default='javascript:;'}" class="scale_content">
+                        <img src="{$item.img_url}">
+                    </a>
+                </foreach>
+                </section>
+                <div class="split-line"></div>
+                </if>
+                <!--商品列表-->
+                <section>
+                    <div class="hr-text"><span class="text icon-cainixihuan">猜你喜欢</span></div>
+                    <ul id="js-goods-list" class="sc-goods-list pic clearfix size-2"></ul>
+                </section>
+            </div>
+        </div>
+        <include file="_layout/mall.footer.html" />
+        <include file="_layout/mall.copyright.html" />
+    </div>
+    
+<script type="text/javascript">
+    <if condition="count($topbanners) gt 1">
+    require(['swiper'], function(){
+        var mySwiper = new Swiper('.js-banner',{
+            autoplay : 5000,
+            loop : true,
+            autoplayDisableOnInteraction : true,
+            <if condition="count($topbanners) lt 8">pagination : '.js-banner .pagination'</if>
+        });
+    });
+    </if>
+    
+    require(['buyer/cart/num', 'buyer/search']);
+    
+    var showlike = false, height = document.body.scrollHeight - window.innerHeight;
+    window.addEventListener('scroll', function(){
+        if(document.body.scrollTop < 100){
+            search_bar.classList.add('transparent');
+        }else if(document.body.scrollTop > 99){
+            search_bar.classList.remove('transparent');
+        }
+
+        if(!showlike && height - document.body.scrollTop < 200){
+            showLikeList();
+        }
+    });
+
+    function showLikeList(){
+        showlike = true;
+        require(["buyer/goods/list"], function(glv){
+            glv.doRefresh({
+                url: get_url("/search/like"),
+                data: {size: 59},
+                cacheKey: 'cainixihuan',
+                refresh: false,
+                container: $("#js-goods-list")
+            });
+        });
+    }
+
+    if(height - document.body.scrollTop < 200){
+        showLikeList();
+    }
+</script>
+</body>
+</html>

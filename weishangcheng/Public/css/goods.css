@@ -1,0 +1,132 @@
+.goods-header .goods-price{padding:5px 10px 2px;text-align:left}
+.current-price{float:left;color:#da8f3e;display:inline-block;font-size:18px}
+.original-price{font-size:12px;margin-left:10px;text-decoration:line-through;color:#ddd}
+.goods-detail{margin-top:10px}
+.tabber button.active,.tabber a.active{position:relative;top:1px;line-height:39px}
+.tabber button,.tabber a{float:left;width:33.33%;height:40px;line-height:40px;border:0px none;outline:0px none;background-color:#fff;text-align:left;text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
+.custom-richtext{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;font-size:16px;color:#333;overflow:hidden;text-align:left;word-wrap:break-word;overflow-x:auto;padding: 10px 10px 15px 10px;background-color: #f8f8f8;}
+.block-list-traderecord{padding-left:0;margin-bottom:30px;background-color:#fff;width:100%;border-top:0px none}
+.block-list-traderecord .list-header{padding:0 10px;height:33px;line-height:33px;background-color:#f2f2f2;border-bottom:2px solid #e5e5e5;border-bottom-width:1px;display:table;width:100%;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
+.block-list-traderecord .list-header .col-1{text-indent:12px}
+.block-list-traderecord .list-header .col-1,.block-list-traderecord .block-item .col-1{width:34%}
+.block-list-traderecord .list-header span,.block-list-traderecord .block-item span{display:table-cell;font-size:12px}
+.block-list-traderecord .list-header .col-2,.block-list-traderecord .block-item .col-2{width:33%}
+.block-list-traderecord .list-header .col-3,.block-list-traderecord .block-item .col-3{width:33%}
+.block-list-traderecord .list-header,.block-list-traderecord .block-item{display:table;width:100%;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
+.block-list-traderecord .block-list{border-top-width:0;border-bottom-width:0}
+.custom-richtext img{max-width:100%;display:block}
+.custom-store .custom-store-link{display:block}
+.custom-store .custom-store-img{position:absolute;top:11px;left:0;height:18px;width:18px;background:url(/img/mall/goods@2x_c9431a6d41.png) -40px 0 no-repeat;background-size:58px 48px}
+.custom-store .custom-store-name{float:left;padding:0 0 0 25px;height:22px;line-height:22px;font-size:14px;color:#333;max-width:210px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.custom-store .custom-store-enter{float:right;height:14px;line-height:14px;margin:4px 0;font-size:12px;color:#999;padding-right:15px}
+.goods-store.block-list .renzheng .rz-item{padding-right:16px;white-space:nowrap}
+.goods-store.block-list .offline-store .offline-store-img{display:inline-block;vertical-align:middle;width:18px;height:18px;background-position:0 -30px;background-image:url("__CDN__/img/mall/goods@2x_c9431a6d41.png");background-repeat:no-repeat;background-size:58px 48px}
+.goods-store.block-list .renzheng .rz-item::before,.goods-store.block-list .offline-store .offline-store-img{background-image:url("__CDN__/img/mall/goods@2x_c9431a6d41.png");background-repeat:no-repeat;background-size:58px 48px}
+.goods-store.block-list .renzheng .rz-item::before{content:'';display:inline-block;vertical-align:middle;width:13px;height:13px;background-position:-18px -30px}
+.goods-store.block-list .renzheng .rz-item.false::before{background-position:-33px -30px}
+.bottom-fix{padding:0}
+.components-container{background-color:#fff}
+#J_MlhPriceBar{position:relative;height:50px;background:-webkit-gradient(linear,0 0,0 100%,from(#fef391),to(#fbe253))}
+#J_MlhPriceBar .active-tag{position:absolute;top:-23px;background-color:#ff4343;z-index:1;color:#fff;padding:6px 8px;border-top-right-radius:3px}
+#J_MlhPriceBar .price_time{position:relative;height:50px;background-color:#ff4343;overflow:hidden}
+.range_price{padding:5px !important;height:36px;line-height:18px;font-size:12px}
+.range_price span{display:none}
+.range_price dl{float:left;text-align:center}
+.range_price_1{display:none}
+.range_price_2{height:18px}
+.range_price_2 span{display:inline}
+.range_price_2 dt{float:left}
+.range_price_2 dd{float:left}
+#J_MlhPriceBar .subleft.nobegin{background:#333}
+#J_MlhPriceBar .subleft.timeout{background:#888}
+#J_MlhPriceBar .subleft{position:relative;margin-right:100px;height:50px;background-color:#ff4343;color:#fff}
+#J_MlhPriceBar .subleft .price{padding:0 10px;display:inline-block;height:50px;line-height:50px;vertical-align:text-bottom;font-size:14px}
+#J_MlhPriceBar .subleft .price strong{font-size:18px;font-weight:400}
+#J_MlhPriceBar .subleft .information{position:absolute;top:0;display:inline-block;color:rgba(255,255,255,.7)}
+#J_MlhPriceBar .subleft .information .oprice{margin-top:9px;padding:0 4px;height:16px;line-height:16px;font-size:12px}
+#J_MlhPriceBar .subleft .information .oprice del{padding-left:2px;text-decoration:line-through}
+#J_MlhPriceBar .subleft .information .soldcount{min-width:45px;text-align:center;margin-top:-2px;display:inline-block;padding:0 6px;height:18px;line-height:18px;font-size:11px;-webkit-border-radius:3px;background:#f0342b}
+.nobeginbar .subleft .information .soldcount{background:rgba(255,255,255,.15)!important}
+#J_MlhPriceBar .subleft .information .soldcount span{color:#fff;font-size:12px;padding-right:3px}
+#J_MlhPriceBar .subleft.avil:after,#J_MlhPriceBar .subleft.soldout:after{border-top-color:#ff4343;border-bottom-color:#ff4343}
+#J_MlhPriceBar .subleft.nobegin:after{border-top-color:#333;border-bottom-color:#333}
+#J_MlhPriceBar .subleft:after{content:"";position:absolute;left:100%;display:inline-block;width:0;height:0;border-right:12px solid transparent;border-bottom:25px solid #f61d4b;border-top:25px solid #333;border-bottom:27px solid #333}
+#J_MlhPriceBar .countdown{position:absolute;right:0;top:8px;width:90px;height:50px;text-align:center}
+#J_MlhPriceBar .countdown .txt{height:16px;text-align:center;line-height:16px;font-size:12px;color:#1A1A1A}
+#J_MlhPriceBar .countdown .clockrun{margin:2px 0 0 5px;height:20px;line-height:20px;text-align:center;font-size:12px;color:#fff}
+#J_MlhPriceBar .countdown .clockrun .tuan{color:#fff}
+#J_MlhPriceBar .countdown .clockrun .hideTime{display:none}
+#J_MlhPriceBar .countdown .clockrun .num{float:left;min-width:16px;height:16px;text-align:center;line-height:16px;background:#f0342b;border-radius:3px}
+#J_MlhPriceBar .countdown .clockrun .dot{float:left;width:4px;height:16px;line-height:18px;text-align:center;color:grey}
+#J_MlhPriceBar .countdown .clockrun{color:#fff}
+#J_MlhPriceBar .countdown .txt{color:#fff}
+#J_MlhPriceBar .countdown .clockrun .dot{color:#fff}
+#J_MlhPriceBar .countdown .clockrun .num{color:#ff4343;background-color:#fff}
+.activity-intro{background-color:rgba(255,102,0,0.05);border:none;margin:0}
+.activity-intro .title{padding:0 0 0 25px}
+.activity-intro .pull-right{margin-right:16px}
+.activity-intro .tag-img{position:absolute;top:11px;left:0;height:18px;width:18px}
+.goods-header{position:relative}
+.goods-header .see-active{height:25px;position:absolute;right:0;bottom:7px;text-align:center;background:red;color:#fff;line-height:25px;border-radius:15px 0 0 15px;padding:0 15px}
+.arrow{position:absolute;top:7.5px;right:5px}
+.arrow em{display:block;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:5px solid #fff}
+.arrow span{position:absolute;left:-2px;top:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:5px solid red}
+.tabber.review-rate-tabber{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:10px 20px;border-top:0px none;background-color:#f2f2f2}
+.tabber.review-rate-tabber .item{width:25%;float:left;text-align:center}
+.tabber.review-rate-tabber .item.active{color:#fff;background-color:#da8f3e}
+.tabber.review-rate-tabber button{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;float:none;height:20px;width:88%;line-height:16px;padding-left:3px;padding-right:3px;border-bottom:0px none;border-radius:2px;background-color:#f2f2f2;font-size:12px;color:#666}
+.goods-rate{}
+.goods-rate .list{background-color:#fff}
+.goods-rate .list .item{border-bottom:1px solid #e5e5e5;padding:20px 0;margin:0 10px}
+.goods-rate .list .item:last-child{border:none}
+.goods-rate .list .info{overflow:hidden;margin-bottom:.8em}
+.goods-rate .list time{float:right}
+.goods-rate .list .info,.goods-rate .list .other,.goods-rate .list .sku{color:#999;margin-top:5px}
+.goods-rate .list blockquote{font-size:14px;line-height:16px}
+.goods-rate .list .pics{overflow:hidden;margin-top:5px}
+.goods-rate .list .pics li{width:55px;height:55px;float:left;margin:0 .48em .5em 0;background-color:#fff;display:-webkit-box;-webkit-box-align:center;-webkit-box-pack:center;display:-ms-flexbox;-ms-flex-pack:center;-ms-flex-align:center}
+.goods-rate .list .pics img{max-width:100%;max-height:100%}
+.goods-rate .list .headimg{width:24px;height:24px;vertical-align:middle;border-radius:50%}
+.other-info{position:relative;line-height:12px;font-size:0;color:#999;background-color:#fff;padding:0 10px}
+.other-info p{width:33.333333%;margin-top:10px;margin-bottom:10px;display:inline-block;font-size:14px;float:left}
+.other-info p:nth-child(1){text-align:left}
+.other-info p:nth-child(2){text-align:center}
+.other-info p:nth-child(3){text-align:right}
+.other-info:after{content:'';display:table;clear:both}
+.goods-header h2.title{color:#252525;box-sizing:border-box;margin-left:0px;margin-right:0px;padding-left:10px;padding-right:75px;line-height: 28px;position:relative}
+.goods-header div.goods-price{box-sizing:border-box}
+.share_qr_container {
+    font-size: 14px;
+    position: absolute;
+    right: 15px;
+    top: 0;
+}
+.share_qr_container img {
+    display: block;
+    width: 40px;
+    margin: 0 auto;
+}
+.share_qr_container p{text-align:center;line-height:20px;color:#606060}
+.x-pullfresh-more{background-color:#fff;margin-top:1px}
+.goods-tag{margin-left:7px;float:left;display:inline-block}
+.goods-tag .tag{margin-left:3px;padding: 1px 7px; border-radius: 6px;}
+.goods-tag .tag.tag-orange{background-color:#da8f3e;color:#fff}
+.goods-digest{color:#9c9c9c;font-size:14px;line-height:18px;background-color:#fff;border-top:1px solid #e5e5e5;padding:10px;}
+.shop-info{background-color:#fff;margin-top:10px;}
+.shop-info .shop-logo{float:left;width:82px;height:82px}
+.shop-info .shop-logo img{width:100%;height:100%}
+.shop-info .shop-name{text-align:right;margin-left:92px;height:82px;line-height:82px;color:#252525;}
+.shop-info .shop-name>span{font-size:16px;float:left}
+.shop-info .shop-header{padding:10px;}
+.shop-info .go-shop-main{color:#da8f3e;border:1px solid #da8f3e;border-radius:18px; padding:5px 10px;}
+.shop-tag-list{box-sizing:border-box;padding:5px 10px;}
+.shop-tag-list .shop-tag{box-sizing: border-box;line-height: 16px;color:#9c9c9c;width:25%;height: 16px;display:inline-block;float:left;overflow: hidden;background:url(/img/mall/shop_tag.png) no-repeat;background-size: 16px 136px;padding-left: 18px;font-size: 12px;}
+.shop-tag-list .shop-tag.gerenrenzheng.active{background:url(/img/mall/shenfen.png) no-repeat;background-size: 19px 17px;padding-left: 22px;}
+.shop-tag-list .shop-tag.gerenrenzheng{background:url(/img/mall/noshenfen.png) no-repeat;background-size: 19px 17px;padding-left: 22px;}
+
+.shop-tag-list .shop-tag.danbaojiaoyi.active{background-position: 0 -35px;}
+.shop-tag-list .shop-tag.danbaojiaoyi{background-position: 0 -52px}
+.shop-tag-list .shop-tag.qitianwuliyou.active{background-position: 0 -69px;}
+.shop-tag-list .shop-tag.qitianwuliyou{background-position: 0 -86px}
+.shop-tag-list .shop-tag.ershisifahuo.active{background-position: 0 -103px;}
+.shop-tag-list .shop-tag.ershisifahuo{background-position: 0 -120px}

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <meta name="viewport" content="initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <meta content="yes" name="apple-mobile-web-app-capable">
+        <meta content="red" name="apple-mobile-web-app-status-bar-style">
+        <meta name="format-detection" content="telphone=no">
+        <link rel="stylesheet" href="css/mall.css?modify=20161203">
+        <link rel="stylesheet" href="css/trade.css?modify=20161203">
+        <link rel="stylesheet" href="css/red.css">
+
+        <title>账单明细</title>
+        <script type="text/javascript">
+        var require = {
+        baseUrl: 'js',
+        waitSeconds: 0,
+        map: {
+          '*': {
+          'css': '//cdn.bootcss.com/require-css/0.1.8/css.min.js',
+          'text': '//cdn.bootcss.com/require-text/2.0.12/text.min.js'
+          }
+        },
+        shim: {
+          swiper: ['jquery', 'css!//cdn.bootcss.com/Swiper/3.3.1/css/swiper.min.css'],
+          lazyload: ['jquery'],
+        },
+        paths: {
+                'jquery': 'jquery.min',
+          'template': 'template',
+          'validatejs': '//cdn.bootcss.com/jquery-validate/1.15.0/jquery.validate.min',
+          'weixinjs': 'https://res.wx.qq.com/open/js/jweixin-1.0.0',
+          'lazyload': '//cdn.bootcss.com/jquery.lazyload/1.9.1/jquery.lazyload.min',
+          'swiper': '//cdn.bootcss.com/Swiper/3.3.1/js/swiper.min',
+
+          'mall/cart': 'h5.js?modify=20161203',
+          'view/order/list': 'h5.js?modify=20161203',
+          'view/balance': 'h5.js?modify=20161203',
+          'module/cart/num': 'h5.js?modify=20161203',
+          'order/address': 'h5.js?modify=20161203',
+          'pay': 'h5.js?modify=20161203',
+          'view/personal/edit': 'h5.js?modify=20161203',
+          'view/personal/scoreDetail': 'h5.js?modify=20161203',
+          'view/present/list': 'h5.js?modify=20161203',
+          'view/score': 'h5.js?modify=20161203',
+          'pay/express': 'h5.js?modify=20161203',
+          'jsweixin': 'h5.js?modify=20161203',
+          'skumodal': 'h5.js?modify=20161203',
+          'customer_service': 'h5.js?modify=20161203',
+          'order/refund': 'h5.js?modify=20161203',
+          'model_pay_coupon': 'h5.js?modify=20161203',
+          'login_modal': 'h5.js?modify=20161203',
+          'member/collection': 'h5.js?modify=20161203',
+                'pullfresh': 'h5.js?modify=20161203',
+                'goods_list': 'h5.js?modify=20161203',
+                'search': 'h5.js?modify=20161203',
+            'payconfirm': '/js/pay-confirm.js?modify=20161203',
+            'my_commodity_list': 'h5.js?modify=20170401',
+            'my_order_list': 'h5.js?modify=2017040501'
+        }
+        }
+        </script>
+
+        <script data-main="js/h5.js?modify=20170405" src="js/require.min.js"></script>
+		<style>
+			.content-body{background-color: #fbf9fe;font-family: "微软雅黑";}
+			ul{border-top:1px solid #ececec;border-bottom:1px solid #ececec;background-color: white;}
+			ul li{width:96%;margin-left:4%;border-bottom:1px solid #ececec;height:48px;line-height:48px;font-size:14px;}
+			ul li:last-child{border-bottom:0px;}
+			ul{margin-top:20px;}
+			ul li span:last-child{float:right;padding-right:1em;}
+			.income_cash{color:red;}
+			.income_cash::before{content:"+ "}
+			.font-black{color:black;}
+			.font-grey{color:#999999;}
+			.cash_yuan::after{content:' ¥'}
+		</style>
+    </head>
+
+<body>
+    <div class="container">
+        <div class="content ">
+            <div class="content-body">
+				<ul>
+					<li  style="font-size:16px;">
+						<span class="span_left font-black">入账金额</span>
+						<span class="span_right income_cash">0</span>
+					</li>
+				</ul>
+				<ul>
+					<li>
+						<span class="span_left font-grey">类型</span>
+						<span class="span_right font-black">收入</span>
+					</li>
+					<li>
+						<span class="span_left font-grey">交易时间</span>
+						<span class="span_right font-black">2017-03-25 09:46:14</span>
+					</li>
+					<li>
+						<span class="span_left font-grey">交易号</span>
+						<span class="span_right font-black">T020170325094615004115233076</span>
+					</li>
+					<li>
+						<span class="span_left font-grey">交易状态</span>
+						<span class="span_right font-black">已完成</span>
+					</li>
+					<li>
+						<span class="span_left font-grey">订单号</span>
+						<span class="span_right" style="color:#007aff">02017032509421892634</span>
+					</li>
+				</ul>
+				<ul>
+					<li>
+						<span class="span_left font-grey">订单金额</span>
+						<span class="span_right font-black cash_yuan">19.8</span>
+					</li>
+					<li>
+						<span class="span_left font-grey">退款金额</span>
+						<span class="span_right font-black cash_yuan">19.8</span>
+					</li>
+					<li>
+						<span class="span_left font-grey">实收金额</span>
+						<span class="span_right font-black cash_yuan">0</span>
+					</li>
+				</ul>
+			</div>
+        </div>
+    </div>
+</body>
+</html>

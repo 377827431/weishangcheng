@@ -1,0 +1,36 @@
+.content{box-sizing:border-box;width:100%;padding-left:4%;padding-right:4%;font-family:"微软雅黑";}
+.vip_card_list{width:100%;}
+div.vip_card{position:relative;}
+div.place_holder{width:100%;padding-top:63%;border-radius:6px;overflow:hidden;}
+div.card_items{position:absolute;width:100%;height:100%;top:0px;left:0px;box-sizing:border-box;padding:4%;color:white;}
+div.vip_card_bg_container{position:absolute;width:100%;height:100%;top:0;left:0px;border-radius:6px;overflow:hidden;}
+div.vip_card_bg_container img{display:block;width:100%;height:100%;background:black;}
+div[class^='card_item_line']{width:100%;}
+div.card_item_line1 {height:23%;}
+div.card_item_line2 {height:37%;display:table;}
+div.card_item_line2>div{width:100%;height:100%;display:table-cell;vertical-align:middle;}
+div.card_item_line2>div p{width:100%;}
+div.card_item_line3 {height:27%;}
+div.card_item_line3 ul{height:100%;width:70%;font-size:0;}
+div.card_item_line3 ul li{display:inline-block;height:50%;width:33%;font-size:12px;}
+div.card_item_line3 ul li>div{display:table;width:100%;height:100%;}
+div.card_item_line3 ul li>div>div{display:table-cell;vertical-align:middle;}
+div.card_item_line4 {height:13%;}
+div.card_item_line4>div {display:table;width:100%;height:100%;}
+div.card_item_line4>div>div{display:table-cell;vertical-align:middle;text-align:right;}
+div.card_items img{display:inline-block;vertical-align:middle;width:50px;height:50px;border-radius:25px;background-color:purple;}
+span.vip_shop_name{display:inline-block;vertical-align:middle;font-size:16px;text-indent:1em;}
+span.vip_card_lv{float:right;}
+p.vip_card_name{font-size:20px;text-indent:2em;}
+div.discut::after{content:"折";}
+div.discut::before,
+div.salary::before,
+div.post_free::before,
+div.youhuiquan::before,
+div.store::before{content:"√";display:inline-block;width:1em;height:1em;font-family:"宋体";border:1px solid white;margin-right:.3em;} 
+div.reflect ul li{display:none;}
+div.reflect ul li.on{display:inline-block;}
+div.expire_day::before{content:"有效期:";padding-right:.3em;}
+ul.vip_card_list>li{margin-top:10px;}
+p.page_title{font-size:16px;line-height:50px;border-bottom:1px solid #bcbcbc;color:0d0d0d;}
+a.add_member_link{font-size:16px;line-height:50px;color:#505189;}

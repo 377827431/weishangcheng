@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="[title]"/>
+    <link rel="stylesheet" href="__CDN__/css/shop.homepage.css?20170901">
+    <link rel="stylesheet" href="__CDN__/css/category_menu.css?modify=20170914">
+</head>
+<style type="text/css">
+.preview_box{
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	position: fixed;
+	top: 0;
+	left: 0;
+	background: rgba(0,0,0,1);
+	z-index: 1001;
+	display: none;
+	cursor: pointer;
+}
+.preview_img{
+  display:flex;
+  align-items:center;/*垂直居中*/
+  justify-content: center;/*水平居中*/
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,1);
+}
+.preview_box img{
+    max-width: 100%;
+	max-height: 100%;
+	vertical-align: middle;
+	
+}
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale3d(.3, .3, .3);
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+.zoomIn {
+  animation-name: zoomIn;
+  animation-duration: .5s;
+  animation-direction:alternate;
+}
+#share_code_body .close_icon {
+    position: absolute;
+    width: 30px;
+    border-radius: 15px;
+    height: 30px;
+    top: -6px;
+    right: -6px;
+    z-index: 100000;
+}
+</style>
+<body class="body-fixed-bottom">
+
+    <div class="container">
+        <!-- <include file="_layout/new_index/mall.qrcode.share.html"/> -->
+        <div id="share_code_body" style="display:none;">
+            <div class="share_code_body" style="background-color:transparent; margin-top: 0px !important; width: auto !important;">
+                <span class="close_icon" style="background:none;color:white;top:-40px;right: 0%;font-size:25px;width:40px;height:40px;font-family:'宋体';text-align:center;line-height:40px;">×</span>
+                    <img class="share_logo" src="" alt="" style="width: auto;display:block;margin:0 auto;border-radius: 8px;">
+                   <!--  <img class="share_logo" src="" alt="" style="width: auto;display:block;margin:0 auto;border-radius: 8px;"> -->
+                   <div class="share_code_btn_text" style="width:auto;margin:0 auto;margin-top:10px;padding:10px 0px;text-align:center;color:white;background-color:#e4bc91;font-size:15px;border-radius:8px;">长按保存图片</div>
+                <!-- <img class="share_logo" src="__CDN__/img/mall/qr_code_icon.jpg"> -->
+            </div>
+        </div>
+
+        <script>
+            require(['jquery'],function(){
+                $('span.close_icon').on('click',function(){
+                    $("#share_code_body").fadeOut(300);
+                })
+            });
+        </script>
+        <include file="_layout/new_index/mall.search.new.html"/>
+        <div class="content">
+            <div class="content-body">
+                <include file="_layout/new_index/mall.top.html" />
+                <section>
+                    <ul id="js-goods-list" class="sc-goods-list pic clearfix size-2"></ul>
+                </section>
+            </div>
+        </div>
+        <include file="_layout/mall.footer.html" />
+        <include file="_layout/mall.copyright.html" />
+    </div>
+	<!--图片预览布局-->
+	<div class="preview_box">
+		<div class="preview_img">
+			<img src=""/>
+		</div>
+	</div>
+	<!--类目菜单-->
+    <div id="category_menu" class="hide">
+        <div class="category_body">
+            <label class="menu_title" for="">商品类目</label>
+            <ul class="menu_item_con">
+                <li class="menu_item on" tag_id="111"><span class="menu_item_nick">所有</span><span class="menu_right_angle"></span></li>
+                <foreach name="tag_list" item="value">
+                    <li class="menu_item" tag_id="{$value['id']}"><span class="menu_item_nick">{$value['name']}</span><span class="menu_right_angle"></span></li>
+                </foreach>
+            </ul>
+        </div>
+        <div class="fadeIn_icon"></div>
+    </div>
+</body>
+<script type="text/javascript">
+    <if condition="count($topbanners) gt 1">
+    require(['swiper'], function(){
+        var mySwiper = new Swiper('.js-banner',{
+            autoplay : 5000,
+            loop : true,
+            autoplayDisableOnInteraction : true,
+            <if condition="count($topbanners) lt 8">pagination : '.js-banner .pagination'</if>
+        });
+    });
+    </if>
+    require(['jquery'],function(){
+        // 获取当前类目
+        var curr_tag_id = $("#category_menu .menu_item.on").attr("tag_id");
+        setTimeout(function(){
+            require(["buyer/goods/list"], function(glv){
+                glv.doRefresh({
+                    url: get_url("/search/tuijian"),
+                    data: {size: 59},
+                    // cacheKey: 'tuijian',
+                    refresh: false,
+                    container: $("#js-goods-list")
+                });
+            });
+        }, 0);
+        //类目显示
+        $("span.category_icon").click(function(){
+            $("#category_menu").toggleClass("hide",false);
+            $("#category_menu").toggleClass("show",true);
+        })
+        // 类目关闭
+        $("#category_menu").click(function(){
+            // $("#category_menu").removeClass("show");
+            $("#category_menu").addClass("hide");    
+        })
+        //切换类目
+        $("#category_menu .menu_item").click(function(){
+            if($(this).hasClass("on")) {
+                $("#category_menu").hide();
+                window.location.href = "__MODULE__/mall";
+                return false;
+            }
+            else{
+                $("#category_menu .menu_item").toggleClass("on",false);
+                $(this).addClass("on");
+            }
+            var new_tag_id = $(this).attr("tag_id");
+            $("#category_menu").hide();
+            // 请求新数据
+            window.location.href = "__MODULE__/mall?tag_id="+new_tag_id;
+        })
+    });
+    
+    <if condition="isset($wxsign)">
+    //分享
+    require(["h5/jsweixin"], function(jweixin){
+       jweixin.init({$wxsign}, function(){
+            jweixin.share({$share}, function(){
+                toast.show('分享成功<br>新用户首次进入即可成为您的好友哦！');
+            });
+       });
+    });
+    </if>
+
+    
+    require(['buyer/cart/num', 'buyer/search']);
+    require(['jquery'],function(){
+        $("#share_code_body").click(function(){
+            $(this).hide();
+        })
+        //点击购物车图片预览
+        $("body").on("click",".dc_pc_click",function(){
+        	var img = $(this).find("img").attr('src');
+    		$(".preview_box img").attr("src",img);
+    		$(".preview_box img").addClass("zoomIn");
+    		$(".preview_box").fadeIn(300);	
+        })
+        //点击图片隐藏
+	    $("body").on("click",".preview_box",function(){
+	    	$(this).fadeOut(300);
+	    })
+    })
+</script>
+</html>

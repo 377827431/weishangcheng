@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="认证信息" />
+    <style>
+        .content-body{box-sizing:border-box;width:100%;padding-left:4%;padding-right:4%;}
+        .p_title{font-size:14px;font-family:"微软雅黑";line-height:30px;}
+        .p_info{font-size:12px;font-family:"微软雅黑";line-height:20px;}
+        .button_yellow{color:white;background-color: #da8f3e;line-height:42px;border-radius:6px;font-size:16px;font-family:"微软雅黑";text-align:center;}
+        p.name::before{content:"真实姓名";padding-right:1em;}
+        p.card_num::before{content:"证件号码";padding-right:1em;}
+        ul{border:1px solid #bdbdbd;}
+        ul>li{height:50px;}
+        ul>li:nth-child(1){background-color: #da8f3e;color:white;text-align:left;}
+        ul>li{padding-left:1em;box-sizing:border-box;padding-right:1em;}
+        ul>li:nth-child(2) p{border-bottom:1px solid #bdbdbd;}
+    </style>
+</head>
+<body style="background-color: #f4f4f4;">
+    <div class="container">
+        <div class="content ">
+            <div class="content-body" style="padding-top:20px;">
+                <ul>
+                    <li class="p_title" style="color:white;"><span style="line-height:50px;">认证信息<span></li>
+                    <li>
+                        <p class="p_title name" style="line-height:50px;">{$data.card_name}</p>
+                    </li>
+                    <li>
+                        <p class="p_title card_num" style="line-height:50px;">{$data.card_no}</p>
+                    </li>
+                </ul>
+                <a href="/seller/shop"><div class="button_yellow goon_button js-turn-back" style="cursor:pointer;margin-top:30px;margin-bottom:24px;">返&nbsp;回</div></a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

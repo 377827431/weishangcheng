@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<include file="_layout/mall.head.html" title="订单结算" />
+<style>
+.container{padding-bottom: 51px}
+.select-express{position:relative; font-size:12px}
+.select-express select{opacity:0;position:absolute;width:100%;height:100%;left:0;right:0;top:0;bottom:0;}
+.select-express.error{color:red}
+.select-express .express_name{color:#ddd}
+.arrow{line-height:20px;margin-right: 10px}
+.arrow:after{content:'';position:absolute;width:7px;height:7px;border-top:2px solid #cbc9cc;border-right:2px solid #cbc9cc;-webkit-transform:rotate(45deg);-moz-transform:rotate(45deg);-ms-transform:rotate(45deg);transform:rotate(45deg);top:15px;right:12px}
+.order-total-pay{padding:0}
+.order-total-pay .btn {
+    position: relative;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    margin-left: 9px;
+    width: 110px;
+    height: 50px;
+    border-radius: 0;
+    background-color: da8f3e;
+    border-color: da8f3e;
+    color: #fff;
+}
+</style>
+<script>
+var pay_url = '{$pay_url}';
+</script>
+</head>
+<body>
+	<div class="container js-page-content wap-page-order">
+		<div class="content confirm-container">
+			<div style="background: #da8f3e;background-size: auto 100%;position: static;padding: 20px;color: #fff;">
+				<div>
+					<h3>提示</h3>
+					<p style="font-size: 12px;margin-top: 5px;line-height:15px;">{$message}</p>
+				</div>
+			</div>
+			<div class="block express" id="js-logistics-container" style="margin-top: -1px;">
+				<div class="js-logistics-content logistics-content js-express">
+					<div class="block form border-top-0 border-bottom-0">
+                        <empty name="address_list">
+                        <div class="js-order-address express-panel express-panel-edit empty-address" style="padding-left: 0;">
+                            <ul class="express-detail"><li>添加收货地址</li></ul>
+                        </div>
+                        <else/>
+                        <div class="js-order-address express-panel express-panel-edit" style="padding-left: 0;">
+                            <ul class="express-detail">
+                                <li class="clearfix">
+                                    <span class="name">收货人：{$address_list[0]['receiver_name']}</span>
+                                    <span class="tel">{$address_list[0]['receiver_mobile']}</span>
+                                </li>
+                                <li class="address-detail">收货地址：
+                                {$address_list[0]['receiver_province']}
+                                {$address_list[0]['receiver_city']}
+                                {$address_list[0]['receiver_county']}
+                                {$address_list[0]['receiver_detail']}
+                                </li>
+                            </ul>
+                        </div>
+                        </empty>
+					</div>
+					<div class="js-logistics-tips logistics-tips font-size-12 c-orange hide">很抱歉，该地区暂不支持配送。</div>
+				</div>
+			</div>
+			<!-- 商品列表 -->
+			<div class="js-goods-list-container"></div>
+			<div class="js-order-total block border-top-0"></div>
+            <include file="_layout/mall.copyright.html" />
+			<div class="js-order-total-pay order-total-pay bottom-fix">
+                <div class="pay-container clearfix">
+                    <div class="pull-right pull-margin-up">
+                        <span class="c-gray-darker font-size-16">共<span class="c-orange"> 0 </span>件，</span>
+                        <span class="c-gray-darker font-size-16">合计：</span>
+                        <span class="c-orange">
+                            <span class="js-price font-size-16">¥00.</span>
+                            <span class="js-price-sub font-size-12">00</span>
+                        </span>
+                        <button class="js-confirm btn btn-red-f44 commit-bill-btn">提交订单</button>
+                    </div>
+                </div>
+            </div>
+		</div>
+	</div>
+    <script>
+    require(["payconfirm"], function(payConfirm){
+        payConfirm.init({$products}, {:json_encode($address_list)});
+    });
+    </script>
+</body>
+</html>

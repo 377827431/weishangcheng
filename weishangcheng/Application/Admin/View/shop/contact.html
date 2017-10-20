@@ -1,0 +1,34 @@
+<form method="post" action="__ACTION__" data-validate="true" data-continue="true" data-submit="ajax" class="form-horizontal edit-form">
+  <div class="control-group">
+    <label class="control-label" for="">客服电话</label>
+    <div class="controls">
+      <input type="text" name="phone" value="{$data.phone}" maxlength="15" placeholder="最多输入15个字符">
+    </div>
+  </div>
+  
+  <div class="control-group">
+  	<label class="control-label" for="">联系地址</label>
+    <div class="controls">
+	    <select name="province_id" style="width:150px" id="province_id" class="required" data-city="#city_id" data-selected="{$data.province_id}">
+			<option value="">请选择</option>
+		</select>
+		&nbsp;&nbsp;
+	    <select name="city_id" style="width:150px"  id="city_id" class="required" data-county="#county_id" data-selected="{$data.city_id}">
+		</select>
+		&nbsp;&nbsp;
+	    <select name="county_id" style="width:150px"  id="county_id" class="required" data-selected="{$data.county_id}">
+		</select>
+    </div>
+  </div>
+  
+  <div class="control-group">
+    <div class="controls">
+      <button type="submit" class="btn btn-primary" aria-hidden="true">保存</button>
+    </div>
+  </div>
+</form>
+
+<script src="/js/address.js"></script>
+<script type="text/javascript">
+Address.bind("#province_id");
+</script>

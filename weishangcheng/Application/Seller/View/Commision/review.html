@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="推广员管理" />
+    <link rel="stylesheet" href="__CDN__/css/seller/keyshop.css?20170901">
+    <style>
+        ul.js-list li{box-sizing:border-box;width:92%;margin-left:4%;}
+        span.tel_phone::before{content:"手机号 : ";}
+        span.create-time::before{content:"申请时间 : ";}
+        span.span-cell{display:inline-block;width:50%;font-size:12px;}
+        span.inventer::before{content:"邀请方 : ";}
+        p.title{font-size:14px;line-height:2em;}
+        div.div-row span{display:inline-block;line-height:1.5em;}
+        span.span-cell{color:grey;}
+        span.passed{color:green;}
+        span.passing{color:orange;}
+        span.unpassed{color:red;}
+        div.varify_group{display:none;}
+        li[stat="passing"] div.varify_group{width:80%;margin:0 auto;height:40px;display:flex;justify-content:space-between;align-items: center;}
+        div.varify_group div{width:45%;height:30px;text-align:center;line-height:30px;color:white;border-radius:6px;}
+        div.varify_group div:nth-child(1){background-color:#ff5000;}
+        div.varify_group div:nth-child(2){background-color:grey;}
+        ul.js-list{padding-top:10px;}
+        ul.js-list li{padding-bottom:10px;}
+        ul.js-list li img{border-radius:50%;}
+        .order-tab-container ul li{width:25%;}
+    </style>
+</head>
+<body>
+<div class="container" style="padding-top: 98px;">
+    <div class="content">
+        <div class="order-tab-container" id="order-tab-container">
+            <ul class="clearfix">
+                <li class="all_log active" href="#all_log" data-status="all">全部</li>
+                <li class="passed" href="#passed" data-status="passed">已通过</li>
+                <li class="unpassed" href="#unpassed" data-status="unpassed">未通过</li>
+                <li class="created_log" href="#created_log" data-status="created">申请时间</li>
+            </ul>
+        </div>
+        <div class="order_opeation clearfix">
+            <div class="search_goods_box">
+                <input type="text" value="{$search_title}" name="" placeholder="搜索输入ID、昵称或手机号" />
+                <a href="javascript:;" class="search_goods_btn"><i></i></a>
+            </div>
+        </div>
+        <div id="log-container">
+            <div class="order-log-container" id="all_log">
+                <ul class="js-list">
+                </ul>
+            </div>
+            <div class="order-log-container" id="passed_log">
+                <ul class="js-list">
+                </ul>
+            </div>
+            <div class="order-log-container" id="unpassed_log">
+                <ul class="js-list">
+                </ul>
+            </div>
+            <div class="order-log-container" id="created_log">
+                <ul class="js-list">
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" class="search_title" value="{$search_title}" />
+
+<script type="text/javascript">
+    /*下拉加载更多*/
+    require(['seller/agent_review']);
+    require(["jquery"], function($){
+        $('body').on('click','.order_opeation .search_goods_btn',function(){
+            var self = $(this);
+            var search_val = $.trim(self.siblings('input').val());
+            window.location.href = '/seller/commision/promoters_recruit_check'+'?title=' + search_val;
+            return false;
+        });
+        //通过按钮
+        $("body").on("click","div.btn_pass",function(){
+            var item_id = $(this).attr("data-id");
+            console.log(item_id);
+            $.ajax({
+                url: "/seller/commision/promoters_recruit_check_adopt",
+                data:{mid:item_id},
+                dataType:"json",
+                type: 'post',
+                success:function(data){
+                    if(data == 1){
+                        toast.show('已通过审核');
+                        window.location.reload(true);
+                    }
+                }
+            })
+        })
+        //不通过按钮
+        $("body").on("click","div.btn_reject",function(){
+            var item_id = $(this).attr("data-id");
+            console.log(item_id);
+            $.ajax({
+                url: "/seller/commision/promoters_recruit_check_refuse",
+                data:{mid:item_id},
+                dataType:"json",
+                type: 'post',
+                success:function(data){
+                    if(data == 1){
+                        toast.show('已拒绝审核');
+                        window.location.reload(true);
+                    }
+                }
+            })
+        })
+    });
+</script>
+</body>
+</html>

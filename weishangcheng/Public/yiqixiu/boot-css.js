@@ -1,0 +1,1 @@
+;(function(window){document.write('<link rel="stylesheet" href="/yiqixiu/eqShow-2.1.2.1.css"/>');})(window);

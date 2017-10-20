@@ -1,0 +1,30 @@
+.cardvalidate_dailog{
+	position:fixed;
+	z-index:101;
+	bottom:0px;
+	width:100%;
+	padding-bottom:10px;
+	display:none;
+}
+.cardvalidate_dailog .dailog_result{display:none;padding-bottom:20px;}
+.cardvalidate_dailog ul li{width:100%;padding-left:4%;padding-right:4%;box-sizing:border-box;background-color: white;}
+.cardvalidate_dailog ul li.cart_num,
+.cardvalidate_dailog ul li.true_name{line-height:46px;font-size:14px;}
+.cardvalidate_dailog ul li.dailog_title {line-height:30px;background-color: red;color:white;}
+.cardvalidate_dailog ul li.dailog_title p{text-align:left;font-size:14px;font-family:"微软雅黑";}
+.cardvalidate_dailog ul li.dailog_title p::after{content:"×";float:right;display:block;width:20px;height:20px;line-height:20px;border:1px solid white;margin-top:5px;border-radius:10px;font-family:"微软雅黑";font-size:16px;text-align:center;}
+.cardvalidate_dailog ul li input{border:none;outline:none;float:right;margin-top:14px;text-align:right;}
+.cardvalidate_dailog ul li.card_photo_container{width:100%;padding-top:10px;position:relative;}
+.cardvalidate_dailog ul li.card_photo_container img{display:block;width:60%;margin:0 auto;}
+.cardvalidate_dailog ul li.card_photo_container div{text-align:center;color:white;font-size:16px;font-family:"微软雅黑";line-height:24px;padding:4px 1em;border-radius:12px;background-color: #ff5000;width:50%;margin:0 auto;margin-bottom:10px;}
+.cardvalidate_dailog ul li div.submit_valid_qr{width:92%;background-color: red;line-height:40px;margin:0 auto;text-align:center;color:white;font-size:16px;font-family:"微软雅黑";border-radius: 6px;}
+.cardvalidate_dailog ul li input.upfile{position:absolute;top:0px;}
+
+.cardvalidate_dailog .dailog_result{background-color: #fff;}
+.cardvalidate_dailog[state="unvalidate"] .dailog_result{display:none;}
+.cardvalidate_dailog[state="unvalidate"] .dailog_body{display:block;}
+.cardvalidate_dailog[state="rejected"] .dailog_result{display:none;}
+.cardvalidate_dailog[state="rejected"] .dailog_body{display:block;}
+.cardvalidate_dailog[state="waiting"] .dailog_result{display:block;}
+.cardvalidate_dailog[state="waiting"] .dailog_body{display:none;}
+.cardvalidate_dailog .dailog_result div{width:100%;text-align:center;line-height:40px;font-size:18px;color:#ff5000;font-family:"微软雅黑";font-weight:bold;}

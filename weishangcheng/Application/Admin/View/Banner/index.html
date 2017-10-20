@@ -1,0 +1,36 @@
+<toolbar id="toolbar"></toolbar>
+
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-url="__URL__" data-toolbar="#toolbar" data-page-size="20" data-page-list="[5, 10, 25, 50, All]">
+    <thead>
+		<tr>
+			<th data-width="40" data-align="center" data-checkbox="true"></th>
+			<th data-width="50" data-field="sort" data-align="center">排序</th>
+			<th data-width="100" data-field="img_url" data-formatter="formatter_img">缩略图</th>
+			<th data-field="title" data-width="200">标题</th>
+			<th data-field="create_time" data-width="150">创建时间</th>
+			<th data-field="url" data-formatter="format_url">链接地址</th>
+			<th data-field="area" >分类专区</th>
+		</tr>
+	</thead>
+</table>
+<script type="text/javascript">
+function formatter_img(val, row, index){
+	return '<a href="'+val+'" target="_blank"><img src="'+val+'" style="width:64px; height:64px;"></a>';
+}
+function format_url(val, row, index){
+	if(val != ''){
+		return '<a href="'+val+'" target="_blank">'+val+'</a>';
+	}else{
+		return val;
+	}
+}
+function formatter_home(val, row, index){
+	if(val == 1){
+		return '顶部';
+	}else if(val == 2){
+		return '底部';
+	}
+	return '否';
+}
+</script>

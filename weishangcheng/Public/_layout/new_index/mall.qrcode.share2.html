@@ -1,0 +1,14 @@
+<div id="share_code_body">
+	<div class="share_code_body" style="padding:10px;box-sizing:border-box;">
+		<span class="close_icon"></span>
+		<img class="share_logo" style="padding-bottom:10px;" src="__CDN__/img/mall/qr_code_icon.jpg">
+		<p style="text-align:center;font-size:10px;line-height:2em;">长按保存上面二维码图片，与我联系</p>
+	</div>
+</div>
+<script>
+	require(['jquery'],function(){
+		$('span.close_icon').on('click',function(){
+			$("#share_code_body").fadeOut(300);
+		})
+	});
+</script>

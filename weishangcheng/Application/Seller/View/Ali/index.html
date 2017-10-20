@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="我的货源" />
+    <link rel="stylesheet" href="__CDN__/css/seller/keyshop.css?20170901">
+</head>
+
+<body style="background-color:#fff;">
+<div class="container" style="padding-top: 54px;">
+    <div class="content">
+        <div class="switch-tab-container">
+        </div>
+        <div class="goods_opeation clearfix" style="top:0px;">
+            <div class="search_goods_box">
+                <input type="text" value="{$q}" class="search_title" placeholder="搜索商品标题" />
+                <a href="javascript:;" class="search_goods_btn"><i></i></a>
+            </div>
+        </div>
+        <div id="log-container">
+            <div class="all-log-container" id="all_log">
+                <ul class="js-list"></ul>
+                <div class="x-pullfresh-more"></div>
+            </div>
+        </div>
+        <div class="goods_off_shelf_box">
+            <div class="half-button">
+                <a href="/seller/commodity/shelf" class="btn btn-orange-dark btn-block" id="all_shop_off">全店下架</a>
+            </div>
+            <div class="half-button">
+                <a href="/seller/commodity/shelf" class="btn btn-green btn-block" id="choose_goods_off">选择下架</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script type="text/javascript">
+    /*下拉加载更多*/
+    require(['seller/ali_goods']);
+    require(["jquery"], function($){
+        /*搜索*/
+        $('body').on('click','.search_goods_btn',function(){
+            var self = $(this);
+            var search_val = $.trim(self.siblings('input').val());
+            window.location.href = '/seller/ali'+'?q=' + search_val;
+            return false;
+        });
+        // $('body').on('click','#log-container a',function(){
+        //     var id = $(this).find(".a_link_id").text();
+        //     $.ajax({
+        //         url: '/seller/commodity/goods1688',
+        //         type: 'get',
+        //         dataType: 'json',
+        //         data: {id: id},
+        //         success:function(data){
+        //             if(data.result == "success"){
+        //                 window.location.href="/seller?code=0";
+        //             }else{
+        //                 var failed_reason = encodeURI(encodeURI(data.reason));
+        //                 window.location.href = "/seller?code=-1&reason="+failed_reason;
+        //             }
+        //         }
+        //     });
+        //     //铺货成功
+        //     // window.location.replace("xxxx");
+        //     // var failed_reason = encodeURI(encodeURI("铺货失败原因"));
+        //     // window.location.replace("/seller?code=-1&reason="+failed_reason);
+        // })
+    });
+</script>
+</html>

@@ -1,0 +1,18 @@
+/*头部条*/
+.fixed_header{background-color:#f0342b;}
+
+.sc-goods-list .info p.goods-price>em{color:#f0342b;font-weight: 700;}
+
+/*购物车页面*/
+.bottom-fix .bottom-cart .select-all.checked{color:#ed5050;}
+.bottom-fix .bottom-cart{color:#ed5050;}
+.bottom-fix .bottom-cart button{background-color: #f0342b;border-color: #db0c02;}
+
+/*购物车为空*/
+.empty-list .empty-list-content .home-page{color: #f0342b;border-color: #f0342b;}
+
+/*订单页面*/
+.tabber.tabber-red button.active, .tabber.tabber-red a.active{color: #f0342b;border-bottom: 1px solid #db0c02;}
+
+/*商品详细页面*/
+.goods-detail .tabber button.active,.tabber a.active{color:#f0342b;border-bottom:1px solid #db0c02}

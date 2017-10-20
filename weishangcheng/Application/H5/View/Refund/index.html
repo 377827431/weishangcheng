@@ -1,0 +1,272 @@
+<div class="js-refund-modal">
+	<div class="js-cancel modal-backdrop"></div>
+	<div class="modal">
+		<form class="js-refund-fm address-ui address-fm" method="post" action="/h5/order/refund">
+	    	<h4 class="address-fm-title">{:empty($order['spec_name']) ? $order['title'] : $order['spec_name']}</h4>
+		    <div class="js-address-cancel publish-cancel js-cancel">
+		        <div class="cancel-img"></div>
+		    </div>
+	    	<div class="block form" style="margin:0;">
+	            <if condition="count($received) == 1">
+	            <input type="hidden" value="{:empty($received['received']) ? 1 : 0}" class="js-refund_type">
+	            <else/>
+	    		<div class="block-item">
+		            <label>到货状况</label>
+		            <div class="area-layout">
+		            	<select name="refund_type" class="js-refund_type">
+			   				<option value="">请选择</option>
+			   				<php>
+			   					if(isset($received['received'])){
+			   						echo '<option value="0"'.($order['refund_type'] === 0 ? 'selected':'').'>已收到货</option>';
+			   					}
+			   					if(isset($received['not_received'])){
+			   						echo '<option value="1"'.($order['refund_type'] == 1 ? 'selected':'').'>未收到货</option>';
+			   					}
+			   				</php>
+			   			</select>
+					</div>
+	        	</div>
+	            </if>
+		        <div class="block-item">
+		            <label>原　　因</label>
+		            <div class="area-layout">
+						<select name="reason" class="js-reason">
+			   				<option value="">请选择</option>
+			   			</select>
+					</div>
+	        	</div>
+		        <div class="block-item">
+		            <label>数　　量</label>
+		            <input type="number" name="num" value="{$order.refund_num}" class="js-num" placeholder="不能大于购买数量" max="{$order['num']}">
+		        </div>
+		        <div class="block-item">
+		            <label>金　　额</label>
+		            <input type="number" name="refund_fee" value="{$order.refund_fee}" class="js-refund_fee" max="{$order['payment']}" placeholder="最多{$order['payment']}元(邮费由卖家定)">
+		        </div>
+		        <div class="block-item">
+		            <label style="vertical-align: top;">说　　明</label>
+		            <textarea type="text" name="remark" placeholder="5~200个字" maxlength="200" class="js-remark">{$order.refund_remark}</textarea>
+		        </div>
+		        <notempty name="wxconfig">
+		        <div class="block-item" style="margin: 0;padding: 10px 0 10px;">
+		            <table style="width: 100%;min-height: 60px;table-layout: fixed;color: #ddd;">
+						<tr class="js-image-list">
+							<php>
+							for($i=0; $i<5; $i++){
+								if(isset($order['refund_images'][$i])){
+									echo '<td style="border: 1px dashed #ddd;text-align: center;"><img src="'.$order['refund_images'][$i].'" style="width:100%"><input type="hidden" value="'.$order['refund_images'][$i].'"></td>';
+								}else{
+									echo '<td style="border: 1px dashed #ddd;text-align: center;">+</td>';
+								}
+							}
+							</php>
+						</tr>
+					</table>
+		        </div>
+		        </notempty>
+	    	</div>
+	    	<eq name="show_action" value="1">
+			<div class="action-container clearfix">
+				<empty name="order['refund_id']">
+	            <button type="submit" class="js-address-save btn btn-block btn-red">申请</button>
+				<else/>
+				<div class="half-button">
+					<button type="submit" class="btn btn-block btn-white" style="">保存修改</button>
+				</div>
+				<div class="half-button">
+					<button type="button" class="js-cancel_apply btn btn-block btn-red">取消申请</button>
+				</div>
+				</empty>
+	        </div>
+	        </eq>
+		</form>
+	</div>
+	<script>
+	(function(){
+		$('html,body').css({'height': document.documentElement.clientHeight + 'px', 'overflow': 'hidden'});
+		var reasonList = {:json_encode($received)};
+		var $modal = $('.js-refund-modal')
+		   ,$reason = $modal.find('.js-reason')
+		   ,$num = $modal.find('.js-num')
+		   ,$refund_fee = $modal.find('.js-refund_fee')
+		   ,$remark = $modal.find('.js-remark')
+		   ,$images = $modal.find('.js-image-list')
+		   ,$refund_type = $modal.find('.js-refund_type')
+		   ,postData = {refund_id: "{$order['oid']}"};
+		
+		// 关闭弹窗
+		$modal.find('.js-cancel').on('click', function(){
+			$modal.remove();
+			$('html,body').css({'height': '', 'overflow': ''});
+			return false;
+		});
+		
+		// 到货状况
+		$refund_type.on('change', function(){
+			var html = '<option value="">请选择</option>';
+			if(this.value != ''){
+				var list = reasonList[this.value == 1 ? 'not_received' : 'received'];
+				for(var i in list){
+					html += '<option value="'+i+'"'+(i=='{$order['refund_reason']}' ? 'selected' : '')+'>'+list[i]+'</option>';
+				}
+			}
+			$reason.html(html);
+			return false;
+		}).trigger('change');
+
+		// 退款数量
+		var num_change = function(){
+			var maxNum = {$order['num']};
+			var post_fee = {$order["post_fee"]}
+    		   ,num = parseInt($num.val()) || maxNum;
+			if(num > maxNum){
+				num = maxNum;
+			}
+			var max = {$order['discount_price']} * num;
+			$refund_fee.attr('placeholder', '最多'+max+'元(邮费由卖家定)').attr('max', max).val(max.toFixed(2));
+			$num.val(num);
+			return false;
+		}
+		$num.on('change', num_change).trigger('change');
+		
+		// 退款金额
+		$refund_fee.on('change', function(){
+			var value = parseFloat(this.value) || '';
+			if(value != ''){
+				var max = parseFloat(this.max);
+				if(value > max){
+					value = max;
+				}
+			}
+			this.value = value.toFixed(2);
+			return false;
+		});
+		
+		<if condition="!empty($order['refund_id'])">
+		$refund_type.trigger('change');
+		$reason.trigger('change');
+		$refund_fee.val({$order['refund_fee']} > 0 ? "{$order['refund_fee']}" : "{$order['refund_post']}");
+		</if>
+		
+		// 保存数据
+		var saveData = function(postData){
+			$.ajax({
+				url: '/h5/refund/add',
+				type: 'post',
+				dataType: 'json',
+				data: postData,
+				success: function(){
+					window.location.reload();
+				}
+			});
+		}
+		
+		// 表单提交
+		$modal.find('.js-refund-fm').on('submit', function(){
+			postData.refund_type = $refund_type.val(),
+			postData.refund_reason = $reason.val(),
+			postData.refund_num = $num.val(),
+			postData.refund_fee = $refund_fee.val(),
+			postData.refund_remark = $remark.val(),
+			postData.refund_images = [];
+
+			if(postData.refund_type == ''){
+				return toast.show('请选择到货状况'), false;
+			}else if(postData.refund_reason == ''){
+				return toast.show('请选择原因'), false;
+			}else if(!$num.hasClass('ignore') && (postData.refund_num == '' || postData.refund_num <= 0)){
+				$num.focus();
+				return toast.show('请输入退货数量'), false;
+			}else if(postData.refund_fee == ''){
+				$refund_fee.focus();
+				return toast.show('请输入金额'), false;
+			}else if(postData.refund_remark.length < 5){
+				$remark.focus();
+				return toast.show('说明不能少于5个字'), false;
+			}
+			
+			
+			if($num.hasClass('ignore')){
+				postData.refund_num = 0;
+			}
+			if($refund_fee.hasClass('ignore')){
+				postData.refund_fee = 0;
+			}
+			
+			var upload = [];
+			$imgList = $images.find('input');
+			$imgList.each(function(i){
+				if($imgList.eq(i).hasClass('js-upload')){
+					upload.push(this.value);
+				}else{
+					postData.refund_images.push(this.value);
+				}
+			});
+			
+			if(upload.length > 0){
+				return mediaDown(upload, function(data){
+					for(var i=0; i<data.length; i++){
+						$imgList.eq(i).removeClass('js-upload').val(data[i]);
+						postData.refund_images.push(data[i]);
+					}
+					saveData(postData);
+				}), false;
+			}
+			
+			saveData(postData);
+			return false;
+		});
+		
+		var width = ((document.documentElement.clientWidth - 26) / 5).toFixed(2);
+		$images.children().css({width: width, height: width});
+		
+		<notempty name="wxconfig">
+		require(['jsweixin'], function(weixin){
+			weixin.init({$wxconfig}, function(){
+				$images.on('click', 'td',function(){
+		            var $td = $(this);
+		            weixin.chooseImage(function(localId, res){
+		            	$td.html('<img src="'+localId+'" style="width:100%"><input type="hidden" class="js-images js-upload" value="'+res.serverId+'">');
+		            });
+		            return false;
+		        });
+			});
+		});
+		</notempty>
+		
+		// 取消申请
+		$modal.find('.js-cancel_apply').on('click', function(){
+			if(!confirm('取消后不可再申请，确定取消吗？')){
+				return false;
+			}
+			
+			$.ajax({
+				url: '/h5/refund/cancel',
+				data:{refund_id: '{$order['refund_id']}'},
+				type: 'post',
+				dataType: 'json',
+				success: function(){
+					$modal.remove();
+					window.location.reload();
+				}
+			});
+			return false;
+		});
+		
+		// 下载多媒体文件
+		var mediaDown = function(list, callback){
+			var postData = {appid: '{:C("WEIXIN.appid")}', mediaid: list};
+			$.ajax({
+				url: '__CDN__/service/api/meida_down',
+				type: 'post',
+				data: postData,
+				waitting: '图片上传中',
+				dataType: "jsonp",
+				success: function(data){
+					callback(data);
+				}
+			});
+		}
+	})();
+	</script>
+</div>

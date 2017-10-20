@@ -1,0 +1,42 @@
+<style>
+.status-bar{margin-left: 10px;position:relative;box-sizing:border-box;width:120px;height:13px;display: inline-block;border:1px solid #fc353a;border-radius:6px;color:#fff;background:#ffb7b7;text-align:center;overflow:hidden}
+.status-bar .status-progress{width:1%;position:absolute;top:0;left:0;height:100%;border-radius:12px;background:#ff5e5d}
+.status-bar .status-soldrate{position:absolute;top:0;left:0;height:100%;width:100%;line-height:100%}
+</style>
+<toolbar id="toolbar" class="toolbar">
+	<form class="search-box">
+		<input type="text" name="product" value="{$product}" placeholder="授权产品">
+		<button type="button" data-name="search" class="btn btn-default" data-event-type="default">
+			<i class="icon-search"></i>
+		</button>
+	</form>
+</toolbar>
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-url="__ACTION__" data-toolbar="#toolbar">
+	<thead>
+		<tr>
+			<th data-width="40" data-checkbox="true"></th>
+            <th data-field="title" data-width="80">会员卡</th>
+            <th data-field="quantity" data-width="120">库存数量</th>
+            <th data-field="used" data-width="20">已被使用数量</th>
+            <th data-field="creator" data-width="80">创建人</th>
+            <th data-field="type" data-width="20">通用</th>
+            <th data-field="timeout" data-width="120">有效时间</th>
+			</tr>
+	</thead>
+</table>
+<script type="text/javascript">
+function formatterProgress(val, row, index){
+	return row.status+'<div class="status-bar"><div class="status-progress" style="width:'+row.progress+'%;"></div><div class="status-soldrate">'+row.progress+'%</div></div>';
+}
+$(function(){
+	$('#table').on('invitation_out',function(e, gridview ,params){
+		var row = gridview.currentRow; 
+		if(!row){ 
+			alertMsg('请点击选择要导出的数据', 'warning');
+			return false; 
+		}
+		params.url += '?id=' + row.id;
+	})
+})
+</script>

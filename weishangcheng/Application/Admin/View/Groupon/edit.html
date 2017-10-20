@@ -1,0 +1,270 @@
+<style>
+.app-design{display:inline-block}
+.app-design .app-sidebar{position:relative;float:left;width:550px;font-size:14px}
+.app-design .app-sidebar+.app-sidebar{width:415px;margin-left:20px}
+.app-design .app-sidebar .app-sidebar-inner{padding:12px 10px;min-height:28px;background:#f8f8f8;border-radius:3px;border:1px solid #d1d1d1}
+.app-design .app-sidebar .app-sidebar-inner+.app-sidebar-inner{margin-top:14px}
+.app-design .app-sidebar .control-group:last-of-type{margin-bottom:0}
+.app-design .control-label{width:90px}
+.app-design .controls{margin-left:100px}
+.app-design .controls input[type="text"]{width:390px}
+.app-design .controls select{width:404px}
+.app-design .controls .input-append input[type="text"]{width:363px}
+.sku-table th+th,.sku-table td+td{border-left:1px solid #ddd;text-align:center}
+.sku-table .input .end-num,.sku-table .input .start_num{text-align:center;border:none;box-shadow:none;font-weight:bold;line-height:16px;padding:0;height:16px;width:31px;background-color:#fff}
+.sku-table .input .end-num{color:red}
+.sku-table .input input{text-align:center}
+.sku-table tr+tr input{color:blue}
+</style>
+<form action="__ACTION__" class="form-horizontal" data-validate="true" data-submit="ajax" method="post" data-success="back">
+    <input type="hidden" name="id" value="{$data['id']}">
+    <div class="app-design">
+        <div class="app-sidebar">
+            <div class="app-sidebar-inner">
+                <p>活动信息</p>
+                <div style="background-color: #fff;border-radius: 3px;padding: 18px 0;border: 1px solid #ccc;">
+                    <div class="control-group ">
+                        <label class="control-label must">活动名称</label>
+                        <div class="controls">
+                            <input type="text" name="title" class="required" value="{$data.title}" maxlength="30" placeholder="商品名称+活动描述">
+                        </div>
+                    </div>
+
+                    <div class="control-group ">
+                        <label class="control-label must">活动标签</label>
+                        <div class="controls">
+                            <input type="text" name="tag_name" class="required" value="{$data.tag_name}" maxlength="5" placeholder="2-5个字符，显示在价格旁" style="width:280px">
+                            <input type="text" name="tag_short" class="required" value="{$data.tag_short}" maxlength="2" placeholder="2个字符" style="width:80px;margin-left:12px">
+                        </div>
+                    </div>                    <div class="control-group">
+                        <label class="control-label must">活动开始</label>
+                        <div class="controls">
+                            <div class="input-append date" data-format="yyyy-MM-dd hh:mm:ss">
+                                <input type="text" name="start_time" value="{$data.start_time}" required="required">
+                                <span class="add-on"><i class="icon-th icon-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label must">活动结束</label>
+                        <div class="controls">
+                            <div class="input-append date" data-format="yyyy-MM-dd hh:mm:ss">
+                                <input type="text" name="end_time" value="{$data.end_time}" required="required">
+                                <span class="add-on"><i class="icon-th icon-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">主宣传图</label>
+                        <div class="controls">
+                            <input class="hide" type="hidden" name="pic_url" value="{$data.pic_url}">
+                            <img id="img_url" src="{$data.pic_url}" class="img-polaroid btn-up" alt="非必填" style="width: 120px; height: 120px;cursor:pointer">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">每人限购</label>
+                        <div class="controls">
+                            <input class="digits" min="0" max="9999" name="quota" type="text" value="{$data.quota}" placeholder="默认不限制">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">优惠限制</label>
+                        <div class="controls">
+                            <select name="single">
+                                <option value="0"{$data['single'] == 0 ? ' selected="selected"':''}>不许用任何优惠(包括积分)</option>
+                                <option value="1"{$data['single'] == 1 ? ' selected="selected"':''}>仅可使用积分抵扣</option>
+                                <option value="2"{$data['single'] == 2 ? ' selected="selected"':''}>不限制(不推荐)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="app-sidebar-inner">
+                <p>商品设置<span style="font-size:12px">(活动期间请勿修改SKU信息)</span></p>
+                <div style="background-color: #fff;border-radius: 3px;padding: 18px 0 0 0;border: 1px solid #ccc;">
+                    <div class="control-group ">
+                        <label class="control-label must">活动商品</label>
+                        <div class="controls">
+                            <input type="text" id="goods_id" name="goods_id" class="required" value="{$data.goods_id}" maxlength="16" placeholder="商品ID" style="width:60px;" {$canEdit ? '':'readonly="readonly"'}>
+                            <label for="goods_id" style="width:310px;display:inline-block;margin-bottom:0;border: 1px solid #ccc;height: 20px;line-height:20px;padding: 4px 6px;background-color: #eee;font-size:12px;color:#999999;">{$data.goods_name}</label>
+                        </div>
+                    </div>
+                    <table class="table sku-table" style="margin:20px 0 0 0">
+                        <php>
+                            $index = 0;
+                            $hasSku = false;
+                            foreach($data['price_range'] as $productId=>$item){
+                                if($index == 0){
+                                    $i = 0;
+                                    echo '<tr>';
+                                    if($item['spec'] != ''){
+                                        $hasSku = true;
+                                        echo '<th>SKU</th>';
+                                        $i++;
+                                    }
+                                    
+                                    $start = 0;
+                                    foreach($item['range'] as $num=>$price){
+                                        $start++;
+                                        echo '<th data-index="'.$i.'" class="input" style="width:85px"><input type="text" class="start_num" value="'.$start.'" disabled="disabled">-<input type="text" class="end-num" value="'.$num.'" data-num="'.$num.'">件</th>';
+                                        $start = $num;
+                                        $i++;
+                                    }
+                                
+                                    echo '<th style="width:50px">已售</th>';
+                                    echo '</tr>';
+                                }
+                                
+                                echo '<tr data-index="'.$index.'" data-product_id="'.$productId.'" title="成本'.$goods['product'][$productId]['cost'].'元">';
+                                if($hasSku){echo '<td>'.$item['spec'].'</td>';}
+                                foreach($item['range'] as $num=>$price){
+                                    echo '<td class="input"><input type="text" name="product['.$productId.'][range]['.$num.']" required="required" min="0.01" value="'.$price.'"></td>';
+                                }
+                                echo '<td>'.$item['sold'].'</td></tr>';
+                                $index++;
+                            }
+                        </php>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="app-sidebar">
+            <div class="app-sidebar-inner">
+                <p>活动图文(不填则默认使用商品图文)</p>
+                <script id="image_text_container" name="detail" type="text/plain">{$data.detail}</script>
+            </div>
+        </div>
+    </div>
+    <div class="form-actions">
+      <button type="button" class="btn btn-back">返回</button>
+      <if condition="$canEdit">
+      <button type="submit" class="btn btn-primary">保存</button>
+      </if>
+    </div>
+</form>
+<script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="/ueditor/ueditor.all.min.js"></script>
+<script>
+$(function(){
+    var editor = UE.getEditor('image_text_container');
+    var $img = $('#img_url');
+    var editor = UE.getEditor('image_text_container');
+    var $skuTable = $('.sku-table');
+    
+    var afterhidepop = function(){
+        editor.removeListener('afterhidepop', afterhidepop);
+        setTimeout(function(){
+            editor.removeListener('beforeInsertImage', beforeInsertImage);
+        }, 600);
+    }
+    var beforeInsertImage = function(t, list){
+        $img.prev().val(list[0]['src']);
+        $img.attr('src', list[0]['src']);
+        afterhidepop();
+        return true;
+    }
+    // 弹出图片上传框
+    $img.on('click', function(){
+        editor.addListener('afterhidepop', afterhidepop);
+        editor.addListener('beforeInsertImage', beforeInsertImage);
+        editor.getDialog("insertimage").open();
+    });
+    
+    $('#goods_id').on('change', function(){
+        var $this = $(this),
+            id = $this.val();
+        if(!/^\d+$/.test(id)){
+            $this.val('').focus();
+            return false;
+        }
+
+        $.ajax({
+            url: '__URL__/goods?id='+id+'&active={$data['id']}',
+            dataType: 'json',
+            success: function(data){
+                $('#goods_id').next().html(data.title);
+                var i = data.hasSku ? 1 : 0;
+                var html = '<tr>'+(data.hasSku ? '<th>SKU</th>' : '')+
+                        '<th data-index="'+(i)+'" class="input" style="width:85px" title="会员价的98折"><input type="text" class="start_num" value="1" disabled>-<input type="text" name="num[0]" class="end-num" value="50" data-num="50" required="required">件</th>'+
+                        '<th data-index="'+(i+1)+'" class="input" style="width:85px" title="员工价的95折"><input type="text" class="start_num" value="51" disabled>-<input type="text" name="num[1]" class="end-num" value="80" data-num="80" required="required">件</th>'+
+                        '<th data-index="'+(i+2)+'" class="input" style="width:85px" title="员工价"><input type="text" class="start_num" value="81" disabled>-<input type="text" name="num[2]" class="end-num" value="100" data-num="100" required="required">件</th>'+
+                        '<th style="width:50px">库存</th>'+
+                        '</tr>';
+                
+                var i = 0;
+                for(var productId in data.product){
+                    var product = data.product[productId];
+                    html += '<tr data-index="'+i+'" data-product_id="'+productId+'" title="成本'+product.cost+'元">'+(data.hasSku ? '<td>'+product.spec+'</td>' : '')+
+                     '<td class="input"><input type="text" name="product['+productId+'][range][50]" required="required" min="0.01" placeholder="'+product.price1+'"></td>'+
+                     '<td class="input"><input type="text" name="product['+productId+'][range][80]" required="required" min="0.01" placeholder="'+product.price2+'"></td>'+
+                     '<td class="input"><input type="text" name="product['+productId+'][range][100]" required="required" min="0.01" placeholder="'+product.price3+'"></td>'+
+                     '<td>'+product.stock+'</td>'+
+                     '</tr>';
+                     i++;
+                }
+                $skuTable.html(html);
+            },
+            error: function(){
+                $this.val('');
+            },
+            complete: function(){
+                
+            }
+        });
+        return false;
+    });
+    
+    $skuTable.on('change', '.end-num', function(){
+        var $endNum = $(this),
+            $startNum = $endNum.prevAll('.start_num'),
+            startNum = $startNum.val()*1,
+            endNum   = $endNum.val()*1;
+        if(!/^\d+$/.test(endNum) || startNum>=endNum){
+            $endNum.val('').focus();
+            endNum = ''
+        }
+        
+        var $td = $endNum.parent();
+            $nextTd = $td.nextAll('.input');
+        if(endNum == ''){
+            for(var i=0; i<$nextTd.length; i++){
+                $nextTd.eq(i).find('.end-num').val('');
+            }
+            return false;
+        }
+        
+        var stepNum = endNum - $endNum.data('num') * 1;
+        $endNum.data('num', endNum);
+        
+        var index = $td.data('index');
+        var $nextTr = $td.parent().nextAll();
+        for(var j=0; j<$nextTr.length; j++){
+            var productId = $nextTr.eq(j).data('product_id');
+            $nextTr.eq(j).find('td:eq('+index+')').find('input').attr('name', 'product['+productId+'][range]['+endNum+']');
+        }
+        
+        for(var i=0; i<$nextTd.length; i++){
+            var $startNum2 = $nextTd.eq(i).find('.start_num'),
+            $endNum2 = $nextTd.eq(i).find('.end-num'),
+            startNum2 = $startNum2.val()*1 + stepNum,
+            endNum2 = $endNum2.data('num')*1 + stepNum;
+            
+            $startNum2.val(startNum2);
+            $endNum2.val(endNum2).data('num', endNum2);
+            
+            for(var j=0; j<$nextTr.length; j++){
+                var productId = $nextTr.eq(j).data('product_id');
+                $nextTr.eq(j).find('td:eq('+(index+i+1)+')').find('input').attr('name', 'product['+productId+'][range]['+endNum2+']');
+            }
+        }
+        
+        return false;
+    }).on('dblclick', 'td input',function(){
+        var $this = $(this),
+            $td = $this.parent(),
+            index = $td.index();
+        $td.parent().nextAll().find('td:eq('+index+')').find('input').val($this.val());
+        return false;
+    })
+});
+</script>

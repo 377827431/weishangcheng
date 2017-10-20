@@ -1,0 +1,82 @@
+<!-- <div id="search_bar" class="search-bar top-fix [class]">
+	<form class="search-form ignore">
+		<button type="button" class="js-search-cancel search-cancel">取消</button>
+		<div class="search-content">
+            <php>
+            if(is_numeric($_GET['shop_id'])){
+                echo '<input type="hidden" name="shop_id" value="'.$_GET['shop_id'].'">';
+            }
+            if(is_numeric($_GET['tag_id'])){
+                echo '<input type="hidden" name="tag_id" value="'.$_GET['tag_id'].'">';
+            }
+            if(is_numeric($_GET['cat_id'])){
+                echo '<input type="hidden" name="cat_id" value="'.$_GET['cat_id'].'">';
+            }
+            </php>
+			<input type="search" class="search-input" placeholder="搜索所有商品" name="kw" value="{$_GET['kw']|htmlspecialchars}" maxlength="8">
+			<span class="search-icon"></span>
+		</div>
+		<button type="submit" class="search-submit">搜索</button>
+	</form>
+	<div class="history-wrap top-fix center">
+		<ul class="history-list js-history-list clearfix"></ul>
+		<a class="tag tag-clear js-tag-clear" href="javascript:;">清除历史搜索</a>
+	</div>
+</div> -->
+<!--
+对比旧版，在搜索栏同一行增加了购物车
+购物车需要根据input搜索框是否获取焦点来显示隐藏
+ -->
+ 
+ <style>
+	#search_bar.focused .category_icon{
+		display:none;
+	}
+	#search_bar .category_icon{
+		display:inline-block;
+		width: calc(2em + 3px);
+		height: 16px;
+		background: url("/img/mall/category_menu.png") no-repeat left;
+		background-size: 16px 16px;
+		padding-left:19px;
+		position:absolute;
+		line-height:16px;
+		right:66px;
+		top:7px;
+	}
+	#search_bar input.search-input{
+		width:calc(100% - 120px);
+	}
+ </style>
+<div id="search_bar" class="search-bar top-fix [class]">
+	<form class="search-form ignore">
+		<button type="button" class="js-search-cancel search-cancel">取消</button>
+		<div class="search-content">
+            <php>
+            if(is_numeric($_GET['shop_id'])){
+                echo '<input type="hidden" name="shop_id" value="'.$_GET['shop_id'].'">';
+            }
+            if(is_numeric($_GET['tag_id'])){
+                echo '<input type="hidden" name="tag_id" value="'.$_GET['tag_id'].'">';
+            }
+            if(is_numeric($_GET['cat_id'])){
+                echo '<input type="hidden" name="cat_id" value="'.$_GET['cat_id'].'">';
+            }
+            </php>
+			<input type="search" class="search-input" placeholder="搜索所有商品" name="kw" value="{$_GET['kw']|htmlspecialchars}" maxlength="8">
+			<span class="category_icon" style="cursor:pointer;">分类</span>
+			<span class="search-icon"></span>
+			<a class="my_chat_link" <?php if(session('user.id') != '1000019'){?>href="__MODULE__/cart"<?php }else{ ?>href="javascript:toast.show('您当前操作为买家行为 请在微信中查看');"<?php }?>>
+				<div class="my_chat">
+					<span class="chat_icon"></span>
+					<span>购物车</span>
+				</div>
+			</a>
+		</div>
+		<button type="submit" class="search-submit">搜索</button>
+	</form>
+	<div class="history-wrap top-fix center">
+		<ul class="history-list js-history-list clearfix"></ul>
+		<a class="tag tag-clear js-tag-clear" href="javascript:;">清除历史搜索</a>
+	</div>
+</div>

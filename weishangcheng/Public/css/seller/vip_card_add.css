@@ -1,0 +1,81 @@
+ div.edit_card_con ul li>div{display:inline-block;line-height:50px;font-size:14px;color:#0b0b0b;}
+div.edit_card_con ul li{border-bottom:1px solid #b8b8b8;font-size:0;}
+div.edit_card_con ul li>div:nth-child(1){width:40%;font-size:14px;}
+div.edit_card_con ul li>div:nth-child(2){width:60%;font-size:14px;text-align:right;}
+div.edit_card_con ul li input{border:none;outline:none;background-color:rgba(0,0,0,0);}
+div.edit_card_con ul li>div:nth-child(2) input{display:inline-block;text-align:right;}
+div.edit_card_con ul li.expire_days>div:nth-child(2)::after{content:"天";}
+div.edit_card_con ul li.discut_cfg>div:nth-child(2)::after{content:"折";}
+div.edit_card_con ul.yongjin li>div:nth-child(2)::after{content:"%";}
+div.edit_card_con ul li.buy_cost>div:nth-child(2)::after{content:"元";}
+div.edit_card_con ul li.order_num>div:nth-child(2)::after{content:"自动升级";}
+div.edit_card_con ul li.custom_range>div:nth-child(2)::after{content:"自动升级";}
+p.p_title{width:100%;display:inline-block;line-height:50px;font-size:14px;font-weight:bold;border-bottom:1px solid #b8b8b8;}
+ul.yongjin div{color:#898967 !important;}
+span.check_box_item::before{content:"";position:relative;top:-1px;display:inline-block;vertical-align:middle;width:1em;height:1em;background:url('/img/seller/check_icon.png') no-repeat;background-size:100% 100%;font-family:"宋体";margin-right:.3em;}
+span.check_box_item.on::before{content:"";position:relative;top:-1px;display:inline-block;vertical-align:middle;width:1em;height:1em;background:url('/img/seller/check_icon_checked.png') no-repeat;background-size:100% 100%;font-family:"宋体";margin-right:.3em;}
+div.save_button{background-color:#fc4f0d;line-height:40px;width:100%;color:white;font-size:16px;text-align:center;border-radius:6px;margin-top:20px;}
+/*开关按钮*/
+.mui-switch {
+width: 52px;
+height: 31px;
+position: relative;
+border: 1px solid #dfdfdf;
+background-color: #fdfdfd;
+box-shadow: #dfdfdf 0 0 0 0 inset;
+border-radius: 20px;
+border-top-left-radius: 20px;
+border-top-right-radius: 20px;
+border-bottom-left-radius: 20px;
+border-bottom-right-radius: 20px;
+background-clip: content-box;
+display: inline-block;
+-webkit-appearance: none;
+user-select: none;
+outline: none; }
+.mui-switch::before {
+    content: '';
+    width: 29px;
+    height: 29px;
+    position: absolute;
+    top: 0px;
+    left: 0;
+    border-radius: 20px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4); }
+.mui-switch:checked {
+    border-color: #fc4f0d;
+    box-shadow: #fc4f0d 0 0 0 16px inset;
+    background-color: #fc4f0d; }
+    .mui-switch:checked::before {
+    left: 21px; }
+.mui-switch.mui-switch-animbg {
+    transition: background-color ease 0.4s; }
+    .mui-switch.mui-switch-animbg::before {
+    transition: left 0.3s; }
+    .mui-switch.mui-switch-animbg:checked {
+    box-shadow: #dfdfdf 0 0 0 0 inset;
+    background-color: #fc4f0d;
+    transition: border-color 0.4s, background-color ease 0.4s; }
+    .mui-switch.mui-switch-animbg:checked::before {
+        transition: left 0.3s; }
+.mui-switch.mui-switch-anim {
+    transition: border cubic-bezier(0, 0, 0, 1) 0.4s, box-shadow cubic-bezier(0, 0, 0, 1) 0.4s; }
+    .mui-switch.mui-switch-anim::before {
+    transition: left 0.3s; }
+    .mui-switch.mui-switch-anim:checked {
+    box-shadow: #fc4f0d 0 0 0 16px inset;
+    background-color: #fc4f0d;
+    transition: border ease 0.4s, box-shadow ease 0.4s, background-color ease 1.2s; }
+    .mui-switch.mui-switch-anim:checked::before {
+        transition: left 0.3s; }
+    /*开关位置*/
+    .mui-switch{
+        position:absolute;
+        top:8px;
+        right:0px;
+    }

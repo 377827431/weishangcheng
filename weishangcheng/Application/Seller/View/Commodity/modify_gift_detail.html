@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="图文详情" />
+    <link rel="stylesheet" href="__CDN__/css/seller/sale_gift_cfg.css">
+    <style>
+    .profile_con{position:relative;width:100%;height:auto;padding-bottom:2em;background-color: white;margin-top:20px;box-sizing: border-box;padding-left:4%;padding-right:4%;}
+    #shop_profile{width:100%;resize:none;padding:.5em;box-sizing:border-box;border:none;outline:none;}
+    /*span.fontnum{color:#acacac;position:absolute;bottom:0.5em;right:1em;}
+    span.fontnum::after{content:"/200";}*/
+    .p_info{font-size:14px;font-family:"微软雅黑";line-height:20px;}
+    .icon_2017060901::before{content:"";display:inline-block;vertical-align:middle;width:1em;height:1em;margin-right:.5em;background:url("__CDN__/img/seller/2017060901.png") no-repeat;background-size:100% 100%;}
+    .icon_2017060902::before{content:"";display:inline-block;vertical-align:middle;width:1em;height:1em;margin-right:.5em;background:url("__CDN__/img/seller/2017060902.png") no-repeat;background-size:100% 100%;}
+    .icon_2017060903::before{content:"";display:inline-block;vertical-align:middle;width:1em;height:1em;margin-right:.5em;background:url("__CDN__/img/seller/2017060903.png") no-repeat;background-size:100% 100%;}
+    .icon_2017060904::before{content:"";display:inline-block;vertical-align:middle;width:1em;height:1em;margin-right:.5em;background:url("__CDN__/img/seller/2017060904.png") no-repeat;background-size:100% 100%;}
+    .icon_2017060905::before{content:"";display:inline-block;vertical-align:middle;width:1em;height:1em;margin-right:.5em;background:url("__CDN__/img/seller/2017060905.png") no-repeat;background-size:100% 100%;}
+    .icon_2017060906::before{content:"";display:inline-block;vertical-align:middle;width:1em;height:1em;margin-right:.5em;background:url("__CDN__/img/seller/2017060906.png") no-repeat;background-size:100% 100%;}
+    .icon_2017060907::before{content:"";display:inline-block;vertical-align:middle;width:1em;height:1em;margin-right:.5em;background:url("__CDN__/img/seller/2017060907.png") no-repeat;background-size:100% 100%;}
+    .icon_2017060908::before{content:"";display:inline-block;vertical-align:middle;width:1em;height:1em;margin-right:.5em;background:url("__CDN__/img/seller/2017060908.png") no-repeat;background-size:100% 100%;}
+    .icon_2017060909::before{content:"";display:inline-block;vertical-align:middle;width:1em;height:1em;margin-right:.5em;background:url("__CDN__/img/seller/2017060909.png") no-repeat;background-size:100% 100%;}
+    .title_p {line-height: 34px;border-bottom: 1px solid #e5e5e5;font-size: 14px; padding-left:4%;border-bottom:none;}
+    .item_photo_container ul li{ cursor: pointer;}
+	.preview_box{
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+		position: fixed;
+		top: 0;
+		left: 0;
+		background: rgba(0,0,0,1);
+		z-index: 1000;
+		display: none;
+		cursor: pointer;
+	}
+	.preview_img{
+	  display:flex;
+	  align-items:center;/*垂直居中*/
+	  justify-content: center;/*水平居中*/
+	  width:100%;
+	  height:100%;
+	  background: rgba(0,0,0,1);
+	}
+	.preview_box img{
+        max-width: 100%;
+    	max-height: 100%;
+    	vertical-align: middle;
+    	
+	}
+	@keyframes zoomIn {
+	  from {
+	    opacity: 0;
+	    transform: scale3d(.3, .3, .3);
+	  }
+	
+	  50% {
+	    opacity: 1;
+	  }
+	}
+	.zoomIn {
+	  animation-name: zoomIn;
+	  animation-duration: .5s;
+	  animation-direction:alternate;
+	}
+    </style>
+</head>
+
+<body>
+<div id="id" style="display: none;"></div>
+<div class="container">
+    <div class="content ">
+        <div class="content-body">
+            <!-- <div class="content_span"></div> -->
+            <p class="icon_2017060905 title_p">商品描述</p>
+            <div class="gift_detail_intro profile_con" style="margin-top:5px;">
+                <textarea id="shop_profile" cols="30" rows="4" class="p_info"  placeholder="好的商品介绍可以让您的交易成功更容易哦~不少于50字"></textarea>
+                <!-- <span class="fontnum">0<span> -->
+            </div>
+            <div class="content_span"></div>
+            <div class="item_photo_container" style="padding-bottom:70px;">
+                <p class="icon_2017060901">商品图片</p>
+                <ul>
+                    <li class="add_item_photo"><img src="__CDN__/img/seller/add_photo.png"></li>
+                    <div style="display: none">
+                        <p><input type="file" id="upfile" onchange="$('#upJQuery').click()"></p>
+                        <p><input type="button" id="upJQuery" value=""></p>
+                    </div>
+                    <div class="clearfix"></div>
+                </ul>
+            </div>
+            <div style="background-color:white;position:fixed;bottom:0px;left:0px;width:100%;">
+                <div class="orange_btn save_btn" style="">保存</div>
+            </div>
+           
+        </div>
+    </div>
+</div>
+<!--图片预览布局-->
+<div class="preview_box">
+	<div class="preview_img">
+		<img src="https://cbu01.alicdn.com/img/ibank/2017/471/210/4613012174_225263684.jpg"/>
+	</div>
+</div>
+<!--/图片预览布局-->
+
+<input class="goods_id_save" type="hidden" value="{$goods_id}">
+<script src="__CDN__/js/seller/modify_gift_detail.js"></script>
+<script src="__CDN__/js/seller/jquery.min.js"></script>
+<script>
+    $(function(){
+        var id = $('.goods_id_save').val();
+        $.ajax({
+            url:"/seller/commodity/modify_gift_detail",
+            type: 'post',
+            data: {id:id},
+            success:function(data){
+                console.log(data);
+                $("#id").html(data);
+                var len = $("#id img").length;
+                var lentext = $("#id").text();
+                console.log(lentext);
+                for (var i = 0; i < len; i++) {
+                    var lenlist = $("#id img").eq(i).attr("src");
+                    $(".item_photo_container ul li.add_item_photo").before("<li><img src="+lenlist+"><i class='delete_icon'></i></li>");
+                }
+                $("textarea").val(lentext);
+            }
+        });
+    })
+</script>
+</body>
+</html>

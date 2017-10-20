@@ -1,0 +1,47 @@
+<div id="customer_service_form" class="modal modal-small hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3>专属客服</h3>
+  </div>
+  <div style="text-align:center;background-color:#ffc;color:#f90;padding:8px">
+                勾选1种商品则应用此配置，勾选多种商品则只添加选中的客服
+  </div>
+  <div class="modal-body">
+  	<foreach name="groups" key="type" item="list">
+  		<ul style="height:auto;display:inline-block;margin-bottom:0">
+  			<li style="width:115px;float:left;margin-right:10px;background-color:black;color:#fff;margin-left:-40px;padding:0 0 0 40px;">{$type}</li>
+			<foreach name="list" key="sid" item="item">
+	  		<li style="width:125px;float:left;{$item['enabled'] == 0 ? 'color:red' : ''}"><label class="checkbox"><input type="checkbox" value="{$sid}"{$item['checked'] ? 'checked="checked"' : ''}> {$item.nickname}</label></li>
+	  		</foreach>
+  		</ul>
+  	</foreach>
+  </div>
+  <div class="modal-footer">
+  	<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+	<button type="button" class="js-save btn btn-primary" aria-hidden="true">保存</button>
+  </div>
+  <script type="text/javascript">
+	(function() { 
+		var $form = $('#customer_service_form');
+		$form.find('.js-save').on('click', function(){
+			var $btn = $(this);
+			var parameters = {goods: '{$goods}', list: []};
+			$form.find('.modal-body :checked').each(function(){
+				parameters.list.push(this.value);
+			});
+			parameters.list = parameters.list.join(',');
+			
+			$.ajax({
+				url: '__ACTION__',
+				type: 'post',
+				dataType: 'json',
+				data: parameters,
+				success: function(){
+					$form.modal('hide');
+				}
+			});
+			return false;
+		});
+	})();
+  </script>
+</div>

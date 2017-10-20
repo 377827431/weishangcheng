@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="店铺介绍"/>
+    <style>
+        .content-body{box-sizing:border-box;width:100%;padding-left:4%;padding-right:4%;}
+        .button_yellow{color:white;background-color: #da8f3e;line-height:42px;border-radius:6px;font-size:16px;font-family:"微软雅黑";text-align:center;color:white;}
+        .p_info{font-size:14px;font-family:"微软雅黑";line-height:20px;}
+        .profile_con{position:relative;width:100%;height:auto;padding-bottom:2em;border:1px solid #bdbdbd;background-color: white;margin-top:20px;}
+        #shop_profile{width:100%;resize:none;padding:.5em;box-sizing:border-box;border:none;outline:none;}
+        span.fontnum{color:#acacac;position:absolute;bottom:0.5em;right:1em;}
+        span.fontnum::after{content:"/40";}
+        .placeholder_p{margin-top: 10px;color: #999;}
+    </style>
+</head>
+<body style="background-color: #f4f4f4;">
+    <div class="container">
+        <div class="content ">
+            <div class="content-body" style="">
+                <div class="profile_con">
+                    <textarea name="" id="shop_profile" cols="30" rows="4" class="p_info"><?php if(empty($desc)){ ?>欢迎光临我的小店，喜欢就拍下哦!<?php }else{ ?>{$desc}<?php }?></textarea>
+                    <span class="fontnum"><span>
+                </div>
+                <p class="placeholder_p">最大可输入40个中文字、英文或标点符号</p>
+
+                <div class="button_yellow save" style="cursor:pointer;margin-top:30px;margin-bottom:24px;">保&nbsp;存</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        require(['jquery'],function(){
+            //用来判断输入框内容是否发生变化
+            var prve_value = "";
+            //最大输入位数 中文2位，英文1位
+            var MAX_FONT_NUM = 40;
+            //用"aa"替换字符串的中文，然后返回字符串长度
+            function getChineseStrLen(str){
+                return str.length;
+            }
+            //根据位数返回子字符串 如果参数传入的是("aaa杨东垒",8)则返回aaa杨东
+            function chineseSubStr(str,length){
+                //传入str本来就比length小，直接返回
+                if(getChineseStrLen(str)<=length){
+                    return str;
+                }
+                var aChar = str.split("");
+                var resultStr = [];
+                var resultLength = 0;
+                for(var i = 0;i< str.length;i++){
+                    var _temp_ch = aChar[i];
+                    if(/[\u0391-\uFFE5]/.test(_temp_ch)){
+                        resultLength += 1;
+                    }else{
+                        resultLength += 1;
+                    }
+                    if(resultLength <= length){
+                        resultStr.push(_temp_ch);
+                    }else{
+                        break;
+                    }
+                }
+                return resultStr.join("");
+            }
+            //保存店铺简介
+            $("div.save").click(function(){
+                var desc = $("#shop_profile").val();
+                $.ajax({
+                    url: "/seller/shop/profile",
+                    data: {desc: desc},
+                    type: 'post',
+                    success: function(){
+                        toast.show('已保存');
+                        window.location.href = "/seller/shop";
+                    }
+                });
+            })
+            $("#shop_profile").on("input",function(){
+                if($.trim($(this).val()) == prve_value){
+                    return false;
+                }else{
+                    prve_value = $.trim($(this).val());
+                    var font_num = getChineseStrLen(prve_value);
+                    if(font_num>MAX_FONT_NUM){
+                        var valid_str = chineseSubStr(prve_value,MAX_FONT_NUM);
+                        $(this).val(valid_str);
+                        $("span.fontnum").text(getChineseStrLen(valid_str));
+                    }else{
+                        $("span.fontnum").text(font_num);
+                    }
+                }
+            })
+            $("span.fontnum").text(getChineseStrLen($('#shop_profile').val()));
+        })
+    </script>
+</body>
+</html>

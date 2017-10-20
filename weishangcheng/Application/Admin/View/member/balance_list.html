@@ -1,0 +1,45 @@
+<div id="scoreModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myscoreModalLabel" aria-hidden="true">
+	<div class="modal-body" style="padding:0;height: 270px;overflow:hidden">
+		<table class="table" data-url="__MODULE__/api/getMemberBalance?mid={$_GET['mid']}" data-height="250">
+			<thead>
+				<th data-field="add_balance" data-width="60" data-align="center">新可提金额</th>
+				<th data-field="add_wallet" data-width="60" data-align="center">新不可提金额</th>
+				<th data-field="add_score" data-width="60" data-align="center">新增积分</th>
+				<th data-field="balance" data-width="60" data-align="center">可提金额</th>
+				<th data-field="wallet" data-width="60" data-align="center">不可提金额</th>
+				<th data-field="score" data-width="60" data-align="center">积分</th>
+				<th data-field="reason" data-width="50" data-align="center">原因</th>
+				<th data-field="created" data-width="150" data-align="center">时间</th>
+			</thead>
+		</table>
+	</div>
+	<div class="modal-footer">
+		<button class="btn js-add-balance hide" data-dismiss="modal" aria-hidden="true">补发积分</button>
+        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">关闭</button>
+	</div>
+    <style>
+    .modal .pull-left{display:none;}
+    .modal .bootstrap-table{border-radius: 8px;}
+    .modal .bootstrap-table .fixed-table-container{padding:0;margin:0}
+    </style>
+	<script type="text/javascript">
+	(function() {
+		var $modal = $('#scoreModal')
+			,$table = $modal.find('table');
+		$table.gridView();
+		
+		$modal.modal();
+		$modal.on('hidden', function(){
+			$modal.remove();
+			return false;
+		});
+		
+		var $btnAddBalance = $('#toolbar').find('button[data-name="reissue_score"]');
+		if($btnAddBalance.length > 0){
+			$modal.find('.js-add-balance').removeClass('hide').on('click', function(){
+				$btnAddBalance.trigger('click')
+			});
+		}
+	})(); 
+	</script>
+</div>

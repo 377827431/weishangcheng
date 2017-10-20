@@ -1,0 +1,5 @@
+SELECT activity.id AS activity_id, activity.title, goods_id, activity.main_tag, activity.price_title,
+                    activity.price, activity.score, activity.start_time, activity.end_time, activity.total, activity.sold,
+                    pic_url
+                FROM mall_groupon AS activity
+                WHERE activity.id IN (101,)

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <include file="_layout/mall.head.html" title="我的足迹" />
+</head>
+<style>
+    .my_tracks{
+        width: 100%;
+        overflow:hidden;
+    }
+    .my_tracks ul li{
+        width:100%;
+        margin-bottom: 20px;
+        background: #ffffff;
+    }
+
+    .my_tracks ul li a{
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex;
+        /* -webkit-box-align: center;
+        -webkit-align-items: center;
+        align-items: center; */
+        padding: 15px;
+        position: relative;
+    }
+    .my_tracks_left {
+        margin-right: .8em;
+        width: 90px;
+        height: 90px;
+        line-height: 60px;
+        text-align: center;
+        margin-top: 0rem;
+    }
+    .my_tracks_left img {
+        width: 100%;
+        max-height: 100%;
+        vertical-align: top;
+    }
+    .my_tracks_right {
+        -webkit-box-flex: 1;
+        -webkit-flex: 1;
+        flex: 1;
+        min-width: 0;
+    }
+    .my_tracks_right p {
+        color: #000;
+        font-size: 14px;
+        line-height: 1.2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-height: 25px;
+        width: 95%;
+        height: 48px;
+    }
+    .my_tracks_right div{
+        margin-top: 1rem;
+    }
+    .Price_box{
+        float: left;
+        font-size: 13px;
+        color: #da8f3e;
+        position: relative;
+        top: .2rem;
+    }
+    .Price_box span{
+        text-align: left;
+    }
+    .share_box{
+        float: right;
+    }
+    .price_icon{
+        font-family: arial;
+        font-size:16px;
+    }
+    .price_num{
+        position: relative;
+        font-size:16px;
+        font-family: avenir arial;
+        right: .5rem;
+    }
+    .share_box div{
+        cursor: pointer;
+        margin-top: 0px !important;
+        float: right;
+        border: 1px solid #da8f3e;
+        padding: 5px 15px;
+        color: #da8f3e;
+        text-align: center;
+        border-radius: 20px;
+        position: relative;
+        z-index: 100;
+    }
+    .my_tracks ul li a:before {
+        content: '';
+        position: absolute;
+        top: 46%;
+        right: 15px;
+        margin-top: -5px;
+        width: 7px;
+        height: 7px;
+        border-top: 1px solid #da8f3e;
+        border-right: 1px solid #da8f3e;
+        -webkit-transform: rotate(45deg);
+        -moz-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+    @media (min-width: 480px){
+        body >.my_tracks {
+            max-width: 480px;
+            margin: 0 auto;
+        }
+    }
+
+    @media(max-width: 320px ) {
+        .my_tracks_right p{
+            font-size: 12px !important;
+        }
+        .my_tracks_left{
+            width: 80px;
+            height: 80px;
+            margin-top: 0.3rem;
+        }
+    }
+    #share_code_body {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
+        z-index: 99999;
+        display: none;
+    }
+    /* #share_code_body .close_icon {
+        position: absolute;
+        width: 30px;
+        border-radius: 15px;
+        height: 30px;
+        top: -6px;
+        right: -6px;
+        z-index: 100000;
+        background: white url(/img/mall/new_close_icon.png) no-repeat;
+        -webkit-background-size: 100% 100%;
+        background-size: 100% 100%;
+    } */
+</style>
+<body>
+    <!-- 分享弹窗 -->
+    <div id="share_code_body" style="display: none;">
+        <div class="share_code_body" style="width:100%;background-color:transparent;margin-top:50px; position: relative;">
+            <span class="close_icon" style="position: absolute; background:none;color:white;top:-40px;right:5%;font-size:25px;width:40px;height:40px;font-family:'宋体';text-align:center;line-height:40px;">×</span>
+                <img class="share_logo" src="" alt="" style="display:block;margin:0 auto; width:80%;border-radius:8px;">
+                <img class="share_logo" src="" alt="" style="display:block;width:80%;border-radius:8px;position:absolute;top:0px;left:10%;opacity:0;">
+                <div style="width:80%;margin:0 auto;height:40px;margin-top:10px;line-height:40px;text-align:center;color:white;background-color:#e4bc91;font-size:15px;border-radius:8px;">长按保存图片</div>
+            <!-- <img class="share_logo" src="https://seller.xingyebao.com/img/mall/qr_code_icon.jpg"> -->
+        </div>
+    </div>
+    <!-- 分享弹窗 end -->
+    <!-- 我的足迹 -->
+    <div class="my_tracks">
+        <ul>
+            <!-- <ul id="js-goods-list" class="sc-goods-list pic clearfix size-2">
+
+            </ul> -->
+            <div class="container">
+                <div class="content">
+                    <div class="content-body">
+                        <!--商品列表-->
+                        <section class="js-goods-container">
+                            <!-- <div class="js-sort tabber tabber-n4 tabber-double-11 clearfix" style="position: fixed; top: 44px;">
+                                <a href="javascript:;" data-sort="zonghe">综合</a>
+                                <a href="javascript:;" data-sort="sales">销量</a>
+                                <a href="javascript:;" data-sort="hot">人气</a>
+                                <a href="javascript:;" data-sort="price">价格</a>
+                            </div> -->
+                            <ul id="goods-list" class="sc-goods-list pic clearfix size-2" style="padding:0px;">
+                                <li style="background: none;position: relative;top: 10rem;"><div class="empty-list list-finished"><p class="font-size-12">正在加载中...</p></div></li>
+                            </ul>
+                            <div class="x-pullfresh-more"></div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+            <!--<foreach name="data" item="item">-->
+                <!--<li>-->
+                    <!--<a href="__MODULE__/goods?id={$item.id}">-->
+                        <!--<div class="my_tracks_left">-->
+                            <!--<img src="{$item.pic_url}" alt="">-->
+                        <!--</div>-->
+                        <!--<div class="my_tracks_right">-->
+                            <!--<p>{$item.title}</p>-->
+                            <!--<div>-->
+                                <!--<em class="Price_box">-->
+                                    <!--<span class="price_icon">￥</span>-->
+                                    <!--<span class="price_num">{$item.price}</span>-->
+                                <!--</em>-->
+                                <!--<span class="share_box">-->
+                                <!--<div class="share_box_btn" data-id="{$item.ids}" shop-id="{$item.ids}">分享</div>-->
+                                <!--<div class="remove_list" data-id="{$item.ids}" style="margin-right:.5rem;">删除</div>-->
+                            <!--</span>-->
+                                <!--<div style="clear:both"></div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</a>-->
+                <!--</li>-->
+            <!--</foreach>-->
+            <!-- <li>
+                <a href="javascript:void(0)">
+                    <div class="my_tracks_left">
+                        <img src="//gw2.alicdn.com/bao/uploaded/i3/2146742267/TB1avmYcTZRMeJjSspoXXcCOFXa_!!0-item_pic.jpg_250x250.jpg" alt="">
+                    </div>
+                    <div class="my_tracks_right">
+                        <p>网纱拼针织长袖连衣裙收腰显瘦中长 款打底裙17新款裙子女</p>
+                        <div>
+                            <em class="Price_box">
+                                <span class="price_icon">￥</span>
+                                <span class="price_num">150</span>
+                            </em>
+                            <span class="share_box">
+                                <div class="share_box_btn">分享</div>
+                                <div style="margin-right:.5rem;">删除</div>
+                            </span>
+                            <div style="clear:both"></div>
+                       </div>
+                    </div>
+                </a>
+            </li> -->
+        </ul>
+    </div>
+    <!-- 我的足迹 end -->
+</body>
+<script>
+    require(["buyer/goods/list2", "buyer/search"], function(glv, searchbar){
+        var $sortList = $(".js-sort"),
+            $container = $("#goods-list"),
+            size = 8;
+        searchbar.data.size = size;
+        console.log(searchbar);
+        glv.doRefresh({
+             url: "__MODULE__/trace/viewed",
+            data: searchbar.data,
+            cache:false,
+            container: $container
+        });
+
+        // 固定顶部排序
+        var fixedTop = $sortList.offset().top - $sortList.height() * 2;
+        var fixed = false;
+        window.addEventListener("scroll", function(){
+            if(document.body.scrollTop >= fixedTop){
+                if(!fixed){
+                    fixed = true;
+                    $sortList.css({position: "fixed", top: "44px"});
+                }
+            }else if(fixed){
+                fixed = false;
+                $sortList.css({position: ""});
+            }
+        }, false);
+    });
+
+    require(['jquery','h5/pullrefresh'], function($,pullfresh){
+        $("body").on("click",".remove_list",function(e){
+            if(confirm('确认删除吗？')){
+                var id = $(this).attr('data-id');
+                $.ajax({
+                    url: '__MODULE__/trace/delete',
+                    type: 'post',
+                    data: {id: id},
+                    dataType: 'json',
+                    success: function(){
+                        toast.show('删除成功');
+                        pullfresh.doRefresh();
+                    }
+                });
+                return false;
+            }
+            return false;
+        })
+        $("body").on("click",".share_box_btn",function(){
+           var shop_id =  $(this).attr("shop-id");
+           var data_id = $(this).attr("data-id");
+            var price = $(this).attr("data-price");
+            //初始化
+            $.ajax({
+                url: 'https://seller.xingyebao.com/login/goods_qr',
+                type: 'post',
+                data: {shop_id:shop_id,id:data_id,price:price},
+                dataType: 'json',
+                success: function(data){
+                    $('.share_logo').attr('src', data);
+                    $('#share_code_body').show();
+                }
+            });
+            return false;
+        })
+        //关闭弹窗
+        $(".close_icon").click(function(){
+            $("#share_code_body").hide();
+            $(".share_logo").removeAttr("src");
+        })
+    })
+</script>
+</html>

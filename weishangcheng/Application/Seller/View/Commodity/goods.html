@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="商品编辑" />
+    <link rel="stylesheet" href="__CDN__/css/seller/sale_gift_cfg.css">
+    <style>
+        .icon_2017060901::before{content:"";display:inline-block;vertical-align:middle;width:1em;height:1em;margin-right:.5em;background:url("__CDN__/img/seller/2017060901.png") no-repeat;background-size:100% 100%;}
+        .icon_2017060902::before{content:"";display:inline-block;vertical-align:middle;width:1em;height:1em;margin-right:.5em;background:url("__CDN__/img/seller/2017060902.png") no-repeat;background-size:100% 100%;}
+        .icon_2017060903::before{content:"";display:inline-block;vertical-align:middle;width:1em;height:1em;margin-right:.5em;background:url("__CDN__/img/seller/2017060903.png") no-repeat;background-size:100% 100%;}
+        .icon_2017060904::before{content:"";display:inline-block;vertical-align:middle;width:1em;height:1em;margin-right:.5em;background:url("__CDN__/img/seller/2017060904.png") no-repeat;background-size:100% 100%;}
+        .icon_2017060905::before{content:"";display:inline-block;vertical-align:middle;width:1em;height:1em;margin-right:.5em;background:url("__CDN__/img/seller/2017060905.png") no-repeat;background-size:100% 100%;}
+        .icon_2017060906::before{content:"";display:inline-block;vertical-align:middle;width:1em;height:1em;margin-right:.5em;background:url("__CDN__/img/seller/2017060906.png") no-repeat;background-size:100% 100%;}
+        .icon_2017060907::before{content:"";display:inline-block;vertical-align:middle;width:1em;height:1em;margin-right:.5em;background:url("__CDN__/img/seller/2017060907.png") no-repeat;background-size:100% 100%;}
+        .icon_2017060908::before{content:"";display:inline-block;vertical-align:middle;width:1em;height:1em;margin-right:.5em;background:url("__CDN__/img/seller/2017060908.png") no-repeat;background-size:100% 100%;}
+        .icon_2017060909::before{content:"";display:inline-block;vertical-align:middle;width:1em;height:1em;margin-right:.5em;background:url("__CDN__/img/seller/2017060909.png") no-repeat;background-size:100% 100%;}
+        #good_title{display:block;border:none;outline:none;width:100%;resize: none;font-size: 14px;}
+        span.fontnum{float:right;}
+        span.fontnum::after{content:"/30";clear:both;}
+        div.category div.name::after{content:"";float:right;width:7px;height:7px;border-top:2px solid #cdcdcd;border-right:2px solid #cdcdcd;transform: rotate(45deg);position: relative;top: 22px}
+		.item_photo_container ul li{ cursor: pointer;}
+		.preview_box{
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+			position: fixed;
+			top: 0;
+			left: 0;
+			background: rgba(0,0,0,1);
+			z-index: 1000;
+			display: none;
+			cursor: pointer;
+		}
+		.preview_img{
+		  display:flex;
+		  align-items:center;/*垂直居中*/
+		  justify-content: center;/*水平居中*/
+		  width:100%;
+		  height:100%;
+		  background: rgba(0,0,0,1);
+		}
+		.preview_box img{
+	        max-width: 100%;
+	    	max-height: 100%;
+	    	vertical-align: middle;
+	    	
+		}
+		@keyframes zoomIn {
+		  from {
+		    opacity: 0;
+		    transform: scale3d(.3, .3, .3);
+		  }
+		
+		  50% {
+		    opacity: 1;
+		  }
+		}
+		.zoomIn {
+		  animation-name: zoomIn;
+		  animation-duration: .5s;
+		  animation-direction:alternate;
+		}
+
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <div class="content ">
+        <div class="content-body">
+            <div id="category" style="display:none;">
+                <div class="modal-backdrop js-cancel"></div>
+                <div class="modal">
+                    <div class="address-ui address-list">
+                        <h4 class="address-title">选择分类</h4>
+                        <div class="cancel-img js-cancel"></div>
+                        <div class="js-address-container address-container block block-list border-top-0">
+                            <foreach name="tag_list" item="value">
+                                <if condition="$value['is_select'] eq 1">
+                                <div data-index="{$value['id']}" class="js-address-item block-item">
+                                <div class="icon-check icon-checked"></div>
+                                <else />
+                                <div data-index="{$value['id']}" class="js-address-item block-item">
+                                <div class="icon-check "></div>
+                                </if>
+                                <p><span class="address-name" style="margin-right: 5px;">{$value.name}</span></p>
+                                <if condition="$value['name'] neq '其他'">
+                                <div class="address-opt js-edit-address js-edit-category"><i class="icon-circle-info"></i></div>
+                                </if>
+                            </div>
+                            </foreach>
+                        </div>
+                        <div class="add-address js-add-address category_add">
+                            <span class="icon-add"></span>
+                            <a class="" href="javascript:;">新增分类</a>
+                            <span class="icon-arrow-right"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="edit_categroy" style="display:none;">
+                <div class="modal-backdrop js-cancel"></div>
+                <div class="modal">
+                    <div class="js-address-fm address-ui address-fm" method="post" action="/address/edit" novalidate="novalidate">
+                        <h4 class="address-fm-title">商品分类</h4>
+                        <div class="js-cancel cancel-img edit_categroy_cancel"></div>
+                        <div class="block form" style="margin:0;">
+                            <input type="hidden" name="id" value="">
+                            <div class="block-item no-top-border">
+                                <label>分类名称</label>
+                                <input class="nick" type="text" value="" placeholder="分类名称">
+                            </div>
+                            <div class="block-item" style="display:none;">
+                                <label>排　　序</label>
+                                <input class="sort_id" type="number" value="" placeholder="分类排序">
+                            </div>
+                        </div>
+                        <div class="action-container">
+                            <button type="button" class="js-address-delete btn btn-block edit_categroy_delete">删除</button>
+                            <button type="button" class="js-address-delete btn btn-block edit_categroy_cancel">取消</button>
+                            <button type="submit" class="btn btn-block edit_categroy_save" name="save" value="1" style="background-color:#da8f3e;color:white;">保存</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content_span"></div>
+            <div class="item_photo_container" style="overflow: hidden;">
+                <p class="icon_2017060901">商品主图</p>
+                <div id="item_photo_dc" style="padding-bottom: 10px;">
+                    <ul class="tile__lists" >
+                        <foreach name="data['images']" item="item">
+                            <li><img src="{$item}"><i class="delete_icon"></i></li>
+                        </foreach>
+                        <li class="add_item_photo"><img src="__CDN__/img/seller/add_photo.png">
+                            <!-- <input type="file" id="upfile" onchange="$('#upJQuery').click()"> -->
+                        </li>
+                    </ul>
+                   
+                    <div style="display: none">
+                        <p><input type="file" id="upfile" onchange="$('#upJQuery').click()"></p>
+                        <p><input type="button" id="upJQuery" value=""></p>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <div class="content_span"></div>
+            <div class="item_title_container">
+                <p class="icon_2017060905">商品标题</p>
+                <!-- <textarea placeholder="">{$data.title}</textarea> -->
+                <textarea id="good_title" type="text" rows="2" placeholder="请填写商品标题"/>{$data.title}</textarea>
+                <span class="fontnum"></span><!--{$data.title_num}-->
+                <div style="clear:both;"></div>
+            </div>
+            <if condition="$is_sku eq 1">
+
+            </if>
+            <div class="content_span"></div>
+            <a class="click_price_cfg_btn" data-href="/seller/commodity/price_cfg?id={$data['id']}" style="cursor:pointer;"><div class="value_cfg icon_2017060904">设置售价</div></a>
+
+
+            <div class="content_span"></div>
+            <div class="js-order-address express-panel express-panel-edit category" style="width:100%;box-sizing:border-box;padding-left:4%;padding-right:4%;position:relative;">
+                <div class="name icon_2017060903" style="line-height:53px;font-size:14px;">分类名称<span class="nick" style="width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;word-break:break-all;text-align:right;font-size:14px;position:absolute;right:0px;right:calc(4% + 10px)">{$tags_name}</span>
+                </div>
+            </div>
+            <!-- <div class="content_span"></div>
+            <div class="item_value_cfg">
+                <ul>
+                    <li><span>设置售价</span><input type="text" value="{$data.price}"/></li>
+                </ul>
+            </div> -->
+            <div class="content_span"></div>
+            <a class="goto_tuwenxiagnqing_btn" data-href="/seller/commodity/modify_gift_detail?id={$data['id']}"><div class="modify_gift_detail icon_2017060901">图文详情</div></a>
+            <!--<div class="content_span"></div>-->
+            <!--<div class="offline_gift post_free">-->
+                <!--<span class="icon_2017060906">包邮</span>-->
+                <!--<input class="mui-switch mui-switch-animbg" type="checkbox" {$data['is_display'] ? 'checked' : ''}>-->
+            <!--</div>-->
+            <div class="content_span"></div>
+            <div class="offline_gift up_down_gift">
+                <span class="icon_2017060909">上架此商品</span>
+                <input class="mui-switch mui-switch-animbg" type="checkbox" {$data['is_display'] ? 'checked' : ''}>
+            </div>
+            <div class="content_span"></div>
+            <div class="offline_gift suyuan">
+                <span class="icon_2017060908">是否在采源宝自动生成采购单</span>
+                <input class="mui-switch mui-switch-animbg" type="checkbox" {$data['is_suyuan'] ? 'checked' : ''}>
+            </div>
+            <div class="orange_btn save_btn">保存</div>
+        </div>
+    </div>
+</div>
+<!--图片预览布局-->
+<div class="preview_box">
+	<div class="preview_img">
+		<img src=""/>
+	</div>
+</div>
+<!--/图片预览布局-->
+<input type="hidden" class="goods_id_save" value="{$data['id']}" />
+<input type="hidden" class="tao_is_save" value="{$data['istao']}" />
+<input type="hidden" class="cat_is_save" value="{$tags}" />
+<input type="hidden" class="cdn_url" value="{$data['cdn']}" />
+<script>
+    // require(["seller/payconfirm"], function(payConfirm){
+    //     payConfirm.init({:json_encode($cat_list)});
+    // });
+    //用来判断输入框内容是否发生变化
+    require(['jquery','sortable','cookie','lrz'],function($,Sortable){
+        var prve_value = "";
+        //最大输入位数 中文2位，英文1位
+        var MAX_FONT_NUM = 60;
+        //用"aa"替换字符串的中文，然后返回字符串长度
+        function getChineseStrLen(str){
+            return str.replace(/[\u0391-\uFFE5]/g,"aa").length;
+        }
+        //根据位数返回子字符串 如果参数传入的是("aaa杨东垒",8)则返回aaa杨东
+        function chineseSubStr(str,length){
+            //传入str本来就比length小，直接返回
+            if(getChineseStrLen(str)<=length){
+                return str;
+            }
+            var aChar = str.split("");
+            var resultStr = [];
+            var resultLength = 0;
+            for(var i = 0;i< str.length;i++){
+                var _temp_ch = aChar[i];
+                if(/[\u0391-\uFFE5]/.test(_temp_ch)){
+                    resultLength += 2;
+                }else{
+                    resultLength += 1;
+                }
+                if(resultLength <= length){
+                    resultStr.push(_temp_ch);
+                }else{
+                    break;
+                }
+            }
+            return resultStr.join("");
+        }
+        $("#good_title").on("input",function(){
+            if($.trim($(this).val()) == prve_value){
+                return false;
+            }else{
+                prve_value = $.trim($(this).val());
+                var font_num = getChineseStrLen(prve_value);
+                if(font_num>MAX_FONT_NUM){
+                    var valid_str = chineseSubStr(prve_value,MAX_FONT_NUM);
+                    $(this).val(valid_str);
+                    $("span.fontnum").text(Math.floor(getChineseStrLen(valid_str)/2));
+                }else{
+                    $("span.fontnum").text(Math.floor(font_num/2));
+                }
+            }
+        })
+        $("span.fontnum").text(Math.floor(getChineseStrLen($("#good_title").val())/2)); 
+        $(function(){
+            var price = $('.item_value_cfg input').val();
+            var id = $('.goods_id_save').val();
+            $.ajax({
+                url:"/seller/commodity/price_chg",
+                type: 'post',
+                data: {price:price,id:id},
+                success:function(data){
+                    $('.item_value_cfg input').val(data.price);
+                   
+                }
+            });
+            //编辑图片排序
+            Sortable.create(item_photo_dc, {
+                animation: 150,
+                handle: '.my-handle'
+            });
+            $(".delete_icon").each(function(){
+                var that = this;
+                Sortable.utils.on($(this)[0],"touchstart",function(e){
+                    $(that).parent().remove();
+                    e.stopPropagation();
+                });
+            });
+            [].forEach.call(item_photo_dc.getElementsByClassName('tile__lists'), function (el) {
+                Sortable.create(el, {
+                    group: 'photo',
+                    animation: 150,
+                    filter:'.add_item_photo',
+                    onStart : function(Event ,evt){
+                        $(".tile__lists .add_item_photo").hide();
+                       
+                    },
+                    onEnd : function(Event ,evt){
+                        $(".tile__lists .add_item_photo").show();
+                        
+                    }
+                });   
+            });
+            Sortable.utils.on($('.add_item_photo')[0],"touchstart",function(e){
+                    $("#upfile").trigger("click");
+                    e.stopPropagation();
+            });
+    	})  
+        $("a.click_price_cfg_btn").click(function(){
+            setStorage($('.goods_id_save').val());
+            window.location.href = $(this).attr('data-href');
+        })
+        $("a.goto_tuwenxiagnqing_btn").click(function(){
+            setStorage($('.goods_id_save').val());
+            window.location.href = $(this).attr('data-href');
+        })
+        function setStorage(good_id){
+            var good_title = $("#good_title").val();
+            var good_pic_list =  new Array();
+            $("div.item_photo_container ul li img").not(':last').each(function(){
+                good_pic_list.push($(this).attr("src"));
+            });
+            var good_sku_id = $("input.cat_is_save").val();
+            var good_sku_nick = $("div.category span.nick").text();
+            var updown = $('.up_down_gift input[type="checkbox"]').is(':checked')?1:0;
+            var suyuan = $('.suyuan input[type="checkbox"]').is(':checked')?1:0; 
+            var _save = {
+                good_title:good_title,
+                good_pic_list:good_pic_list,
+                good_sku_id:good_sku_id,
+                good_sku_nick:good_sku_nick,
+                updown:updown,
+                suyuan:suyuan
+            }
+            var _save_str = JSON.stringify(_save);
+            $.cookie('ydl_good_id'+good_id,_save_str);
+        }
+        function getStorage(good_id){
+            var _save_str = $.cookie('ydl_good_id'+good_id);
+            if(_save_str == "null" || _save_str == undefined || _save_str == null){
+                return false;
+            }else{
+                var _save = JSON.parse(_save_str);
+                //设置商品图片
+                var img_html = "";
+                for(var i = 0;i<_save.good_pic_list.length;i++){
+                    img_html += '<li>';
+                    img_html += '<img src="' + _save.good_pic_list[i] + '">';
+                    img_html += '<i class="delete_icon"></i>';
+                    img_html += '</li>';
+                }
+                img_html += '<li class="add_item_photo"><img src="http://seller.xingyebao.cn/img/seller/add_photo.png"></li>';
+                img_html += '<div style="display: none"><p><input type="file" id="upfile" onchange="$('+'#upJQuery'+').click()"></p><p><input type="button" id="upJQuery" value=""></p></div>';
+                img_html += '<div class="clearfix"></div>';
+                $("div.item_photo_container ul").html(img_html);
+                //设置商品标题
+                var good_title = _save.good_title;
+                $("#good_title").text(good_title);
+                //设置分类名称
+                var good_sku_nick = _save.good_sku_nick;
+                var good_sku_id = _save.good_sku_id;
+                $("input.cat_id_save").val(good_sku_id);
+                $("div.category span.nick").text(good_sku_nick);
+                $('.cat_is_save').val(good_sku_id);
+                var good_sku_array = good_sku_id.split(',');
+                $("#category .block-item").find(".icon-check").toggleClass("icon-checked",false);
+                if(good_sku_array != ""){
+                       for(var i = 0;i<good_sku_array.length;i++){
+                        $("#category .block-item[data-index="+good_sku_array[i]+"]").find(".icon-check").toggleClass("icon-checked",true);
+                    } 
+                }
+                // 设置商品上下 溯源
+                var suyuan = _save.suyuan;
+                var updown = _save.updown;
+                if(updown == 1 || updown == "1"){
+                    $(".up_down_gift").html('<span class="icon_2017060909">上架此商品</span><input class="mui-switch mui-switch-animbg" type="checkbox" checked>');
+                }else{
+                    $(".up_down_gift").html('<span class="icon_2017060909">上架此商品</span><input class="mui-switch mui-switch-animbg" type="checkbox">');
+                }
+                if(suyuan == 1 || suyuan == "1"){
+                    $("div.suyuan").html('<span class="icon_2017060908">是否在采源宝自动生成采购单</span><input class="mui-switch mui-switch-animbg" type="checkbox" checked>');
+                }else{
+                    $("div.suyuan").html('<span class="icon_2017060908">是否在采源宝自动生成采购单</span><input class="mui-switch mui-switch-animbg" type="checkbox">');
+                }
+            }
+        }
+            getStorage($("input.goods_id_save").val()); 
+    })
+   
+</script>
+<script src="__CDN__/js/seller/sale_gift_cfg.js?v=2017092101"></script>
+</body>
+</html>

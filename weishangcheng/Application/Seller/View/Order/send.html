@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="发货" />
+    <link rel="stylesheet" href="__CDN__/css/seller/send.css">
+</head>
+
+<body>
+<div class="container">
+    <div class="content ">
+        <div class="content-body">
+            <div class="div_span">收货信息</div>
+            <ul class="receive_info">
+                <li><span>收件人</span><span><input type="text" value="{$data.name}" readonly="readonly" /><span></span></span></li>
+                <li><span>联系电话</span><span><input class="contect_tel" type="text" value="{$data.mobile}" readonly="readonly" /><span></span></span></li>
+                <li><span>收货地址</span><span><textarea spellcheck="false" readonly="readonly">{$data.detail}</textarea><span></span></span></li>
+                <li><span>买家留言</span><span><textarea spellcheck="false" placeholder="无" readonly="readonly">{$data.remark}</textarea><span></span></span></li>
+            </ul>
+            <div class="div_span">快递发货</div>
+            <ul class="kuaidi_info">
+                <li><span>快递公司</span><span><input class="kuaidi" type="text" placeholder="请输入快递公司名称"></span></span></li>
+                <li><span>录入单号</span><span><input class="kuaidi_num" type="text" placeholder="请输入快递单号"></span></li>
+            </ul>
+            <div class="btn_container">
+                <div class="send_btn">发货</div>
+            </div>
+        </div>
+    </div>
+</div>
+<input class="send_tid" type="hidden" value="{$data.id}" />
+<script src="__CDN__/js/seller/send.js"></script>
+</body>
+</html>

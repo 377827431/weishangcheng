@@ -1,0 +1,39 @@
+<div id="feedback_form" method="post" action="__ACTION__?goods_id={$goods_id}" class="modal modal-small hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3>反馈信息</h3>
+  </div>
+  <div class="modal-body">
+    <textarea class="js-question" placeholder="请输入您的反馈，不少于10个字符" maxlength="300" style="margin: 0px; width: 514px; height: 130px;"></textarea>
+  </div>
+  <div class="modal-footer">
+  	<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+  	<button type="button" class="btn btn-primary" aria-hidden="true">保存</button>
+  </div>
+	<script type="text/javascript">
+		(function() { 
+			var $form = $('#feedback_form'),
+				$question = $form.find('.js-question');
+			$form.modal().on('hidden', function(){
+		    	$form.remove();
+				return false;
+			});
+			
+			$form.find('.btn-primary').on('click', function(){
+				var question = $question.val();
+				if(question == '' || question.length < 10){
+					$question.focus();
+					return false;
+				}
+				
+				$.ajax({
+					url: '__MODULE__/goods/feedback',
+					data:{goods_id: {$goods_id}, question: question, tid: '{$tid}'},
+					type: 'post'
+				});
+				$form.modal('hide');
+				return false;
+			});
+		})();
+	</script>
+</div>

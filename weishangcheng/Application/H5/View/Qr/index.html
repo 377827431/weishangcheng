@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <include file="_layout/mall.head.html" />
+    <style type="text/css">
+img{width:100%}
+.img-list{width:100%;display:inline-block}
+.img-list a{display:block;}
+.img-list tr td+td{padding-left:5px}
+    </style>
+</head>
+<body class="body-fixed-bottom">
+    <div class="container rule-container">
+        <div class="content">
+        	<img alt="" src="__CDN__/img/ragent/web_bg.jpg">
+            <table class="img-list">
+                <tr>
+                    <td><a href="javascript:;" data-type="jingdian"><img src="__CDN__/img/ragent/jingdian.jpg"></a></td>
+                    <td><a href="javascript:;" data-type="yuangou"><img src="__CDN__/img/ragent/yuangou.jpg"></a></td>
+                    <td><a href="javascript:;" data-type="chunjie"><img src="__CDN__/img/ragent/chunjie.jpg"></a></td>
+                </tr>
+                <tr>
+                    <td><a href="javascript:;" data-type="gaobige1"><img src="__CDN__/img/ragent/gaobige1.jpg"></a></td>
+            		<td><a href="javascript:;" data-type="gaobige2"><img src="__CDN__/img/ragent/gaobige2.jpg"></a></td>
+            		<td><a href="javascript:;" data-type="gaobige3"><img src="__CDN__/img/ragent/gaobige3.jpg"></a></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <include file="_layout/mall.footer.html" />
+    <script type="text/javascript">
+    require(['jquery', 'swiper'], function(){
+    	$('.img-list a').on('click', function(){
+    		var type = $(this).data('type');
+    		$.ajax({
+    			url: '__CONTROLLER__/recommond?openid={$openid}&type='+type,
+    			waitting: '正在生成',
+    		    dataType: 'json',
+    		    success: function(data){
+					var $body = $('body');
+					var html = '<div id="recommond" class="swiper-container swiper-container-horizontal full-screen">'+
+						'<div class="swiper-wrapper" style="line-height:'+document.documentElement.clientHeight + 'px">'+
+							'<div class="swiper-slide swiper-slide-active"><img src="'+data.link+'"></div>'+
+						'</div>'+
+						'<div class="swiper-tip">温馨提示：长按图片保存到手机</div>'+
+						'<div id="swiper-pagination-swiper-pagination-recommond" class="pagination"></div></div>';
+					
+					$body.append(html);
+					var $modal = $('#recommond');
+					$modal.on('click', function(){
+						$modal.remove();
+						return false;
+					});
+					new Swiper('#recommond', {loop: false, pagination : '#swiper-pagination-recommond'});
+    		    }
+    		});
+    		return false;
+    	});
+    });
+    </script>
+</body>
+</html>

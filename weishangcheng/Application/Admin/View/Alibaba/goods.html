@@ -1,0 +1,83 @@
+<toolbar id="toolbar">
+	<form class="search-box">
+        <input type="text" name="name" value="{$_GET['shop']}" placeholder="完整店铺名" style="width:150px">
+        <input type="text" name="key" placeholder="商品名称" maxlength="6" value="{$_GET['title']}">
+        <input type="text" name="tao_id" placeholder="12位商品ID" style="width:100px" value="{$_GET['tao_id']}">
+        <button type="button" data-name="search" class="btn btn-default" data-event-type="default">
+            <i class="icon-search"></i>
+        </button>
+	</form>
+</toolbar>
+
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-url="__ACTION__" data-toolbar="#toolbar" data-lazyload="true" data-page-size="10">
+	<thead>
+		<tr>
+			<th data-width="85" data-field="images" data-formatter="formatter_img">商品</th>
+			<th data-field="subject" data-formatter="formatter_title">摘要</th>
+			<th data-width="95" data-field="price" data-formatter="formatter_price">属性</th>
+			<th data-width="135" data-field="last_sync" data-formatter="formatter_sync" data-align="center">同步时间</th>
+			<th data-width="135" data-formatter="formatter_do">操作</th>
+		</tr>
+	</thead>
+</table>
+
+<script>
+function formatter_img(val, row, index){
+	var images = eval(row.images);
+	return '<a target="_blank" href="https://detail.1688.com/offer/'+row.tao_id
+		+'.html"><img data-original="'+images[0]+'" style="width:64px; height:64px;"></a>';
+}
+
+function formatter_title(val, row, index){
+	return (row.title?row.title+'<span class="label'+(row.is_display==1?' label-warning'
+		:' label-important')+'">'+(row.is_display==1?'售卖中':'已下架')+'</span>':'')
+		+'<br/><a target="_blank" href="https://amos.alicdn.com/getcid.aw?v=3&uid='
+		+encodeURI(row.seller_nick)+'&site=cnalichn&groupid=0&s=1&charset=UTF-8'
+		+'"><img border="0" src="http://amos.alicdn.com/realonline.aw?v=2&uid='
+		+encodeURI(row.seller_nick)+'&site=cntaobao&s=1&charset=utf-8" alt="点'
+		+'击这里给我发消息" /> '+row.seller_nick+'</a><br/>阿里商品ID：'+row.tao_id
+		+'<br/>'+row.subject;
+}
+
+function formatter_price(val, row, index){
+	var status = '<span style="color:#f00;">不可售</span>';
+	if (row.status == 'published') {
+		status = '可售';
+	}
+	return '<i class="icon-inbox"></i> '+row.stock+' '+row.unit
+		+'<br/><i class="icon-dashboard"></i> '+row.weight+' kg'
+		+'<br/><i class="icon-yen"></i> '+row.price+' 元'
+		+'<br/><i class="icon-glass"></i> '+status;
+}
+
+function formatter_sync(val, row, index){
+	return row.last_update+'<br/><span style="color:#aaa;"><i class="icon-arrow-up"></i>'
+		+'阿里 平台<i class="icon-arrow-down"></i></span><br/>'
+		+(row.last_sync);
+}
+
+function formatter_do(val, row, index){
+	var action = [];
+	action.push('<a class="js-alibaba" data-id="'+row.tao_id+'">详情</a>');
+	if(row.title == undefined){ // 1688
+		action.push('<a href="__MODULE__/goods/add?tao_id='+row.tao_id+'">上架</a>');
+	}else{
+		action.push('<a href="__MODULE__/goods/edit?id='+row.id+'">同步</a>');
+	}
+
+	return '<br/>'+action.join(' - ');
+}
+
+(function(){
+	$('#toolbar').append('<div class="btn-list"><div class="btn-group"><a class="btn btn-default" href="{$auth_url}"> 重新授权“<?php echo session('user.shop_name'); ?>”</a></div></div>');
+	var $table = $('#table');
+	$table.on('click', '.js-alibaba',function(){
+		var id = $(this).data('id');
+		$.get('__URL__/detail?tao_id='+id, function(html){
+			$('body').append(html);
+		});
+		return false;
+	});
+})();
+</script>

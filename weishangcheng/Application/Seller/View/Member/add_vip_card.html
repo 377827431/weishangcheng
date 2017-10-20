@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="会员等级设置" />
+    <!--<link rel="stylesheet" href="/css/seller/member_lv.css">-->
+    <link rel="stylesheet" href="/css/seller/vip_card.css">
+    <link rel="stylesheet" href="/css/seller/vip_card_add.css">
+</head>
+<body>
+    <div class="container">
+        <div class="content" style="padding-top:10px;">
+            <div class="vip_card">
+                <div class="place_holder"></div>
+                <div class="vip_card_bg_container">
+                    <img class="vip_card_bg">
+                </div>
+                <div class="card_items">
+                    <div class="card_item_line1">
+                        <img src="{$shop.logo}" alt="">
+                        <span class="vip_shop_name">{$shop.name}</span>
+                        <span class="vip_card_lv">
+                          <foreach name='levels' item="vo">
+                            <if condition="$vo.default eq true">
+                              {$vo.key}
+                            </if>
+                          </foreach>
+                        </span>
+                    </div> 
+                    <div class="card_item_line2">
+                        <div>
+                            <p class="vip_card_name"></p>
+                        </div>
+                    </div>
+                    <div class="card_item_line3 reflect">
+                        <ul>
+                            <if condition="($data.discut eq 10) OR ($data.discut eq '') OR ($data.discut eq 10)">
+                              <li class=""><div><div class="vip_right discut"></div></div></li>
+                            <else />
+                              <li class="on"><div><div class="vip_right discut">{$data.discut}</div></div></li>
+                            </if>
+                            <!-- <li class="on yongjin"><div><div class="vip_right salary">佣金</div></div></li> -->
+                            <!-- <li class="on baoyou"><div><div class="vip_right post_free">包邮</div></div></li> -->
+                            <!-- <li class="on youhuiquan"><div><div class="vip_right youhuiquan">优惠券</div></div></li>
+                            <li class="on songjifen"><div><div class="vip_right store">积分<div></div></li> -->
+                        </ul>
+                    </div>
+                    <div class="card_item_line4">
+                        <div><div class="expire_day">
+                          <if condition="$data.expire_time eq ''">
+                            永久
+                          <else />
+                            {$data.expire_time}天
+                          </if>
+                        </div></div>
+                    </div>   
+                </div>
+            </div>
+            <div class="edit_card_con">
+                <!--编号名称有效期-->
+                <ul>
+                    <li class="card_level">
+                        <div><span>会员卡编号</span></div>
+                        <div>
+                            <select name="">
+                              <foreach name='levels' item="vo">
+                                <option value="{$vo.key}">{$vo.key}</option>
+                              </foreach>
+                            </select>
+                        </div>
+                    </li>
+                    <li class="card_name">
+                        <div>
+                            <span>会员卡名称</span>
+                        </div>
+                        <div>
+                            <input type="text" value="{$data.title}" placeholder="请填写会员卡名称">
+                        </div>
+                    </li>
+                    <li class="expire_days">
+                        <div>
+                            <span>有效期</span>
+                        </div>
+                        <div>
+                            <input type="text" value="{$data.expire_time}" placeholder="有效天数，默认永久">
+                        </div>
+                    </li>
+                </ul>
+                <p class="p_title">会员权益</p>
+                <!--会员权益-->
+                <ul>
+                    <li class="discut_cfg">
+                        <div>
+                            <span>折扣</span>
+                        </div>
+                        <div>
+                            <input type="text" value="{$data.discut}" placeholder="会员折扣，默认不打折">
+                        </div>
+                    </li>
+                    <!-- <li class="free_post" style="position:relative;">
+                        <div>
+                            <span>包邮</span>
+                        </div>
+                        <div>
+                            <input ctrol_what="baoyou" class="mui-switch mui-switch-animbg" type="checkbox" checked="">
+                        </div>
+                    </li> -->
+                    <!-- <li class="yongjin_li" style="position:relative;">
+                        <div>
+                            <span>佣金</span>
+                        </div>
+                        <div>
+                            <input ctrol_what="yongjin" class="mui-switch mui-switch-animbg" type="checkbox" checked="">
+                        </div>
+                    </li> -->
+                </ul>
+                <!--推广奖励-->
+                <!-- <ul class="yongjin">
+                    <li class="yongjin_li_1" style="border-bottom:1px solid rgba(89,89,67,0.5);">
+                        <div>
+                            <span>推广奖励一级</span>
+                        </div>
+                        <div>
+                            <input type="text" placeholder="商品成交金额百分比">
+                        </div>
+                    </li>
+                    <li class="yongjin_li_2">
+                        <div>
+                            <span>推广奖励二级</span>
+                        </div>
+                        <div>
+                            <input type="text" placeholder="商品成交金额百分比">
+                        </div>
+                    </li>
+                </ul> -->
+                <p class="p_title">办卡条件</p>
+                <!--办卡条件-->
+                <ul>
+                    <li class="buy_cost">
+                        <div>
+                            <span>购买，需要</span>
+                        </div>
+                        <div>
+                            <input type="text" value="{$data.price}" placeholder="设置此卡出售所需购买价格">
+                        </div>
+                    </li>
+                    <li class="order_num">
+                        <div>
+                            <span>订单笔数达</span>
+                        </div>
+                        <div>
+                            <input type="text" value="{$data.auto_trade}" style="width:100px;" placeholder="请设置订单笔数">
+                        </div>
+                    </li>
+                    <li class="custom_range"> 
+                        <div>
+                            <span>消费金额达</span>
+                        </div>
+                        <div>
+                            <input type="text" value="{$data.auto_payment}" style="width:100px;" placeholder="请设置消费金额">
+                        </div>
+                    </li>
+                    <!-- <li class="bankasong_li" style="position:relative">
+                        <div>
+                            <span>办卡送</span>
+                        </div>
+                        <div>
+                            <input ctrol_what="bankasong" class="mui-switch mui-switch-animbg" type="checkbox" checked="">
+                        </div>
+                    </li> -->
+                </ul>
+                <!--办卡送-->
+                <!-- <ul class="bankasong">
+                    <li>
+                        <div style="float:left;">
+                            <span class="check_box_item on" ctrol_what="youhuiquan">优惠券</span>
+                        </div>
+                        <div>
+                            <select name="" id=""  style="font-size:14px">
+                              <foreach name='coupon' item='cval'>
+                                <option value="{$cval.id}">{$cval.name}</option>
+                              </foreach>
+                            </select>
+                            <input class="youhuiquan_num" type="text" placeholder="请设置优惠券张数">
+                        </div>
+                    </li>
+                    <li style="border-bottom:none">
+                        <div>
+                            <span class="check_box_item on" ctrol_what="songjifen">送积分</span>
+                        </div>
+                        <div>
+                            <input class="songjifen_num" type="text" placeholder="请设置积分数目">
+                        </div>
+                    </li>
+                </ul> -->
+                <input type="hidden" id="card_id" value="{$data.id}">
+                <div class="save_button">保存</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        require(['jquery'],function($){
+            //点击开关控制显示隐藏
+           $("input.mui-switch").on('click',function(){
+               var stat = $(this).is(':checked');
+               switch($(this).attr("ctrol_what")){
+                    // 佣金
+                   case 'yongjin':
+                   $("div.vip_card li.yongjin").toggleClass("on",stat);
+                   $("ul.yongjin").toggle(stat);
+                    break;
+                    // 包邮
+                   case 'baoyou':
+                    $("div.vip_card li.baoyou").toggleClass("on",stat);
+                   break;
+                    // 办卡送 
+                   case 'bankasong':
+                   $("ul.bankasong").toggle(stat);
+                   break;
+               }
+           });
+           //点击checkbox控制显示隐藏
+           $("span.check_box_item").on('click',function(){
+               $(this).toggleClass("on");
+               var stat = $(this).hasClass("on");
+               switch($(this).attr("ctrol_what")){
+                   case 'youhuiquan':
+                   $("div.vip_card li.youhuiquan").toggleClass("on",stat);
+                   break;
+                   case 'songjifen':
+                   $("div.vip_card li.songjifen").toggleClass("on",stat);
+                   break;
+               }
+           });
+           //会员等级映射
+           $("li.card_level select").on("change",function(){
+               var vip_level = $(this).val();
+               $("div.vip_card span.vip_card_lv").text(vip_level);
+           })
+           //会员卡名称映射
+           $("li.card_name input").on('input',function(){
+               $("p.vip_card_name").text($(this).val());
+           })
+           //会员卡折扣映射
+           $("li.discut_cfg input").on('input',function(){
+               if($(this).val() == ""){
+                   $("div.vip_right.discut").parents('li').toggleClass("on",false);
+               }else{
+                   $("div.vip_right.discut").parents('li').toggleClass("on",true);
+               }
+               $("div.vip_right.discut").text($(this).val());
+           })
+           //过期时间有映射
+           $("li.expire_days input").on('input',function(){
+               var text = $(this).val();
+               if(text == 0 || text == ""){
+                    text = "永久";
+               }else{
+                   text += "天"
+               }
+               $("div.expire_day").text(text);
+           })
+           //点击保存
+           $("div.save_button").on('click',function(){
+               //会员卡编号
+               var vip_level = $("li.card_level select").val();
+               //会员卡名称
+               var card_name = $("li.card_name input").val();
+               //有效期
+               var expire_days = $("li.expire_days input").val();
+               //折扣
+               var discut = $("li.discut_cfg input").val();
+               // //包邮
+               // var free_post = $("li.free_post input").is(":checked");
+               // //佣金
+               // var yongjin_li = $("li.yongjin_li input").is(":checked");
+               // //佣金百分比1
+               // var yongjin_li_1 = $("li.yongjin_li_1 input").val();
+               // //佣金百分比2
+               // var yongjin_li_2 = $("li.yongjin_li_2 input").val();
+               //购买需要花费
+               var buy_cost = $("li.buy_cost input").val();
+               //订单笔数限制
+               var order_num_line = $("li.order_num input").val();
+               //消费金额限制
+               var custom_cost = $("li.custom_range input").val();
+               // //办卡送开关
+               // var bankasong = $("li.bankasong_li input").is(":checked");
+               // //优惠券开关
+               // var youhuiquan_flag = $("ul.bankasong span[ctrol_what='youhuiquan']").hasClass("on");
+               // //优惠券名称
+               // var youhuiquan_name = $("ul.bankasong select").val();
+               // //优惠券数目
+               // var youhuiquan_num = $("ul.bankasong input.youhuiquan_num").val();
+               // //送积分开关
+               // var songjifen_flag = $("ul.bankasong span[ctrol_what='songjifen_flag']").hasClass("on");
+               // //送积分数目
+               // var songjifen_num = $("ul.bankasong input.songjifen_num").val();
+               //会员卡ID
+               var card_id = $("#card_id").val();
+               if(card_name == ""){
+                   toast.show("请输入卡名");
+                   return false;
+               }
+               if(discut != '' && !/^[0-9]+(\.[0-9]{2})?$/.test(discut)){
+                  toast.show("折扣输入非法");
+                  return false;
+               }
+               if(discut<=0 || discut >=10){
+                  toast.show("折扣必须在0-10之间，不含0和10");
+                  return false;
+               }
+               if(!/^[0-9]*$/.test(expire_days)){
+                    toast.show("有效期天数必须为整数");
+                    return false;
+               }
+               if(order_num_line != '' && !/^[0-9]*$/.test(order_num_line)){
+                    toast.show("订单笔数必须为整数");
+                    return false;
+               }
+               // if(yongjin_li){
+               //     if(yongjin_li_1 == "" || yongjin_li_2 == ""){
+               //         toast.show("请输入佣金百分比");
+               //         return false;
+               //     }
+               // }
+               if(buy_cost != '' && !/^[0-9]+(\.[0-9]{2})?$/.test(buy_cost)){
+                   toast.show("购买会员花费金额输入非法");
+                   return false;
+               }
+               if(custom_cost != '' && !/^[0-9]+(\.[0-9]{2})?$/.test(custom_cost)){
+                  toast.show("消费金额输入非法");
+                  return false;
+               }
+               if(expire_days == ""){
+                  expire_days = 0;
+               }
+               if(card_id == ''){
+                $.ajax({
+                    url: '/seller/member/cardinsert',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {level:vip_level,level_nick:card_name,empire_date:expire_days,discut:discut,member_value:buy_cost,auto_order_num:order_num_line,auto_price:custom_cost},
+                    success:function(data){
+                        toast.show("添加成功!");
+                        setTimeout(function(){
+                            window.location.href = '/seller/member';
+                        },1500);
+                    }
+                });
+               }else{
+                $.ajax({
+                    url: '/seller/member/cardedit',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {level:vip_level,level_nick:card_name,empire_date:expire_days,discut:discut,member_value:buy_cost,auto_order_num:order_num_line,auto_price:custom_cost,id:card_id},
+                    success:function(data){
+                        toast.show("修改成功!");
+                        setTimeout(function(){
+                            window.location.href = '/seller/member';
+                        },1500);
+                        
+                    }
+                });
+               }
+               
+
+
+               // console.log({
+               //     vip_level:vip_level,
+               //     card_name:card_name,
+               //     expire_days:expire_days,
+               //     discut:discut,
+               //     // free_post:free_post,
+               //     // yongjin_li:yongjin_li,
+               //     // yongjin_li_1:yongjin_li_1,
+               //     // yongjin_li_2:yongjin_li_2,
+               //     buy_cost:buy_cost,
+               //     order_num_line:order_num_line,
+               //     custom_cost:custom_cost,
+               //     // bankasong:bankasong,
+               //     // youhuiquan_flag:youhuiquan_flag,
+               //     // youhuiquan_name:youhuiquan_name,
+               //     // youhuiquan_num:youhuiquan_num,
+               //     // songjifen_flag:songjifen_flag,
+               //     // songjifen_num:songjifen_num
+               //     card_id:card_id
+               // })
+           })
+        });
+    </script>
+</body>
+</html>

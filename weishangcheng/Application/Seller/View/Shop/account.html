@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="帐号设置"/>
+	<style>
+        div.btn{width:100% !important;box-sizing: border-box;}
+		ul>li{line-height:46px;font-size:14px;box-sizing:border-box;width:92%;margin-left:4%;color:black;border-bottom:1px solid #ccc;position:relative;}
+		ul>li span:nth-child(1){display:block;}
+		ul>li span:nth-child(2){display:block;position:absolute;top:0px;right:0px;}
+		ul>li span.triangle:nth-child(2){display:block;width:7px;height:7px;border-top:2px solid #ccc;border-right:2px solid #ccc;transform: rotate(45deg);margin-top:19px;}
+		ul>li input{border:none;display:block;outline:none;width:75%;position:absolute;right:0px;top:14px;text-align:left;background-color:rgba(0,0,0,0);}
+		div.btn{width:92%;line-height:36px;background-color:#da8f3e;color:white;text-align:center;font-size:16px;margin-top:50px;}
+		div.btn:hover{color:white;}
+	</style>
+</head>
+<body>
+	<ul>
+		<li class="acount"><span>登陆账号</span><span>{$username}<span></li>
+		<li class="password"><span>修改密码</span><span class="triangle"></span></li>
+	</ul>
+	<div class="btn logout">退出登陆</div>
+	<script>
+		require(['jquery'],function(){
+			$("div.logout").on('click',function(){
+                //退出登陆
+                var acount = $("li.acount span").eq(2).text();
+                //发送退出登陆
+                window.location.href="/seller/login/out";
+			})
+			$("li.password").click(function(){
+				window.location.href="/seller/shop/changePwd";
+			})
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" />
+</head>
+<body class="body-fixed-bottom">
+    <div class="container">
+        <include file="_layout/mall.search.html" class="transparent" />
+        <div class="content">
+            <div class="content-body">
+                <if condition="$show_watch_weixin">
+                <include file="_layout/mall.subscribe.html" />
+                </if>
+                <notempty name="topbanners">
+                <div class="scale_wh scale_4_3">
+                     <div class="scale_content">
+                        <div class="js-banner swiper-container">
+                            <div class="swiper-wrapper">
+                                <foreach name="topbanners" item="item">
+                                <div class="swiper-slide"><a href="{$item.url|default='javascript:;'}"><img src="{$item.img_url}"></a></div>
+                                </foreach>
+                            </div>
+                            <div class="pagination rectangle"></div>
+                        </div>
+                     </div>
+                </div>
+                </notempty>
+                <section class="table-nav">
+                    <table>
+                        <tr>
+                            <td><a href="/notice"><img src="__CDN__/img/mall/home_tag_gonggao.png"/><p>商城公告</p></a></td>
+                            <td><a href="/college"><img src="__CDN__/img/mall/home_tag_wsxy.png"/><p>微商学院</p></a></td>
+                            <td><a href="/list?tag_id=10005"><img src="__CDN__/img/mall/home_tag_shoubiao.png"/><p>手表专区</p></a></td>
+                            <td><a href="/list?tag_id=10007"><img src="__CDN__/img/mall/home_tag_huoji.png"/><p>火机专区</p></a></td>
+                            <td><a href="/list?tag_id=10015"><img src="__CDN__/img/mall/home_tag_jinkou.png"/><p>海外进口</p></a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="/list?sort=sales"><img src="__CDN__/img/mall/home_tag_remai.png"/><p>热卖宝贝</p></a></td>
+                            <td><a href="/list?sort=newest"><img src="__CDN__/img/mall/home_tag_shangxin.png"/><p>每日上新</p></a></td>
+                            <td><a href="/list?shop_id=1"><img src="__CDN__/img/mall/home_tag_baokuan.png"/><p>微商爆款</p></a></td>
+                            <td><a href="/list?tag_id=10006"><img src="__CDN__/img/mall/home_tag_muying.png"/><p>母婴专区</p></a></td>                
+                            <td><a href="__MODULE__/category"><img src="__CDN__/img/mall/home_tag_fenlei.png"/><p>商品分类</p></a></td>
+                        </tr>
+                    </table>
+                </section>
+                <div class="split-line"></div>
+                <include file="_layout/mall.news.html" />
+                <div class="split-line"></div>
+                <section class="horizontal-view">
+                    <a href="/goods?id=2358" style="width:37.5%;display:block">
+                        <img src="__CDN__/img/mall/ddwdb.jpg?modify=20161203" style="width:100%">
+                    </a>
+                    <div class="vertical-view" style="width:62.5%">
+                        <a href="/list?tag_id=1001" style="display:block">
+                            <img src="__CDN__/img/mall/home_pintuan.jpg" style="width:100%">
+                        </a>
+                        <div class="horizontal-view">
+                            <a href="/list?tag_id=score" style="display:block;width:50%">
+                                <img src="__CDN__/img/mall/home_score.jpg" style="width:100%">
+                            </a>
+                            <a href="/list?tag_id=1002" style="display:block;width:50%">
+                                <img src="__CDN__/img/mall/home_1002.jpg" style="width:100%">
+                            </a>
+                        </div>
+                    </div>
+                </section>
+                <div class="split-line"></div>
+                <if condition="count($bottombanners) gt 0">
+                <!-- 底部大图广告 -->
+                <section class="bottom-banner">
+                <foreach name="bottombanners" item="item">
+                    <a href="{$item.url|default='javascript:;'}" class="scale_content">
+                        <img src="{$item.img_url}">
+                    </a>
+                </foreach>
+                </section>
+                <div class="split-line"></div>
+                </if>
+                <!--商品列表-->
+                <section>
+                    <div class="hr-text"><span class="text icon-cainixihuan">猜你喜欢</span></div>
+                    <ul id="js-goods-list" class="sc-goods-list pic clearfix size-2"></ul>
+                </section>
+            </div>
+        </div>
+        <include file="_layout/mall.footer.html" />
+        <include file="_layout/mall.copyright.html" />
+    </div>
+    
+<script type="text/javascript">
+    <if condition="count($topbanners) gt 1">
+    require(['swiper'], function(){
+        var mySwiper = new Swiper('.js-banner',{
+            autoplay : 5000,
+            loop : true,
+            autoplayDisableOnInteraction : true,
+            <if condition="count($topbanners) lt 8">pagination : '.js-banner .pagination'</if>
+        });
+    });
+    </if>
+    
+    require(['buyer/cart/num', 'buyer/search']);
+    
+    var showlike = false, height = document.body.scrollHeight - window.innerHeight;
+    window.addEventListener('scroll', function(){
+        if(document.body.scrollTop < 100){
+            search_bar.classList.add('transparent');
+        }else if(document.body.scrollTop > 99){
+            search_bar.classList.remove('transparent');
+        }
+
+        if(!showlike && height - document.body.scrollTop < 200){
+            showLikeList();
+        }
+    });
+
+    function showLikeList(){
+        showlike = true;
+        require(["buyer/goods/list"], function(glv){
+            glv.doRefresh({
+                url: get_url("/search/like"),
+                data: {size: 59},
+                cacheKey: 'cainixihuan',
+                refresh: false,
+                container: $("#js-goods-list")
+            });
+        });
+    }
+
+    if(height - document.body.scrollTop < 200){
+        showLikeList();
+    }
+</script>
+</body>
+</html>

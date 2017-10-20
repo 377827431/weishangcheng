@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="会员权益" />
+    <style type="text/css">
+    body{margin:0px;padding:0;font-family:sans-serif;font-size:12px}
+    p{margin:0 0 1px 0}
+    .edui-image{margin:0;padding:0;line-height:0;position:relative;}
+    .edui-draggable, .edui-image .btn[data-id="0"]{display:none;}
+    </style>
+</head>
+<body>
+     <div class="container wap-goods internal-purchase">
+        <div class="content">
+            <div class="content-body">{$data['detail']}</div>
+        </div>
+        <include file="_layout/mall.copyright.html" />
+    </div>
+</body>
+<script type="text/javascript">
+    require(['jquery'], function(){
+        var productIds = {$products};
+        $('.js-buy-card').on('click', function(){
+            var $btn = $(this), cardId = $btn.data('id');
+            if(cardId <= {$buyer.card_id}){
+                return toast.show('不能降级哦'), false;
+            }
+
+            var data = {goods_id: {$data.goods_id}, product_id: productIds[cardId], quantity: 1, activity_id: 0};
+            var products = JSON.stringify([data]);
+            $.ajax({
+                url: '__MODULE__/cart/submit',
+                type: 'post',
+                data: {products: products},
+                dataType: 'json'
+            });
+            return false;
+        });
+    });
+    
+    <if condition="IS_WEIXIN">
+    //分享
+    require(["h5/jsweixin"], function(jweixin){
+       jweixin.init({$sign}, function(){
+            jweixin.share({$share_data}, function(){
+                toast.show('分享成功');
+            });
+       });
+    });
+    </if>
+</script>
+</html>

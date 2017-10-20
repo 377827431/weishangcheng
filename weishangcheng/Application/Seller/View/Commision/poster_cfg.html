@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="推广员设置" />
+    <link rel="stylesheet" href="/css/seller/mui-switch.css">
+    <style>
+		ul li{position:relative;height:50px;line-height:50px;border-bottom:1px solid #bbb;box-sizing:border-box;width:100%;padding-left:4%;padding-right:4%;font-size:14px;}
+		ul li>span:nth-child(1){float:left;}
+		ul li>:nth-child(2){float:right;}
+		ul li>input[type='checkbox']{margin-top:10px;}
+		ul li>select{margin-top:14px;font-size:14px;padding-right:12px;}
+		ul li>input{border:none;outline:none;text-align:right;}
+		ul li>input[type="text"]{}
+		ul {border-bottom:10px solid rgba(187,187,187,0.3);}
+		p.ptitle{line-height:50px;font-size:14px;font-weight:bold;padding-left:4%;border-bottom:1px solid #bbb;}
+		ul li.arrow_li::after{content:"";position:absolute;right:0px;top:20px;margin-right:4%;display:inline-block;width:7px;height:7px;border-top:2px solid #ccc;border-right:2px solid #ccc;transform:rotate(45deg);}
+		ul li.percet_li::after{content:"%";position:absolute;right:0px;padding-right:4%;}
+		ul li.yuan_li::after{content:"元";position:absolute;right:0px;padding-right:4%;}
+		div.save_btn{width:92%;height:40px;margin:0 auto;text-align:center;line-height:40px;font-size:18px;background-color:#fc4f0d;color:white;margin-top: 20px;border-radius:6px;margin-bottom:20px;}
+    </style>
+</head>
+<body>
+	<ul>
+		<li><span>推广员招募</span><input id="zhaomu" class="mui-switch mui-switch-animbg" type="checkbox" {$card['recruit_open']==1 ? 'checked' : ''}></li>
+		<li><span>推广员审核</span><input id="shenhe" class="mui-switch mui-switch-animbg" type="checkbox" {$card['check_open']==1 ? 'checked' : ''}></li>
+	</ul>
+	<p class="ptitle">推广员全店佣金设置</p>
+	<ul style="border-bottom:none;">
+		<li class="arrow_li">
+			<span>佣金提成方式</span>
+			<select name="" id="comission_way">
+				<option value="0" {$data['settlement_type']==0 ? 'selected' : ''}>按成交额百分比</option>
+				<!-- <option value="1" {$data['settlement_type']==1 ? 'selected' : ''}>每成交1件提n元</option>
+				<option value="-1" {$data['settlement_type']==-1 ? 'selected' : ''}>按会员卡百分比</option> -->
+			</select>
+		</li>
+		<li class="percet_li yongjin_area">
+			<span>佣金</span>
+			<input id="comission_rate" type="text" name="" value="{$card['agent_rate']}" style="margin-top:17px;background-color:rgba(0,0,0,0);padding-right:1em;" placeholder="请填写佣金">
+		</li>
+		<li class="percet_li percent_li_two lv_two_yongjin_area" <?php if($card['agent_rate2']==0){ echo "style='display:none'";} ?> >
+			<span>二级奖励</span>
+			<input id="comission_rate_lv_two" type="text" name="" value="{$card['agent_rate2']}" style="margin-top:17px;background-color:rgba(0,0,0,0);padding-right:1em;" placeholder="请填写二级佣金">
+		</li>
+		<!-- <li class="arrow_li"><span>无佣金产品</span><span style="padding-right:1em;">已设置2个</span></li> -->
+		<li><span>二级奖励</span><input id="lv_two" class="mui-switch mui-switch-animbg" type="checkbox" <?php if($card['agent_rate2']!=0){ echo 'checked';} ?> ></li></li>
+	</ul>
+	<div class="save_btn">保存</div>
+	<div style="display: flex;width: 92%;margin-left: 4%;justify-content: space-between;">
+		<div style="display: inline-block;width: 24px;height: 24px;">
+			<svg class="icon" style="width: 24px; height: 24px;vertical-align: middle;fill: #C6C6C6;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="844"><path d="M526.3 30.2C262.6 30.2 48.8 244 48.8 507.7s213.8 477.5 477.5 477.5 477.5-213.8 477.5-477.5S790 30.2 526.3 30.2zM558.8 182.1c36 0 65.1 29.2 65.1 65.1 0 36-29.2 65.1-65.1 65.1-36 0-65.1-29.2-65.1-65.1C493.7 211.3 522.9 182.1 558.8 182.1zM680.9 654.9 535.7 795.2c-46.7 43.1-96.9 7.5-83.7-63.8l36.8-272.2-49.3-38.4c-21.3-17.6-31.4-43.4 8-43.4l161.5 0-48.6 294.6 104.4-40.6C689.8 619.7 705.8 630.8 680.9 654.9z" p-id="845"></path></svg>
+		</div>
+		<div style="width: calc(100% - 30px);font-size: 14px;color:#C6C6C6;">
+			<p style="line-height:18px">● 初次开启佣金奖励，所有商品默认使用全店铺佣金设置，单商品需要自行调整。单品佣金设置规则优先级高于店铺佣金规则。</p>
+			<p style="line-height:18px">● 佣金比例为订单的实际成交金额（剔除运费和退款部分）－成本× 佣金比例 = 获得的佣金。</p>   
+		</div>
+	</div>
+	<script>
+		require(['jquery'],function(){
+			$("div.save_btn").click(function(){
+				var switch_zhaomu = $("#zhaomu").is(":checked");
+				var switch_shenhe = $("#shenhe").is(":checked");
+				var switch_lv_two = $("#lv_two").is(":checked");
+				// 佣金提成方式
+				var comission_way = $("#comission_way").val();
+				// 佣金比例
+				var comission_rate = $("#comission_rate").val();
+				var comission_rate_lv_two = $("#comission_rate_lv_two").val();
+				var comission_rate_reg = /^((?:-?0)|(?:-?[1-9]\d*))(?:\.\d{1,2})?$/;
+				var comission_yuan_reg = /^([1-9][\d]{0,7}|0)(\.[\d]{1,2})?$/;
+				if(comission_way != 1){
+					if(!comission_rate_reg.test(comission_rate)){
+						toast.show("佣金比例为两位小数");
+						return false;
+					}
+					if(parseFloat(comission_rate) > parseFloat(100) || parseFloat(comission_rate) < parseFloat(0)){
+						toast.show("佣金比率为0-100");
+						return false;
+					}
+					// if(!comission_rate_reg.test(comission_rate_lv_two)){
+					// 	toast.show("佣金比例为两位小数");
+					// 	return false;
+					// }
+					// if(parseFloat(comission_rate_lv_two) > parseFloat(100) || parseFloat(comission_rate_lv_two) < parseFloat(0)){
+					// 	toast.show("佣金比率为0-100");
+					// 	return false;
+					// }
+				}else{
+					if(!comission_yuan_reg.test(comission_rate)){
+						toast.show("佣金金额为两位小数");
+						return false;
+					}
+					// if(!comission_yuan_reg.test(comission_rate_lv_two)){
+					// 	toast.show("佣金金额为两位小数");
+					// 	return false;
+					// }
+				}
+				console.log({
+					switch_zhaomu:switch_zhaomu,
+					switch_shenhe:switch_shenhe,
+					switch_lv_two:switch_lv_two,
+					comission_way:comission_way,
+					comission_rate:comission_rate
+				});
+				$.ajax({
+					url: "/seller/commision/promoters_set",
+					type: 'post',
+					data: {recruit:switch_zhaomu,check:switch_shenhe,settlement_type:comission_way,agent_rate:comission_rate,agent_rate2:comission_rate_lv_two,reward2:switch_lv_two},
+					dataType: 'json',
+					success: function(data){
+						if(data == 1){
+							toast.show('保存成功');
+							history.go(-1);
+						}
+					}
+				})
+			})
+			$("#lv_two").on("change",function(){
+				var val = $(this).is(':checked');
+				$("li.percent_li_two").toggle(val);
+			})
+			$("#comission_way").on("change",function(){
+				var val = $(this).val();
+				if($.trim(val) == 1){
+					$("li.yongjin_area").toggleClass("percet_li",false);
+					$("li.yongjin_area").toggleClass("yuan_li",true);
+					$("li.lv_two_yongjin_area").toggleClass("percet_li",false);
+					$("li.lv_two_yongjin_area").toggleClass("yuan_li",true);
+				}else{
+					$("li.yongjin_area").toggleClass("yuan_li",false);
+					$("li.yongjin_area").toggleClass("percet_li",true);
+					$("li.lv_two_yongjin_area").toggleClass("percet_li",true);
+					$("li.lv_two_yongjin_area").toggleClass("yuan_li",false);
+				}
+			})
+		})
+	</script>
+</body>
+</html>

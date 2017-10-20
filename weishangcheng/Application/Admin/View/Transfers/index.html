@@ -1,0 +1,91 @@
+<toolbar id="toolbar">
+	<form id="order_search" class="form-horizontal">
+		<div class="filter-groups">
+			<div class="control-group">
+				<label class="control-label">微信公众号</label>
+				<div class="controls">
+					<select name="appid">
+					<option value="">全部</option>
+					<foreach name="wxlist" key="appid" item="item">
+						<option value="{$appid}">{$item['name']}</option>
+					</foreach>
+					</select>
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<label class="control-label">手机号</label>
+				<div class="controls">
+					<input type="text" name="mobile">
+				</div>
+			</div>
+			
+			 <div class="control-group">
+					<label class="control-label">是否提现成功</label>
+					<div class="controls">
+						<select name="result_code" >
+							<option value="SUCCESS">已成功</option>
+							<option value="FAIL">已失败</option>
+						</select>
+					</div>
+			</div> 
+		</div>
+		
+		<div class="filter-groups">
+			<div class="control-group">
+			<label class="control-label" style="width: 120px;">提现时间</label>
+			<div class="controls" style="margin-left:125px;">
+				<div class="input-append date" data-format="yyyy-MM-dd hh:mm:ss">
+					<input type="text" name="start_date" value="{$start_date}">
+					<span class="add-on"><i class="icon-th"></i></span>
+				</div>
+				至
+				<div class="input-append date" data-format="yyyy-MM-dd hh:mm:ss">
+					<input type="text" name="end_date" value="{$end_date}" >
+					<span class="add-on"><i class="icon-th"></i></span>
+				</div>
+			</div>
+			</div>
+			
+			<div class="control-group">
+			<label class="control-label">提现金额</label>
+			<div class="controls" >
+					<input type="text" name="start_amount" style="width:158px;">
+				至
+					<input type="text" name="end_amount" style="width:158px;">
+			</div>
+			</div>
+		</div>
+		
+		
+	</form> 
+</toolbar>
+
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-url="__URL__" data-toolbar="#toolbar"  data-page-list="[1, 10, 25, 50, All]">
+    <thead>
+		<tr>
+			<th data-field="nickname" data-width="110">会员名称</th>
+			<th data-field="mobile" data-width="110">手机号</th>
+			<th data-field="amount" data-width="110">提现金额</th>
+			<th data-field="balance" data-width="110">提现前金额</th>
+			<th data-field="no_balance" data-width="120">不可提现金额</th>
+			<th data-field="payment_time" data-width="110">提现时间</th>
+			<th data-field="result_code" data-width="120">是否提现成功</th>
+		</tr>
+	</thead>
+</table>
+
+<script>
+$(function(){
+	$('#table').on('export',function(e, gridview ,params){
+		var url = '__URL__/export';
+		var array = $('#toolbar form').serializeArray();
+		for(var i=0; i<array.length; i++){
+			url += (i == 0 ? '?' : '&') + array[i].name + '=' + array[i].value;
+		}
+		window.open(url);
+		return false;
+	});
+});
+</script>

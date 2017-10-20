@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<include file="_layout/mall.head.html" title="我的收入" />
+		<style type="text/css">* {margin: 0;padding: 0;-webkit-appearance: none; //去掉浏览器默认样式-webkit-tap-highlight-color: rgba(0, 0, 0, 0);-webkit-touch-callout: none;box-sizing: border-box;}html,body {margin: 0 auto;width: 100%;min-height: 100%;overflow-x: hidden;-webkit-user-select: none;}
+    		body {font-family: Helvetica Neue, Helvetica, Arial, sans-serif;-webkit-text-size-adjust: 100%; //关闭自动调整字体-webkit-overflow-scrolling: touch;overflow-scrolling: touch;}input {width: 90%;height: 40px;font-size: 18px;border: 1px solid #b72f20;border-radius: 5px;margin: 20px 5% 0 5%;padding: 5px;}h1 {background-color: #b72f20;color: #fff;font-size: 25px;text-align: center;padding: 10px;}
+    	</style>
+		<link rel="stylesheet" href="/css/seller/LArea.css">
+		<style>
+			.content-body{position:absolute;width:100%;height:100%;top:0px;background-color: #f1f0f5;}
+			p{width:100%;line-height:50px;height:50px;font-size:14px;color:#777777;text-indent:1em;}
+			.bank_num,.bank_num_resure{border:none;outline:none;font-size:14px;}
+			#bank_selector,
+			#city_selector{display:inline-block;width:90%;border-radius:6px;margin-top:9px;height:32px;line-height:32px;margin:9px 0 0px 0;border:1px solid #ccc;font-size:14px;}
+			.selector_container{height:50px;background-color: white;line-height:50px;padding-left:1em;}
+			.update_btn{width:92%;text-align: center;height: 39px;line-height: 39px;background-color: #fc4f0d;border-radius: 6px;margin: 40px auto;color: white;font-size: 16px;cursor: pointer;}
+			.bank_num_resure,
+			.bank_num{border:none;outline:none;font-size:14px;}
+		</style>
+
+    </head>
+
+<body>
+    <div class="container">
+        <div class="content ">
+            <div class="content-body">
+				<p>银行:</p>
+				<div class="content-block">
+					<div class="selector_container">
+			            <div id="bank_selector" type="text" readonly="" placeholder="请选择银行" col_num="1">{$data.bc_name}</div>
+			            <input id="bank_selector_val" type="hidden" value="{$data.bc_name}">
+			        </div>
+        		</div>
+				<p>所属省市:</p>
+					<div class="selector_container">
+						<div id="city_selector" type="text" readonly="" placeholder="请选择开户银行所在地" col_num="2">{$data.address}</div>
+						<input id="city_selector_val" type="hidden" value="{$data.address}">
+					</div>
+				<p>银行卡号:</p>
+				<div>
+					<div style="background-color: white;border-bottom:1px solid #eaeaea;padding-left:1em;">
+						<input class="bank_num" type="number" placeholder="请输入卡号" value="{$data.bc_no}">
+					</div>
+					<div style="background-color: white;padding-left:1em;">
+						<input class="bank_num_resure" type="number" placeholder="请再次输入卡号" value="{$data.bc_no}">
+					</div>
+				</div>
+				<p>持卡人姓名:</p>
+				<div>
+					<div style="background-color: white;border-bottom:1px solid #eaeaea;padding-left:1em;">
+						<input class="card_holder" style="border:none;outline:none;" type="text" maxlength="10" placeholder="请输入持卡人姓名" value="{$data.card_name}">
+					</div>
+				</div>
+				<p style="line-height:28px;height:28px;margin-top:10px;">1.银行开户人信息必须同姓名、身份证一致;</p>
+				<p style="line-height:28px;height:28px;">2.暂不支持信用卡;</p>
+				<div class="update_btn">保&nbsp;存</div>
+			</div>
+        </div>
+    </div>
+	<script src="/js/seller/CityData.js"></script>
+	<script src="/js/seller/BankData.js"></script>
+	<script src="/js/seller/LArea.js"></script>
+	<script>
+	require(['jquery'],function($){
+		/*银行*/
+		var bank_selecter = new LArea();
+	    bank_selecter.init({
+	        'trigger': '#bank_selector', //触发选择控件的文本框，同时选择完毕后name属性输出到该位置
+	        'valueTo': '#bank_selector_val', //选择完毕后id属性输出到该位置
+	        'keys': {
+	            id: 'value',
+	            name: 'text'
+	        }, //绑定数据源相关字段 id对应valueTo的value属性输出 name对应trigger的value属性输出
+	        'type': 2, //数据源类型
+	        'data': [bank_level_one,bank_level_two, bank_level_three] //数据源
+	    });
+		/*地市 */
+		var city_selecter = new LArea();
+	    city_selecter.init({
+	        'trigger': '#city_selector', //触发选择控件的文本框，同时选择完毕后name属性输出到该位置
+	        'valueTo': '#city_selector_val', //选择完毕后id属性输出到该位置
+	        'keys': {
+	            id: 'value',
+	            name: 'text'
+	        }, //绑定数据源相关字段 id对应valueTo的value属性输出 name对应trigger的value属性输出
+	        'type': 2, //数据源类型
+	        'data': [level_one,level_two, level_three] //数据源
+	    });
+
+		//银行卡数据验证
+		//两次密码一致 第二个input卡号位数限制
+		$("input.bank_num_resure").on("input",function(){
+			var text = this.value;
+			if(text.length > 20){
+				text = text.substring(0,20);
+				$(this).val(text);
+			}
+			var text_before = $("input.bank_num").val();
+			if(text_before.indexOf(text) == "-1"){
+				$(this).attr('style', 'color:red');
+			}else{
+				$(this).attr('style','color:black');
+			}
+			if(text_before === text){
+				$(this).attr('style', 'color:green');
+			}
+		})
+		//第一个input卡还位数限制
+		$("input.bank_num").on("input",function(){
+			var text = this.value;
+			if(text.length > 20){
+				text = text.substring(0,20);
+				$(this).val(text);
+			}
+		})
+
+		//更新按钮
+		$('.update_btn').click(function(){
+			var owner_name = $(".card_holder").val();
+			var bank_name = $('#bank_selector').text();
+			var bank_id = $('#bank_selector_val').val();
+			var _aName = $('#city_selector').text().split(',');
+			var _aCode = $('#city_selector_val').val().split(',');
+			var prov_name = _aName[0];
+			var prov_code = _aCode[0];
+			var city_name = _aName[1];
+			var city_code = _aCode[1];
+			var bank_num = $(".bank_num").val();
+			var param = {
+				bank_name:bank_name,
+				bank_id:bank_id,
+				prov_name:prov_name,
+				prov_code:prov_code,
+				city_name:city_name,
+				city_code:city_code,
+				bank_num:bank_num,
+				owner_name:owner_name
+			}
+			if(bank_name == "请选择您的开户银行" || bank_name == ""){
+				toast.show("请选择您的开户银行");
+				return false;
+			}
+			if(prov_name == "请选择您开户行所在地市" || prov_name == ""){
+				toast.show("请选择您开户行所在地市");
+				return false;
+			}
+			if(bank_num == ""){
+				toast.show("请输入银行卡卡号");
+				return false;
+			}
+			if(bank_num != $(".bank_num_resure").val()){
+                toast.show("两次输入的卡号不一样");
+				return false;
+			}
+			if(owner_name == ""){
+				toast.show("持卡人姓名不能为空");
+				return false;
+			}
+			var num_reg = /^[0-9]*$/;
+			if(!num_reg.test(bank_num)){
+				toast.show("银行卡号只能输入数字")
+			};
+
+			//发送到后台的数据
+            $.ajax({
+                url: "/seller/income/bank_edit",
+                type: "POST",
+                data: param,
+                success: function(d) {
+					toast.show('银行卡绑定成功');
+					setTimeout(function(){
+						window.location.href="__MODULE__/income/index?method=bank";
+					},1500);
+                }
+            });
+		})
+
+	})
+    </script>
+</body>
+</html>

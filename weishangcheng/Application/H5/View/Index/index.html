@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" />
+    <!-- 维持原有样式不变，替换新样式 -->
+    <link rel="stylesheet" href="__CDN__/css/shop.homepage.css?20170901">
+</head>
+<body class="body-fixed-bottom">
+    <div class="container">
+        <include file="_layout/new_index/mall.qrcode.share.html"/>
+        <include file="_layout/new_index/mall.search.new.html"/>
+        <div class="content">
+            <div class="content-body">
+                <if condition="$show_watch_weixin">
+                    <include file="_layout/mall.subscribe.html" />
+                </if>
+                <include file="_layout/new_index/mall.top.html" />
+                <section>
+                    <ul id="js-goods-list" class="sc-goods-list pic clearfix size-2"></ul>
+                </section>
+            </div>
+        </div>
+        <include file="_layout/mall.footer.html" />
+        <include file="_layout/mall.copyright.html" />
+    </div>
+
+<script type="text/javascript">
+    <if condition="count($topbanners) gt 1">
+    require(['swiper'], function(){
+        var mySwiper = new Swiper('.js-banner',{
+            autoplay : 5000,
+            loop : true,
+            autoplayDisableOnInteraction : true,
+            <if condition="count($topbanners) lt 8">pagination : '.js-banner .pagination'</if>
+        });
+    });
+    </if>
+
+    require(['buyer/cart/num', 'buyer/search']);
+
+    var showlike = false, height = document.body.scrollHeight - window.innerHeight;
+    window.addEventListener('scroll', function(){
+        if(!showlike && height - document.body.scrollTop < 200){
+            showLikeList();
+        }
+    });
+
+    function showLikeList(){
+        showlike = true;
+        require(["buyer/goods/list"], function(glv){
+            glv.doRefresh({
+                url: get_url("/search/tuijian"),
+                data: {size: 59},
+                cacheKey: 'tuijian',
+                refresh: false,
+                container: $("#js-goods-list")
+            });
+        });
+    }
+
+    if(height - document.body.scrollTop < 200){
+        showLikeList();
+    }
+</script>
+</body>
+</html>

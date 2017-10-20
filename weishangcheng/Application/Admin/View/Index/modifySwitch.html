@@ -1,0 +1,23 @@
+<form method="post" action="__ACTION__" data-validate="true" data-submit="ajax" class="form-horizontal modal modal-small hide fade"> 
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3>切换店铺</h3>
+  </div>
+  <div class="modal-body">
+		<div class="control-group">
+			<label class="control-label">切换店铺</label>
+			<div class="controls">
+				<select name="shop" data-search="true">
+					<option value="">选择切换店铺</option>
+					<foreach name="data" item="item">
+					<option value="{$item.id},{$item.name}" {$item['id'] == $_SESSION['admin']['user']['shop_id'] ? ' selected="selected"' : ''}>{$item.name}</option>
+					</foreach>
+				</select>
+			</div>
+		</div>
+	</div>
+  <div class="modal-footer">
+  	<button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+  	<button type="submit" class="btn btn-primary" aria-hidden="true">立即切换</button>
+  </div>
+</form>

@@ -1,0 +1,25 @@
+/*头部条*/
+.fixed_header{background-color:#1881ea;}
+
+.sc-goods-list .info p.goods-price>em{color:#1881ea;}
+
+/*购物车页面*/
+.bottom-fix .bottom-cart .select-all.checked{color:#4896e3;}
+.bottom-fix .bottom-cart{color:#4896e3;}
+.bottom-fix .bottom-cart button{background-color: #1881ea;border-color: #1075da;}
+
+/*购物车为空*/
+.empty-list .empty-list-content .home-page{color: #1881ea;border-color: #1881ea;}
+
+/*订单页面*/
+.tabber.tabber-red button.active, .tabber.tabber-red a.active{color: #1881ea;border-bottom: 1px solid #1075da;}
+
+/*等待的小点点*/
+.loader span:nth-child(1){-webkit-animation-delay:-1s;animation-delay:-1s;background:rgba(24,129,234,0.6)}
+.loader span:nth-child(2){-webkit-animation-delay:-0.8s;animation-delay:-0.8s;background:rgba(24,129,234,0.8)}
+.loader span:nth-child(3){-webkit-animation-delay:-0.26666s;animation-delay:-0.26666s;background:rgba(24,129,234,1)}
+.loader span:nth-child(4){-webkit-animation-delay:-0.8s;animation-delay:-0.8s;background:rgba(24,129,234,0.8)}
+.loader span:nth-child(5){-webkit-animation-delay:-1s;animation-delay:-1s;background:rgba(24,129,234,0.4)}
+
+/*商品详细页面*/
+.goods-detail .tabber button.active,.tabber a.active{color:#1881ea;border-bottom:1px solid #1075da}

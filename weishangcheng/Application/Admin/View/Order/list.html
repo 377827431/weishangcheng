@@ -1,0 +1,167 @@
+<table id="order_list_table" class="ui-table-order">
+    <thead class="js-list-header-region tableFloatingHeaderOriginal" style="position: static; top: 0px; margin-top: 0px; left: 150px; z-index: 1; width: 849px;">
+        <tr class="widget-list-header">
+            <th colspan="2" style="width: 367px">商品</th>
+            <th style="width: 80px">单价/数量</th>
+            <th class="customer-cell" style="width: 120px">买家</th>
+            <th class="time-cell" style="width:90px">下单时间</th>
+            <th class="status-cell" style="width: 110px">订单状态</th>
+            <th class="pay-price-cell" style="width: 130px">总金额</th>
+        </tr>
+    </thead>
+    <if condition="empty($list)">
+    <tr class="content-row">
+        <td class="text-center" colspan="8">没有相关订单</td>
+    </tr>
+    <else/>
+    <foreach name="list" item="trade">
+    <tbody class="widget-list-item" data-tid="{$trade.tid}">
+        <tr class="separation-row">
+            <td colspan="7">
+                <script type="text/plain" class="js-trade-remark">{$trade.seller_remark|htmlspecialchars}</script>
+            </td>
+        </tr>
+        <tr class="header-row" title="{$trade['seller_nick']}">
+            <td colspan="2">
+                <?php if ($trade['edit_out_tid']) { 
+                    echo '<a class="order-no js-order-no" href="javascript:;">订单号: '.$tid.'</a>';
+                }else{
+                    echo '订单号:'.$trade['tid'];
+                }?>
+                <span class="create_time">{$trade.pay_type_str}</span>
+                <div class="order-no-1688">
+                <?php if (!empty($trade['alibaba'])) { 
+                    echo '<span class="label label-warning">'.($trade['alibaba'][0]['type'] == 1 ? '1688' : '淘宝').'</span>';
+                    foreach($trade['alibaba'] as $alibaba){
+                        if(!empty($alibaba['out_tid'])){
+                            echo '<span title="'.($alibaba['type'] == 1 ? '1688' : '淘宝').' - '.$alibaba['buyer_login_id'].'">'.$alibaba['out_tid'].'</span>&nbsp;&nbsp;';
+                        }
+                    }
+                }?>
+                </div>
+            </td>
+            <td colspan="4">
+                <if condition="$trade['sync1688']">
+                <a href="__MODULE__/alibaba/syncTrade?tid={$trade['edit_out_tid']?$tid:$trade['tid']}" target="_blank">同步1688订单</a>
+                <span>-</span>
+                </if>
+                
+                <if condition="$trade['status'] eq 1">
+                <a href="javascript:;" class="js-cancel-order">取消订单</a>
+                <elseif condition="$trade['status'] lt 7 OR !empty($trade['express_no'])"/>
+                <div class="js-express express">
+                    <if condition="empty($trade['express_no'])">
+                    <a href="javascript:;" class="js-upload-express-no">发货</a>
+                    <else/><if condition="$trade['status'] lt 7"><a href="javascript:;" class="js-upload-express-no">运单号:</a><else/><span>运单号:</span></if>
+                    </if>
+                    <foreach name="trade['express_no']" key="express_no" item="express_name">
+                    <a href="https://m.kuaidi100.com/result.jsp?nu={$express_no}" class="express-no" target="_blank" title="{$express_name}">{$express_no}</a>
+                    </foreach>
+                </div>
+                </if>
+            </td>
+            <td class="text-right">
+                <div class="order-opts-container">
+                    <div class="js-memo-star-container memo-star-container">
+                        <div class="opts">
+                            <div class="td-cont message-opts">
+                                <div class="m-opts">
+                                    <a href="javascript:;" class="js-set-seller-remark{:empty($trade['seller_remark']) ? ' color-gray' : ''}" rel="popover">备注</a>
+                                    <span>-</span>
+                                    <a href="__MODULE__/order/detail?tid={$trade['edit_out_tid']?$tid:$trade['tid']}" class="js-order-detail" target="_blank">查看详情</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <foreach name="trade['orders']" key="index" item="order">
+        <?php if($index==0){ $rowspan = count($trade['orders']);?>
+        <tr class="content-row">
+            <td class="image-cell">
+                <img data-original="{$order.pic_url}" class="js-lazy">
+            </td>
+            <td class="title-cell">
+                <p class="goods-title">
+                    <a href="{$p_url['host']}/{$p_url['alias']}/goods?id={$order.goods_id}" target="_blank" class="new-window">{$order.title}</a>
+                </p>
+                <p class="goods-spec">{$order.spec} <a class="js-goods_feedback" data-gid="{$order.goods_id}" title="反馈"><i class="icon-pencil"></i></a></p>
+                <p style="color: #ED5050;">{$order['errmsg']}</p>
+            </td>
+            <td class="price-cell">
+                <if condition="$order['score'] gt 0"><p>{$order['score']}{$trade['project']['score_alias']}</p>
+                    <if condition="$order['price'] gt 0"><p>+{$order['price']}元</p></if>
+                <else/>
+                <p>{$order['price']}</p>
+                </if>
+                <p>({$order.quantity}件)</p>
+            </td>
+            <td class="customer-cell" rowspan="{$rowspan}" title="{$trade.receiver_province} {$trade.receiver_city}">
+                <a class="buyer_nick ellipsis" href="__MODULE__/member?mid={$trade.buyer_id}" target="_blank">{$trade.buyer_nick}</a>
+                <div>{$trade.receiver_name}</div>
+                <div>{$trade.receiver_mobile}</div>
+            </td>
+            <td class="time-cell" rowspan="{$rowspan}">
+                <div class="td-cont">{$trade.created}</div>
+            </td>
+            <td class="status-cell" rowspan="{$rowspan}" style="padding-left:0;padding-right:0">
+                <div class="td-cont">
+                    <p>{$trade.status_str}<if condition="$trade['end_type'] gt 0"><br>({$trade.end_type_str})</if></p>
+                    <if condition="$trade['refund_status'] gt 0">
+                    <a href="javascript:;" class="js-refund" style="line-height:12px">
+                        <!--<?php if($trade['refunded_score'] > 0 ){echo $trade['refunded_score'].$trade['project']['score_alias']; if($trade['refunded_fee'] > 0 ){echo '<br>+'.$trade['refunded_fee'].'元';}}else{echo $trade['refunded_fee'];} ?><br>-->
+                        {$trade.refund_status_str}
+                    </a>
+                    <elseif condition="$trade['status'] gt 2"/>
+                    <a href="javascript:;" class="js-refund">办理退款</a>
+                    </if>
+                </div>
+                <a href="javascript:;" data-tid="{$trade['tid']}" class="js-btn-cancel">{$trade.refunded_desc}</a>
+            </td>
+            <td class="pay-price-cell" rowspan="{$rowspan}">
+                <div>{$trade['need_payment']}元</div>
+                <if condition="$trade['need_score'] gt 0">
+                <div class="postage">+{$trade['need_score']}{$trade['project']['score_alias']}</div>
+                </if>
+                <if condition="$trade['total_postage'] gt 0">
+                <div class="postage">(含运费{$trade['total_postage']}元)</div>
+                </if>
+                <if condition="$trade['status'] eq 1 && $auth_adjust">
+                <a href="javascript:;" class="js-adjust_fee">修改价格</a>
+                </if>
+            </td>
+        </tr>
+        <?php }else{ ?>
+        <tr class="content-row">
+            <td class="image-cell">
+                <img src="{$order.pic_url}">
+            </td>
+            <td class="title-cell">
+                <p class="goods-title">
+                    <a href="{$p_url['host']}/{$p_url['alias']}/goods?id={$order.goods_id}" target="_blank"get="_blank" class="new-window">{$order.title}</a>
+                </p>
+                <p class="goods-spec">{$order.spec} <a class="_js-goods_feedback" data-gid="{$order.goods_id}" title="反馈" href="__MODULE__/goods/edit?id={$order.goods_id}"><i class="icon-pencil"></i></a></p>
+                <p style="color: #ED5050;">{$order['errmsg']}</p>
+            </td>
+            <td class="price-cell">
+                <if condition="$order['score'] gt 0"><p>{$order['score']}{$trade['project']['score_alias']}</p>
+                    <if condition="$order['price'] gt 0"><p>+{$order['price']}元</p></if>
+                <else/>
+                <p>{$order['price']}</p>
+                </if>
+                <p>({$order.quantity}件)</p>
+            </td>
+        </tr>
+        <?php } ?>
+        </foreach>
+        <notempty name="trade['buyer_remark']">
+        <tr class="remark-row buyer-msg">
+            <td colspan="8">买家备注： {$trade.buyer_remark|htmlspecialchars}</td>
+        </tr>
+        </notempty>
+    </tbody>
+    </foreach>
+    </if>
+</table>
+<div id="pagination" style="text-align:right;" data-page="{$page}" data-total="{$rows}" data-size="{$size}"></div>

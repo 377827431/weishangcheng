@@ -1,0 +1,124 @@
+<form method="post" action="__ACTION__?id={$data['id']}" data-validate="true" data-continue="true" data-submit="ajax" class="agent-modal form-horizontal modal modal-small hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <style>
+    .modal.agent-modal{width:600px;margin-left:-300px}
+    .agent-modal .form-group{margin:0}
+    .agent-modal .modal-body{padding:0}
+    .agent-modal .controls input{width:150px}
+    .agent-modal .controls select{width:164px}
+    .agent-modal .relation-agent,.agent-modal .agent-contianer{width:100%}
+    .agent-modal .relation-agent select{width:465px}
+    .agent-modal .controls input.agent-item{width:63px}
+    .agent-modal .agent-contianer i{margin:3px 5px 0 5px}
+    .agent-modal .error-message{width:0;height:0;overflow:hidden}
+  </style>
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3>单品代理分组</h3>
+  </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <div class="form-item">
+                <div class="control-group">
+                    <label class="control-label must">分组名称</label>
+                    <div class="controls">
+                        <input type="text" name="title" value="{$data.title}" placeholder="勿和代理级别重复" maxlength="6" class="required" }>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">关联会员卡</label>
+                    <div class="controls">
+                        <select name="card_id">
+                            <option value="">不送会员卡</option>
+                            <foreach name="cards" item="item">
+                                <option value="{$item.id}"{$data['card_id']==$item['id']?'selected="selected"':''}>{$item.title}</option>
+                            </foreach>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-item">
+                <div class="control-group">
+                    <label class="control-label">佣金结算时间</label>
+                    <div class="controls">
+                        <select name="settlement_type">
+                            <foreach name="settlement_type" key="stid" item="item">
+                                <option value="{$stid}"{$data['settlement_type']==$stid?'selected="selected"':''}>{$item.title}</option>
+                            </foreach>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">佣金结算方式</label>
+                    <div class="controls">
+                        <select name="reward_type">
+                            <option value="0">按成交额百分比计算</option>
+                            <option value="1"{$data['reward_type']==1?'selected="selected"':''}>每成交1件提n元</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-item relation-agent">
+                <div class="control-group">
+                    <label class="control-label">关联代理权</label>
+                    <div class="controls">
+                        <input type="hidden" name="relation" id="agent_relation_name" />
+                        <select id="agent_relation" class="js-select2" multiple="multiple" data-placeholder="升级就送" data-maximum-selection-length="10">
+                            <foreach name="relations" item="items">
+                                <optgroup label="{$items.title}">
+                                    <foreach name="items['items']" key="levelid" item="item">
+                                        <option value="{$levelid}"{:in_array($levelid, $data['relation'])?'selected="selected"':''}>{$item.title}</option>
+                                    </foreach>
+                                </optgroup>
+                            </foreach>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-item agent-contianer">
+                <div class="control-group">
+                    <label class="control-label must">代理级别</label>
+                    <div class="controls" id="agents">
+                        <input type="text" class="agent-item" maxlength="4" placeholder="四级代理" name="items[1][title]" value="<?php echo $data['items'][$data['id'].'1']['title'];?>" required="required" data-msg-required="&nbsp;" /><i>&lt;</i>
+                        <input type="text" class="agent-item" maxlength="4" placeholder="三级代理" name="items[2][title]" value="<?php echo $data['items'][$data['id'].'2']['title'];?>" required="required" data-msg-required="&nbsp;" /><i>&lt;</i>
+                        <input type="text" class="agent-item" maxlength="4" placeholder="二级代理" name="items[3][title]" value="<?php echo $data['items'][$data['id'].'3']['title'];?>" required="required" data-msg-required="&nbsp;" /><i>&lt;</i>
+                        <input type="text" class="agent-item" maxlength="4" placeholder="一级代理" name="items[4][title]" value="<?php echo $data['items'][$data['id'].'4']['title'];?>" /><i>&lt;</i>
+                        <input type="text" class="agent-item" maxlength="4" placeholder="全国总代" name="items[5][title]" value="<?php echo $data['items'][$data['id'].'5']['title'];?>" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        <button type="submit" class="btn btn-primary" aria-hidden="true">保存</button>
+    </div>
+    <script>
+    (function () {
+        var $agent_relation = $('#agent_relation'), $relationName = $('#agent_relation_name');
+        // 一个代理分组只能选一个
+        $agent_relation.on('select2:selecting', function (ev) {
+            var id = ev.params.args.data.id.toString();
+            var selected = $agent_relation.val(), nv = '';
+            if (selected) {
+                var group = id.substring(0, id.length - 1);
+                for (var i = 0; i < selected.length; i++) {
+                    var g = selected[i].toString();
+
+                    if (g.substring(0, g.length - 1) == group) {
+                        selected.splice(i, 1);
+                        selected.push(id);
+                        $agent_relation.val(selected);
+                        $relationName.val(selected.join(','));
+                        return true;
+                    }
+                }
+
+                selected.push(id);
+                nv = selected.join(',');
+            }
+            $relationName.val(nv);
+            return true;
+        });
+    })();
+    </script>
+</form>

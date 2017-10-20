@@ -1,0 +1,26 @@
+<toolbar id="toolbar"></toolbar>
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table" data-url="__URL__" data-toolbar="#toolbar" data-side-pagination="client" data-tree-view="true" data-pagination="false">
+    <thead>
+        <tr>
+            <th data-width="40" data-checkbox="true"></th>
+            <th data-width="150" data-field="name" data-tree="true">名称</th>
+            <th data-width="80" data-field="icon" data-visible="false" data-align="center" data-formatter="formatter_icon">图标</th>
+            <th data-width="100" data-field="sort" data-align="center">排序</th>
+            <th data-field="created">创建时间</th>
+            <th data-field="goods_quantity" data-align="center">商品数量</th>
+            <th data-field="url" data-formatter="formatter_url">链接地址</th>
+        </tr>
+    </thead>
+</table>
+<script type="text/javascript">
+//图标
+function formatter_icon(val, row, index){
+    return val == '' ? '' : '<img class="img-circle" src="'+val+'" style="width:32px; height:32px">';
+}
+
+//链接地址
+function formatter_url(val, row, index){
+    return '/mall?tag_id='+row.id;
+}
+</script>

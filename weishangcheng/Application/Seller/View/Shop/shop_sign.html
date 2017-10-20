@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="店招图片" />
+    <link rel="stylesheet" href="__CDN__/css/seller/canvas_img_cut.css">
+    <style>
+
+        .p_title{font-size:14px;font-family:"微软雅黑";line-height:30px;}
+        .p_info{font-size:12px;font-family:"微软雅黑";line-height:20px;}
+        .button_yellow{color:white;background-color: #ff5000;line-height:42px;border-radius:6px;font-size:16px;font-family:"微软雅黑";text-align:center;}
+        img{display:block;}
+        .photo_viewer img{width:100%;}
+        .photo_selecter {box-sizing:border-box;width:100%;padding-left:4%;padding-right:4%;}
+        .photo_selecter ul{font-size:0;margin-top:30px;}
+        .photo_selecter ul li{display:inline-block;box-sizing:border-box;width:25%;position:relative;cursor:pointer;}
+        .photo_selecter ul li img{width:90%;margin:0 auto;}
+        .button_container {box-sizing:border-box;width:100%;padding-left:4%;padding-right:4%;}
+        .button_yellow{color:white;background-color: #ff5000;line-height:42px;border-radius:6px;font-size:16px;font-family:"微软雅黑";text-align:center;cursor:pointer;}
+        li.on::after{content:"";width:20px;height:20px;position:absolute;bottom:24px;right:0px;background: url('__CDN__/img/seller/right_yellow.png') no-repeat;background-size:100% 100%;}
+    </style>
+</head>
+<body style="background-color: #f4f4f4;">
+    <div class="container">
+        <div class="content ">
+            <div class="content-body" style="">
+                <div id="cut_img" style="display:none;">
+                    <div class="canvas_container">
+                        <canvas id="result_canvas">
+                            <p>插件无法加载...</p>
+                        </canvas>
+                        <canvas id="show_canvas">
+                            <p>插件无法加载...</p>
+                        </canvas>
+                        <canvas id="mask_canvas">
+                            <p>剪切插件</p>
+                        </canvas>
+                    </div>
+                    <div class="cut_controller">
+                        <div class="cut_save" style="cursor:pointer;">保存</div>
+                        <div class="cut_cancel" style="cursor:pointer;">取消</div>
+                    </div>
+                </div>
+                <div class="photo_viewer">
+                    <img src="{$shop_sign_big}">
+                </div>
+                <div class="photo_selecter">
+                    <ul>
+                        <li class="default_sign {$select[1]}">
+                            <img src="__CDN__/img/seller/default_shopsign1.jpg">
+                            <p class="p_title" style="text-align:center;">默认一</p>
+                        </li>
+                        <li class="default_sign {$select[2]}">
+                            <img src="__CDN__/img/seller/default_shopsign2.jpg">
+                            <p class="p_title" style="text-align:center;">默认二</p>
+                        </li>
+                        <li class="default_sign {$select[3]}">
+                            <img src="__CDN__/img/seller/default_shopsign3.jpg">
+                            <p class="p_title" style="text-align:center;">默认三</p>
+                        </li>
+                        <li class="{$haspic} {$select[4]}">
+                            <img src="{$custom_pic}">
+                            <p class="p_title" style="text-align:center;">自定义</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="button_container" style="position:relative;">
+                    <div class="button_yellow" style="font-size:16px;cursor:pointer;margin-top:30px;margin-bottom:10px;background-color:#da8f3e;">上传自定义图片</div>
+                    <input type="file" class="custom" style="position:absolute;top:0px;width:100%;height:100%;opacity:0;">
+                </div>
+                <div class="button_container save">
+                    <div class="button_yellow" style="font-size:16px;cursor:pointer;margin-bottom:24px;background-color:#da8f3e;">保存</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        require(['image_cut','jquery','lrz'],function(t,$){
+            //选择照片
+            $("ul li").click(function(){
+                if($(this).hasClass("default_sign")){
+                    //点击的是默认店招照片。
+                    $("ul li").toggleClass("on",false);
+                    $(this).toggleClass("on",true);
+                    var src = $(this).find("img").attr("src");
+                    $("div.photo_viewer img").attr("src",src);
+                }else{
+                    //点击的是添加自定义照片,当用户已经上传照片，则走第一个if;
+                    $("input.custom").trigger("click");
+                }
+            })
+            //用户点击自定义按钮触发
+            $("input.custom").on("change",function(){
+                var file = $(this).get(0).files[0];
+                lrz(file).then(function(rst){
+                    $('#cut_img').show();
+                    t.show({
+                        show_canvas:"#show_canvas",
+                        mask_canvas:"#mask_canvas",
+                        result_canvas:"#result_canvas",
+                        canvas_container:".canvas_container",
+                        source_imgSrc:rst.base64,
+                        mask_border:40,
+                        radio_wh:640/339,
+                        min_length:80
+                    });
+                })
+            })
+            //剪裁弹窗保存
+            $(".cut_save").click(function(){
+                var imgSrc = t.getImageSrc();
+                var fd = new FormData();
+                fd.append("upfile", imgSrc);
+                $.ajax({
+                    url: "__CDN__/ueditor?action=uploadscrawl",
+                    type: "POST",
+                    processData: false,
+                    contentType: false,
+                    data: fd,
+                    success: function(d) {
+                        var dd = JSON.parse(d);
+                        if (dd.state == 'SUCCESS'){
+                            $.ajax({
+                                url: "/seller/shop/set_custom_picture",
+                                data: {custom_pic: dd.url},
+                                type: 'post',
+                                success: function(){
+                                }
+                            });
+                            $(".photo_selecter ul li:last-child img").attr("src",dd.url);
+                            $(".photo_viewer img").attr("src",dd.url);
+                            $(".photo_selecter ul li").toggleClass("on",false);
+                            $(".photo_selecter ul li:last-child").toggleClass("on",true);
+                            $(".photo_selecter ul li:last-child").toggleClass("default_sign",true);
+                        }
+                    },
+                    complete:function(){
+                        $('#cut_img').hide();
+                    }
+                });
+            })
+            //剪切弹窗取消
+            $(".cut_cancel").click(function(){
+                $('#cut_img').hide();
+            })
+            //选择店招图片保存按钮
+            $("div.save").click(function(){
+                var $select = $(".photo_selecter ul li.on");
+                if($select.length == 0){
+                    toast.show("请选择店招图片");
+                }else{
+                    var shop_sign = $select.children("img").attr("src");
+                    $.ajax({
+                        url: "/seller/shop/shop_sign",
+                        data: {shop_sign: shop_sign},
+                        type: 'post',
+                        success: function(){
+                            toast.show('已保存');
+                            window.location.href = "/seller/shop";
+                        }
+                    });
+                }
+            })
+        })
+
+    </script>
+</body>
+</html>

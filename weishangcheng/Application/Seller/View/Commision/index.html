@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="佣金设置" />
+    <style>
+        ul li{box-sizing:border-box;padding-left:4%;padding-right:4%;line-height:48px;border-bottom:1px solid #ccc;width:100%;font-size:14px;font-family: "微软雅黑";background-color: white;}
+        ul li input{border:none;outline:none;}
+        ul li span:nth-child(1){display:inline-block;vertical-align: middle;}
+        ul li select{text-align:right;margin-top:15px;font-size:14px;font-family: "微软雅黑";direction: rtl;}
+        ul li select option{direction: ltr;}
+        ul li>div::after{display:inline-block;content:"";width: 7px;height: 7px;border-top: 2px solid black;border-right: 2px solid black;-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);-ms-transform: rotate(45deg);transform: rotate(45deg);}
+        ul li .comission_rate{float:right;margin-top:15px;text-align:right;}
+        .comission_btn_container{position:fixed;bottom:0px;width:92%;padding:10px 4%;background-color: #fff;border-top:1px solid #ccc;}
+        .comission_btn{width:100%;line-height:40px;background-color: #ff5000;line-height:40px;font-size:14px;color:white;border-radius:6px;text-align:center;font-family: "微软雅黑";}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <ul>
+                <li>
+                    <span>佣金结算方式</span>
+                    <div style="float:right">
+                    <select name="comission_select">
+                        <option value="0" {$card['settlement_type'] == 0 ? 'selected="selected"' : ''}>不参与推广</option>
+                        <!--<option value="1">手动结算（暂不支持）</option>-->
+                        <option value="2" {$card['settlement_type'] == 2 ? 'selected="selected"' : ''}>买家付款后</option>
+                        <option value="3" {$card['settlement_type'] == 3 ? 'selected="selected"' : ''}>上传快递单号后</option>
+                        <option value="4" {$card['settlement_type'] == 4 ? 'selected="selected"' : ''}>确认收货后（推荐）</option>
+                    </select>
+                    </div>
+
+                </li>
+                <li>
+                    <span>佣金比例</span>
+                    <input class="comission_rate" type="text" placeholder="请填写佣金比例0~50" value="{$card['agent_rate']}"/>
+                </li>
+            </ul>
+            <div class="comission_btn_container">
+                <div class="comission_btn">提交佣金设置</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        require(['jquery'],function($){
+            $("div.comission_btn").click(function(){
+                var comission_id = $("select[name='comission_select']").val();
+                var comission_value = $('select option[value="'+  comission_id +'"]').text();
+                var comission_rate = $('.comission_rate').val();
+                if(comission_rate == ""){
+                    toast.show("请填写佣金比率");
+                    return false;
+                }
+                if(parseFloat(comission_rate)> 50 || parseFloat(comission_rate)< parseFloat(0) ||isNaN(comission_rate)){
+                    toast.show("佣金比率为0~50");
+                    return false;
+                }
+                console.log({
+                    comission_id:comission_id,
+                    comission_value:comission_value,
+                    comission_rate:comission_rate
+                });
+                $.ajax({
+                    url: '__ACTION__',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {agent_rate:comission_rate, settlement_type:comission_id},
+                    success: function(data){
+                        toast.show("佣金设置成功");
+                    }
+                });
+            })
+        })
+    </script>
+</body>
+</html>

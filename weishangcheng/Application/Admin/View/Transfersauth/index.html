@@ -1,0 +1,135 @@
+<toolbar id="toolbar">
+	<form class="form-horizontal">
+		<div class="control-group span6">
+			<label class="control-label">店铺名称</label>
+			<div class="controls">
+				<input type="text" name="shop_name" data-search="true" value="{$data.shop_name}">
+			</div>
+		</div>
+		<div class="control-group span6">
+			<label class="control-label">姓名</label>
+			<div class="controls">
+				<input type="text" name="card_name" data-search="true" value="{$data.card_name}">
+			</div>
+		</div>
+		<div class="control-group span6">
+			<label class="control-label">身份证号</label>
+			<div class="controls">
+				<input type="text" name="card_no" data-search="true" value="{$data.card_no}">
+			</div>
+		</div>
+		<div class="control-group span6">
+			<label class="control-label">店铺所有人</label>
+			<div class="controls">
+				<input type="text" name="au_username" data-search="true" value="{$data.au_username}">
+			</div>
+		</div>
+		<div class="control-group span6">
+			<label class="control-label">申请时间</label>
+			<div class="controls">
+				<div class="input-append date" data-format="yyyy-MM-dd">
+	                <input type="text" name="created_str" value="{$data.created_str}">
+	                <span class="add-on"><i class="icon-th"></i></span>
+	            </div>
+			</div>
+		</div>
+		<div class="control-group span6">
+			<label class="control-label">审核状态</label>
+			<div class="controls">
+				<select name="status" data-search="true" data-selected="{$data.status}">
+					<option value="">全部</option>
+					<option value="0">等待审核</option>
+					<option value="1">已通过</option>
+					<option value="2">未通过</option>
+				</select>
+			</div>
+		</div>
+	</form>
+</toolbar>
+
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-url="__URL__" data-toolbar="#toolbar" data-show-columns="true" data-side-pagination="server" data-page-size="20" >
+    <thead>
+		<tr>
+			<!-- <th data-width="40" data-align="center" data-checkbox="true"></th> -->
+			<th data-width="200" data-field="shop_name">店铺名称</th>
+			<th data-width="150" data-field="card_name">姓名</th>
+			<th data-width="200" data-field="card_no">身份证号</th>
+			<th data-width="150" data-field="au_username">店铺所有人</th>
+			<th data-width="150" data-field="card_pic" data-formatter="fomat_pic"> 身份认证图片</th>
+			<th data-width="150" data-field="created_str">申请时间</th>
+			<th data-field="status" data-formatter="fomat_status">审核状态</th>
+			<th data-width="150" data-field="modify_str">审核时间</th>
+			<th data-width="120" data-formatter="formatter_action" data-align="right">操作</th>
+		</tr>
+	</thead>
+</table>
+
+<script type="text/javascript">
+
+//格式化数据
+function fomat_status(val, row, index){
+	if(val == 0){
+		return '等待审核';
+	}else if(val == 1){
+		return '已通过';
+	}else{
+		return '未通过';
+	}
+}
+
+function formatter_action(val, row, index){
+    var id = row.id;
+    var html = '<p>' +
+        '    <a href="javascript:;" class="js-confirm">通过</a>' +
+        '    <span>-</span>' +
+        '    <a href="javascript:;" class="js-cancel">取消</a>'+
+        '</p>'
+    return html;
+}
+
+function fomat_pic(val, row, index){
+    var html = '<img class="big-img" src="'+val+'" target="_blank" style="width: 64px; height: 64px; display: inline;">';
+	return html;
+}
+
+$(function(){
+    $('#table').on('click', '.js-cancel, .js-confirm',function(){
+        var $ele = $(this),
+            id = $ele.parents('tr:first').data('uniqueid'),
+            url = $('#toolbar').data('module'),
+            postData = {};
+        if($ele.hasClass('js-cancel')){
+            var message = $ele.data('message') || '确认审批失败？';
+            if(!confirm(message)){
+                return false;
+            }
+            $.ajax({
+                url: url + '/checkinfo',
+                type: 'post',
+                data: {id:id,status:'2'},
+                dataType: 'json',
+                success: function(){
+                    $('#table').bootstrapTable('refresh');
+                }
+            });
+        }else if($ele.hasClass('js-confirm')){
+            var message = $ele.data('message') || '确认审批通过？';
+            if(!confirm(message)){
+                return false;
+            }
+            $.ajax({
+                url: url + '/checkinfo',
+                type: 'post',
+                data: postData,
+                data: {id:id,status:'1'},
+                dataType: 'json',
+                success: function(){
+                    $('#table').bootstrapTable('refresh');
+                }
+            });
+        }
+        return false;
+    });
+});
+</script>

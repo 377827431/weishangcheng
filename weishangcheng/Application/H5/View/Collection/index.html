@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<include file="_layout/mall.head.html" />
+</head>
+<body class="body-fixed-bottom">
+	<div class="container">
+		<div class="content">
+			<div class="content-body">
+				<ul class="js-goods-list sc-goods-list clearfix list size-3">
+					<li><div class="empty-list list-finished"><p class="font-size-12">正在加载中...</p></div></li>
+				</ul>
+			</div>
+		</div>
+		<include file="_layout/mall.copyright.html" />
+	</div>
+	<include file="_layout/mall.footer.html" />
+	
+	<script type="text/javascript">
+	require(['goods_list'], function(gv){
+        gv.start({
+            url: '/h5/collection',
+            container: '.js-goods-list',
+            pullfresh: true
+        });
+        
+        gv.onLongClick = function(){
+        	var $li = $(this);
+        	var id = $li.data('id');
+        	$li.hide();
+        	$.ajax({
+        		url: '/h5/collection/delete',
+        		type: 'post',
+        		data: {goods_id: id},
+        		dataType: 'json',
+        		waitting: false,
+        		success: function(){
+        			$li.remove();
+        		},
+        		error: function(){
+        			$li.show();
+        		}
+        	});
+        }
+    });
+	require(['module/cart/num']);
+</script>
+</body>
+</html>

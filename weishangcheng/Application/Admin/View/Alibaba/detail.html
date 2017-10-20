@@ -1,0 +1,51 @@
+<style type="text/css">
+.css-detail img{width: 500px;}
+</style>
+<div id="goodsModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal"
+			aria-hidden="true">×</button>
+		<h3 id="myModalLabel">{$data.seller_nick}</h3>
+	</div>
+	<div class="modal-body" style="padding: 0 15px;margin-top: -1px;">
+		<table class="table" style="margin-bottom: 0;">
+			<tr>
+				<td><span class="js-detail-images"></span></td>
+			</tr>
+		</table>
+		<table class="table" style="margin-bottom: 0;">
+			<tr>
+				<td><span class="js-detail css-detail">{$data.detail}</span></td>
+			</tr>
+		</table>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    	<a type="button" class="btn btn-primary" href="__MODULE__/goods?shop_id={$shop.id}">商品管理</a>
+	</div>
+	<script>
+	(function(){
+		var $modal = $('#goodsModal');
+		$modal.modal({backdrop: 'static'}).on('hidden', function(){
+			$modal.remove();
+			return false;
+		});
+
+		var images = $('.js-detail').html();
+		var patt = new RegExp("https:[a-z0-9_\/\.]*\.jpg","g");
+		var result;
+		var html;
+		do
+		{
+			result=patt.exec(images);
+			if (html == null) {
+				html = result;
+			}else if (result != null) {
+				html = html+'<br/>'+result;
+			}
+		}
+		while (result!=null)
+		$('.js-detail-images').append(html);
+	})();
+	</script>
+</div>

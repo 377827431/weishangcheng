@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="招募文案" />
+    <style>
+		p.ptitle{font-size:14px;font-weight:bold;line-height:46px;}
+		p.zhaomu_title::after{content:" (字数不易过多)";color:grey;font-size:12px;font-weight:normal;}
+		input{border:none;outline:none;background-color:rgba(0,0,0,0);}
+		div.title{border-bottom:1px solid #ccc;padding-bottom:10px;}
+		div.artical textarea{width:100%;border-radius: 6px;resize:none;box-sizing:border-box;height:500px;}
+		div.half_btn{width:40%;line-height:46px;background-color:#da8f3e;height:46px;text-align:center;color:white;font-size:14px;border-radius:6px;}
+    </style>
+
+</head>
+<body style="background-color:white;width:92%;box-sizing:border-box;margin-left:4%;">
+	<div class="title">
+		<p class="ptitle zhaomu_title">招募标题</p>
+		<input type="text" value="{$recruit.recruit_title}" placeholder="诚招推广员">
+	</div>
+	<div class="artical">
+		<p class="ptitle">招募文案</p>
+		<textarea style="padding:5px 8px;" placeholder="以下招募文案模板，请根据情况自行修改，仅供参考。 需要在方案说明中阐述清楚：如何成为推广员、如何推广商品、以及推广商品后，可获得的相应奖励，以及业绩规则说明，结算规则说明，以及出现疑问和问题，如何联系到商家等等内容。———————————
+&nbsp;
+小伙伴，欢迎加入我们
+&nbsp;
+我们是XXX运营团队，竭诚为你的销售工作提供完善的支持。
+&nbsp;
+我们诚挚邀请你加入我们的销售员推广计划，无任何成本即可成为XXX的销售员，一起分享收获的喜悦。你只需将高品质商品分享推荐给他人，收获他人的感谢的同时，挣得属于自己的利润。
+&nbsp;
+&nbsp;
+1. 业绩说明
+1）买家通过销售员分享链接成交，即算作销售员的业绩；
+2）订单交易完成前发生退款的订单，相应的销售员业绩将扣除相应的退款金额；
+3）仅在线支付的订单算作业绩，不包括货到付款订单。
+&nbsp;
+&nbsp;
+2. 结算说明
+1）推广订单金额在XXX元以下，获得X%的业绩提成；
+2）推广订单金额在XXX元～XXX元之间，获得X%的业绩提成；
+3）推广订单金额在XXX元～XXX元之间，获得X%的业绩提成；
+4）每月XX号前，我们将会和各销售员核算业绩；
+5）每月XX号前，我们会将业绩奖励打入各销售员提供的银行账号。
+&nbsp;
+&nbsp;
+3. 其他说明
+1）分享前，请确定商品页面有【···】按钮；
+2）销售过程中有任何疑问，请直接在微信公众号内询问或直接致电；
+3）已售出商品的任何售后问题，由本商城处理；
+4）不传播或者扩散有关于政治、色情等任何违法的信息，一经发现，直接踢你出局，如果触犯任何法律相关问题，商城不负任何责任；
+5）以上内容解释权归本商城所有。
+&nbsp;
+&nbsp;
+4. 联系方式
+1）联络人：XXX
+2）手机：1234567889
+3）销售员QQ交流群：12345678
+4）邮箱：xxx@xxx.com
+无论是销售、对账，还是结算问题，请通过以上方式咨询。">{$recruit.recruit_content}</textarea>
+	</div>
+	<div style="display:fixed;bottom:0px;height:60px;width:100%;background-color:#f8f8f8;">
+		<div style="width:100%;height:100%;display:flex;justify-content:space-between;box-sizing:border-box;">
+			<div class="half_btn save_btn" style="cursor:pointer;">保存</div>
+			<div class="half_btn route_btn" style="cursor:pointer;">转发</div>
+		</div>
+	</div>
+	<script>
+		require(['jquery','h5/jsweixin'],function($,jweixin){
+			$("div.save_btn").on("click",function(){
+				var title = $("div.title input").val();
+				if($.trim(title) == ""){
+					toast.show("请填写招募标题");
+					return false;
+				}
+				var detail = $("div.artical textarea").val();
+				if($.trim(detail) == ""){
+					toast.show("请填写招募文案");
+					return false;
+				}
+				if($.trim(detail).length <= 20){
+					toast.show("招募文案最少要20个字");
+					return false;
+				}
+				var data = {
+					title:$.trim(title),
+					detail:$.trim(detail)
+				}
+				console.log(data);
+				$.ajax({
+					url: "/seller/commision/promoters_recruit_copywriter",
+					type: 'post',
+					data: {recruit_title:data.title,recruit_content:data.detail},
+					dataType: 'json',
+					success:function(data){
+						if(data == 1){
+							toast.show('保存成功');
+							history.go(-1);
+						}
+					}
+				})
+			});
+	   //      jweixin.init({$pack}, function(){   
+		  //       $("div.route_btn").on("click",function(){
+				// 	jweixin.share({$share_data}, function(){
+		  //               toast.show('转发成功');
+		  //           });
+				// });
+	   //      });
+	        $("div.route_btn").on("click",function(){
+	        	var title = $("div.title input").val();
+				if($.trim(title) == ""){
+					toast.show("请填写招募标题");
+					return false;
+				}
+				var detail = $("div.artical textarea").val();
+				if($.trim(detail) == ""){
+					toast.show("请填写招募文案");
+					return false;
+				}
+				if($.trim(detail).length <= 20){
+					toast.show("招募文案最少要20个字");
+					return false;
+				}
+				var data = {
+					title:$.trim(title),
+					detail:$.trim(detail)
+				}
+				console.log(data);
+	        	$.ajax({
+					url: "/seller/commision/promoters_recruit_copywriter",
+					type: 'post',
+					data: {recruit_title:data.title,recruit_content:data.detail,zhuanfa:1},
+					dataType: 'json',
+					success:function(data){
+						window.location.href= data.link;
+					}
+				})
+			});
+			
+		})
+		
+	</script>
+</body>
+</html>

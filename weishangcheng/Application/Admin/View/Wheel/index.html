@@ -1,0 +1,51 @@
+<toolbar id="toolbar">
+	<form class="search-box">
+		<input type="text" name="title" value="" placeholder="活动名称">
+		<button type="button" data-name="search" class="btn btn-default" data-event-type="default">
+			<i class="icon-search"></i>
+		</button>
+	</form>
+</toolbar>
+
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-url="__URL__" data-toolbar="#toolbar">
+    <thead>
+		<tr>
+			<th data-width="40" data-align="center" data-checkbox="true"></th>
+			<th data-field="title" data-width="250">活动名称</th>
+			<th data-field="subscribe" data-width="100" data-formatter="formatter_subscribe">参与限制</th>
+			<th data-field="active_time" data-width="130">有效期</th>
+			<th data-field="uv_times" >参与人/次</th>
+			<th data-field="url">链接地址</th>
+			<!-- <th data-formatter="formatterAction">查看奖品</th> -->
+		</tr>
+	</thead>
+</table>
+<script type="text/javascript">
+	//格式化数据
+	function formatter_subscribe(subscribe, row, index){
+		if(subscribe == '1'){
+			return '必须关注';
+		}else{
+			return '无限制';
+		}
+	}
+	
+	function formatterAction(val, row, index){
+		return '<a class="js-addLocation" data_id="'+row.id+'">查看</a>';
+	}
+	
+	$(function(){
+		$("#table").on('click', '.js-addLocation', function(){
+			var id = $(this).attr("data_id");
+			var gridview = $('#table').data('gridview');
+			
+			if(id == '' || isNaN(id)){
+				return false;
+			}
+			
+			gridview.loadModal('/wheel/detail?wheel_id='+id);
+			return false;
+		})
+	})
+</script>

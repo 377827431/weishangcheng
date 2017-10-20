@@ -1,0 +1,72 @@
+ <toolbar id="toolbar" class="toolbar">
+	<form id="level_search" class="form-horizontal">
+		<div class="clearfix">
+			<if condition="$access eq true">
+				<div class="filter-groups">
+					<div class="control-group">
+						<label class="control-label">操作人</label>
+						<div class="controls">
+							<select name="uid" id="sel_users">
+							  <option value="">全部</option>
+				              <foreach name="users" item="item">
+								<option value="{$item.id}">{$item.nick}-{$item.username}</option>
+							  </foreach>
+							</select>
+						</div>
+					</div>
+				</div>
+			</if>
+			<div class="pull-left">
+				<div class="control-group">
+					<label class="control-label" style="width: 120px;">操作时间</label>
+					<div class="controls" style="margin-left:125px;">
+						<div class="input-append date" data-format="yyyy-MM-dd hh:mm:ss">
+							<input type="text" name="start_date" value="{$search.start_date}"style="width: 130px;">
+							<span class="add-on"><i class="icon-th"></i></span>
+						</div>
+						至
+						<div class="input-append date" data-format="yyyy-MM-dd hh:mm:ss">
+							<input type="text" name="end_date" value="{$search.end_date}" style="width: 130px;">
+							<span class="add-on"><i class="icon-th"></i></span>
+						</div>
+					</div>
+				</div>
+			</div>
+	 	</div>
+	</form>
+</toolbar>
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-url="__URL__" data-toolbar="#toolbar"  data-page-list="[1, 10, 25, 50, All]">
+    <thead>
+		<tr>
+			<th data-width="150" data-field="nick">操作人</th>
+			<th data-width="150" data-field="username">操作账号</th>
+			<th data-width="200" data-field="nickname">代理昵称</th>
+			<th data-width="100" data-field="old_level_name">原代理等级</th>
+			<th data-width="100" data-field="level_name">调级后等级</th>
+			<th data-field="created">操作时间</th>
+		</tr>
+	</thead>
+</table>
+
+<script type="text/javascript" src="//cdn.bootcss.com/select2/4.0.3/js/select2.min.js"></script>
+<link rel="stylesheet" href="//cdn.bootcss.com/select2/4.0.3/css/select2.min.css">
+
+<script type="text/javascript">
+$(function(){
+	$('#table').on('printdetail',function(e, gridview ,params){
+		var data = $('#level_search').serializeArray();
+		var url = '__URL__/printdetail?';
+		for(var i=0; i<data.length; i++){
+			url += (i > 0 ? '&' : '')+data[i].name+'='+data[i].value;
+		}
+		window.location.href = url;
+		return false;
+	}).on('adjust_level',function(e, gridview ,params){
+		params.url = '__URL__/adjust_level';
+	});
+});
+
+//多选
+$("#sel_users").select2();
+</script>

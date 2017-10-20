@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="支付宝绑定" />
+    <style>
+        div.ali_container{width:100%;box-sizing:border-box;padding-left:4%;padding-right:4%;}
+        div.ali_container input{border:none;outline:none;background-color:rgba(0,0,0,0);}
+        div.yellow_btn{width:100%;border-radius:6px;font-size:16px;text-align:center;line-height:46px;color:white;background-color:#fc4f0d;margin-top:5px;}
+        label{display:inline-block;line-height:50px;}
+        #ali_code{float:right;text-align:right;margin-top:16px;font-family:"微软雅黑";}
+        div.notice {margin-top:20px;font-size:16px;}
+        div.notice p::before{content:"";display:inline-block;width:25px;height:25px;background:url('/img/seller/notice_icon.jpg') no-repeat;background-size:100% 100%;vertical-align:middle;}
+    </style>
+</head>
+<body>
+    <div class="ali_container">
+        <div style="font-size:16px;">
+            <label>支付宝账号</label>
+            <input id="ali_code" type="text" value="{$data.alipay_accounts}" placeholder="请输入支付宝账号">
+        </div>
+        <div class="yellow_btn submit">提交</div>
+        <div class="notice">
+            <p>支付宝持有人请与认证姓名保持一致</p>
+        </div>
+    </div>
+    <script>
+        require(['jquery'],function(){
+            $("div.submit").on('click',function(){
+                var account = $("#ali_code").val();
+                if(account == ""){
+                    toast.show("帐号不能为空");
+                    return false;
+                }else{
+                    //发送ajax
+                    $.ajax({
+                        url: '/seller/income/alipay_edit',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {account: account},
+                        success:function(data){
+                            toast.show("绑定成功!");
+                            setTimeout(function(){
+                                window.location.href = "__MODULE__/income/index?method=alipay";
+                            },1500);
+                        }
+                    })
+                }
+            })
+        })
+    </script>
+</body>
+</html>

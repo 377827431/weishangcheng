@@ -1,0 +1,173 @@
+<!-- 表单 -->
+<form action="__ACTION__?id={$data.id}" class="form-horizontal" data-validate="true" data-submit="ajax" method="post" data-success="back">
+		<div class="process">
+			<div class="process-bar">
+                <ul id="js_nav">
+                    <li class="size3 selected"><span>选择红包类型</span></li>
+                    <li class="size3 next"><span>配置红包消息</span></li>
+                    <li class="size3 nnext last"><span>配置红包内信息</span></li>
+                </ul>
+            </div>	
+            <div class="process-cnt">
+            	<div class="process-cnt-item show">
+            		<div class="control-group">
+						<div class="controls">
+							<label class="radio inline"><input type="radio" name="type" value="4" checked="checked">定制红包</label>
+							<label class="radio inline"><input type="radio" name="type" value="1" disabled="disabled">现金红包</label>
+							<label class="radio inline"><input type="radio" name="type" value="2" disabled="disabled">裂变红包</label>
+							<label class="radio inline"><input type="radio" name="type" value="3" disabled="disabled">积分红包</label>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">红包描述</label>
+						<div class="controls">
+							<textarea name="desc" placeholder="方便您记忆红包的用途" class="input-xxlarge" maxlength="128">{$data.desc}</textarea>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label must">h5页面</label>
+						<div class="controls">
+							<input type="text" name="url" placeholder="url地址" class="input-xxlarge" required="required" value="{$data.url}" />
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="controls input-xxlarge text-center">
+							<button type="button" class="btn btn-back">返回</button>
+							<button type="button" class="btn btn-primary" onclick="go_next_step(1)">下一步</button>
+						</div>
+					</div>
+            	</div>
+            	
+            	<div class="process-cnt-item">
+	            	<div class="control-group">
+						<label class="control-label must">活动名称</label>
+						<div class="controls">
+							<input type="text" name="act_name" value="{$data.act_name}" placeholder="act_name" class="input-xxlarge" required="required" maxlength="32"/>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label must">商户名称</label>
+						<div class="controls">
+							<input type="text" name="send_name" value="{$data.send_name}" placeholder="send_name" class="input-xxlarge" required="required" maxlength="32"/>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label must">备注</label>
+						<div class="controls">
+							<input type="text" name="remark" value="{$data.remark}" placeholder="remark" class="input-xxlarge" maxlength="218" required="required"/>
+						</div>
+					</div>
+					<div id="js_wishing">
+						<foreach name="data['wishing']" key="index" item="item">
+						<eq name="index" value="0">
+						<div class="control-group">
+							<label class="control-label must">祝福语</label>
+							<div class="controls">
+								<div class="input-append">
+								  <!-- <input type="text" name="wishing[{$index}]" style="width: 490px;" maxlength="128" required="required" value="{$item}"/> -->
+								  <textarea name="wishing[{$index}]" style="width: 490px;" maxlength="128" required="required">{$item}</textarea>
+								  <button type="button" class="btn" onclick="add_wishing(this)"><i class="icon-plus"></i></button>
+								</div>
+							</div>
+						</div>
+						<else/>
+						<div class="control-group">
+							<div class="controls">
+								<div class="input-append">
+								  <!-- <input type="text" name="wishing[{$index}]" style="width: 490px;" maxlength="128" required="required" value="{$item}"/> -->
+								  <textarea name="wishing[{$index}]" style="width: 490px;" maxlength="128" required="required">{$item}</textarea>
+								  <button type="button" class="btn" onclick="remove_wishing(this)"><i class="icon-minus"></i></button>
+								</div>
+							</div>
+						</div>
+						</eq>
+						</foreach>
+					</div>
+					<div class="control-group">
+						<div class="controls input-xxlarge text-center">
+							<button type="button" class="btn btn-primary" onclick="go_next_step(0)">上一步</button>
+							<button type="button" class="btn btn-back">返回</button>
+							<button type="button" class="btn btn-primary" onclick="go_next_step(2)">下一步</button>
+						</div>
+					</div>
+            	</div>
+            	
+            	
+            	<div class="process-cnt-item">
+	            	<div class="control-group">
+						<label class="control-label">商户logo</label>
+						<div class="controls">
+							<div class="input-append" data-type="image">
+							  <input type="text" name="logo_imgurl" style="width: 490px;" disabled="disabled" value="暂不开放"/>
+							  <button type="button" class="btn btn-up"><i class="icon-arrow-up"></i></button>
+							</div>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">分享的文案</label>
+						<div class="controls">
+							<input type="text" name="share_content" value="{$data.share_content}"placeholder="share_content" maxlength="128" class="input-xxlarge"/>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">分享的图片</label>
+						<div class="controls">
+							<div class="input-append file" data-type="image">
+							  <input type="text" name="share_imgurl" style="width: 490px;" disabled="disabled" value="暂不开放"/>
+							  <button type="button" class="btn btn-up"><i class="icon-arrow-up"></i></button>
+							</div>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">分享的链接</label>
+						<div class="controls">
+							<input type="text" name="share_url" value="{$data.share_url}" placeholder="share_url" class="input-xxlarge"/>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="controls input-xxlarge text-center">
+							<button type="button" class="btn btn-primary" onclick="go_next_step(1)">上一步</button>
+							<button type="button" class="btn btn-back">返回</button>
+							<button type="submit" class="btn btn-primary">保存</button>
+						</div>
+					</div>
+            	</div>
+            </div>
+		</div>
+</form>
+
+<script type="text/javascript">
+// 添加祝福语
+function add_wishing(btn){
+	var html = '';
+	html += '<div class="control-group">';
+	html += '	<div class="controls">';
+	html += '		<div class="input-append">';
+	html += '		  <textarea name="wishing[]" style="width: 490px;" maxlength="128" required="required"></textarea>';
+	html += '		  <button type="button" class="btn" onclick="remove_wishing(this)"><i class="icon-minus"></i></button>';
+	html += '		</div>';
+	html += '	</div>';
+	html += '</div>';
+	$('#js_wishing').append(html);
+	reset_wishing();
+}
+
+// 移除祝福语
+function remove_wishing(btn){
+	$(btn).parent().parent().parent().remove();
+}
+
+function reset_wishing(){
+	var $input = $('#js_wishing textarea');
+	$input.each(function(i, item){
+		$input.eq(i).attr('name', 'wishing['+i+']');
+	});
+}
+
+reset_wishing();
+
+// 跳到第几步
+function go_next_step(index){
+	$('#js_nav>li:eq('+index+')').trigger('click');
+}
+</script>

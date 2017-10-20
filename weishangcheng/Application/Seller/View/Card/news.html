@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<include file="_layout/mall.head.html" />
+	<link rel="stylesheet" href="__CDN__/css/mobile.editor.css">
+</head>
+<body class="body-fixed-bottom">
+	<div class="container">
+		<div class="content">
+			<div class="content-body">
+				<div id="customContent" class="mobile-editor"></div>
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+require(['editor'], function(){
+	$('#customContent').editor({
+		css: '__CDN__/css/mall.css',
+		cards: {$cards},
+		save: function(html){
+			$.ajax({
+				url: '__ACTION__',
+				type: 'post',
+				data: {content: html},
+				dataType: 'json',
+				success: function(){
+					toast.show('已保存');
+				}
+			});
+		}
+	});
+});
+</script>
+</html>

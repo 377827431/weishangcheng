@@ -1,0 +1,81 @@
+<style>
+.rate-feedback{width:260px;max-height: 40px;overflow:hidden;cursor:pointer}
+.rate-created{color: #c5c5c5;width: 70px;height: 16px;overflow: hidden;}
+.goods-info{display: block;}
+</style>
+<toolbar id="toolbar" class="toolbar">
+	<form class="search-box">
+		<input id="rate_mid" type="text" name="buyer_id" value="{$_GET['buyer_id']}" placeholder="会员id">
+        <select name="result">
+            <option value="">评价</option>
+            <option value="1">好评</option>
+            <option value="2">中评</option>
+            <option value="3">差评</option>
+        </select>
+		<input type="text" name="goods_id" value="{$_GET['goods_id']}" placeholder="商品id">
+		<button type="submit" data-name="search" class="btn btn-default" data-event-type="default">
+			<i class="icon-search"></i>
+		</button>
+	</form>
+</toolbar>
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-url="__ACTION__" data-toolbar="#toolbar">
+	<thead>
+		<tr>
+            <th data-field="result" data-width="40" data-formatter="formatter_result">评价</th>
+            <th data-field="feedback" data-formatter="formatter_feedback">评论</th>
+            <th data-field="service" data-width="145" data-align="center">描述/物流/服务</th>
+            <th data-field="created" data-width="87">评价日期</th>
+            <th data-field="buyer_nick" data-width="120" data-formatter="formatter_buyer_nick">评价人</th>
+			<th data-field="tid" data-width="240" data-formatter="formatter_tid">宝贝信息</th>
+            <th data-field="action" data-width="100" data-formatter="formatter_action">操作</th>
+		</tr>
+	</thead>
+</table>
+<script type="text/javascript">
+function formatter_result(val, row, index){
+	return val
+}
+function formatter_tid(val, row, index){
+	return '<a class="goods-info" href="/order/detail?tid='+row.tid+'" target="_blank">'+row.title+row.spec+'</a>'
+}
+function formatter_feedback(val, row, index){
+	if(row.feedback == ''){
+		return '这个人很懒，什么都没有留下';
+	}
+	return '<div class="rate-feedback ellipsis">'+row.feedback+'</div>'
+}
+function formatter_buyer_nick(val, row, index){
+	return '<a href="/member?mid='+row.buyer_id+'" target="_blank">'+row.buyer_nick+'('+row.buyer_agent_level+')</a>'
+}
+function formatter_action(val, row, index){
+	var tip = row.visible == 1 ? '隐藏' : '显示';
+	return '<a class="js-delete" data-id="'+row.id+'" data-message="确定'+tip+'吗？">'+tip+'</a><br><a class="detail" data-id="'+row.buyer_id+'">'+'请查看'+'</a>';
+}
+function formatter_detail(index, row){
+	return row.feedback
+}
+
+$(function(){
+	$('#table').on('click', '.rate-feedback',function(){
+		var $this = $(this);
+		if($this.data('popover')){
+			return false;
+		}
+		
+		var html = $(this).html();
+		$this.popover({
+			placement: 'top',
+			content: html
+		});
+		$this.popover('show');
+		return false;
+	}).on('click', '.detail',function(){
+		var $this = $(this);
+		var mid = $this.data('id');
+		$('#rate_mid').val(mid);
+		$('#toolbar button').trigger('submit');
+		return false;
+	})
+});
+</script>

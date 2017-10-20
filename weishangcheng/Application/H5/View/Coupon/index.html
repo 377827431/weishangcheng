@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<include file="_layout/mall.head.html" />
+</head>
+<body class="body-fixed">
+	<div class="container">
+		<div class="content">
+			<div id="coupon-nav" class="tabber tabber-red tabber-n2 top-fix clearfix">
+				<a href="javascript:;" data-status="1">可使用</a>
+				<a href="javascript:;" data-status="0">已失效</a>
+			</div>
+			<div id="coupon-list" class="my-coupons">
+				<div class="block block-list"></div>
+			</div>
+		</div>
+		<include file="_layout/mall.copyright.html" />
+	</div>
+	<include file="_layout/mall.footer.html" />
+	<script type="text/javascript">
+	require(['h5/pullrefresh'], function(view){
+		var $container = $('#coupon-list');
+		
+		$('#coupon-nav').on('click', 'a', function(){
+			var $this = $(this), status = $this.data('status');
+			if($this.hasClass('active')){
+				$this.removeClass('active');
+			}
+			$this.addClass('active').siblings().removeClass('active');
+			
+			view.doRefresh({
+				url: '__MODULE__/coupon',
+	            data: {status: status, size: 20},
+	            dataType: "json",
+	            cacheKey: status,
+	            container: $container,
+	            success: function(list, page, size){
+	            	if(page == 1 && list.length == 0){
+	    				$container.html('<div class="empty-list"><div><h4>居然都没啦</h4><p class="font-size-12">好东西，手慢无</p></div><div><a href="" class="js-refresh tag tag-big tag-orange">刷新</a></div></div>');
+	    				return;
+	    			}
+	            	/* view.setNoMore(list.length < size); */
+	    			var html = '', types = {1:'优惠券', 2:'优惠码', 3:'代金券'};
+	    			for(var i=0; i<list.length; i++){
+	    				html += '<a href="javascript:;" class="block-item'+(list[i].status != 0 ? ' disabled' : '')+'">';
+	    				html += '	<div class="coupon-condition">';
+	    				html += '   	<p class="coupon-value"><em>¥</em>'+list[i].value+'</p>';
+	    				html += '	<div class="line"></div>';
+	    				html += '   	<p class="coupon-meet">'+list[i].condition+'</p>';
+	    				html += '	</div>';
+	    				html += '	<div class="coupon-info">';
+	    				html += '		<p class="coupon-title">'+list[i].name+'</p>';
+	    				html += '		<p class="coupon-expire">使用期限'+list[i].start_time + ' - ' + list[i].end_time +'</p>';
+	    				html += '	</div>';
+	    				html += '	<span class="coupon-type">'+types[list[i].type]+'</span>';
+	    				html += '</a>';
+	    			}
+	    			
+	    			if(page == 1){
+	    				$container.html(html);
+	    			}else{
+	    				$container.append(html);
+	    			}
+	            	return list.length >= size;
+	            }
+			});
+			return false;
+		}).find('a[data-status="'+1+'"]').trigger('click');
+	});
+	</script>
+</body>
+</html>

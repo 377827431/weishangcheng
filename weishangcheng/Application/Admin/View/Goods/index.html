@@ -1,0 +1,287 @@
+<toolbar id="toolbar" class="toolbar" >
+    <form class="search-box">
+        <if condition="$all_shop eq true">
+            <select name="shop_id" class="js-select2" style="margin-bottom: 0;width: auto;">
+                <option value="">全部店铺</option>
+                <foreach name="shop" item="item">
+                    <option value="{$item.id}" <if condition="$item.id eq $search['shop_id']">selected</if>>{$item.name}</option>
+                </foreach>
+            </select>
+        </if>
+        <select name="tag" style="margin-bottom: 0;width: auto;">
+            <option value="">所有分组</option>
+            <foreach name="goods_tag" item="item">
+                <option value="{$item.id}" <if condition="$item.id eq $tag">selected</if>>{$item.name}</option>
+            </foreach>
+        </select>
+        <input type="text" name="title" value="{$title}" placeholder="商品名称">
+        <input type="hidden" name="action" value="{:ACTION_NAME}">
+        <button type="button" data-name="search" class="btn btn-default" data-event-type="default">
+            <i class="icon-search"></i>
+        </button>
+    </form>
+</toolbar>
+
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-url="__ACTION__" data-toolbar="#toolbar" data-lazyload="true" {$column_field['field']=='takedowns'?' data-sort-name="takedowns" data-sort-order="desc"':''}>
+    <thead>
+        <tr>
+            <th data-width="40" data-checkbox="true"></th>
+            <th data-field="title" data-formatter="formatter_title" data-sortable="true">商品</th>
+            <th data-width="70" data-field="cost" data-formatter="formatter_agent_price">零售价</th>
+            <th data-width="90" data-field="pv" data-formatter="formatter_pv">访问量</th>
+            <th data-width="90" data-field="stock" data-align="center" data-sortable="true">库存</th>
+            <th data-width="90" data-field="sold" data-align="center" data-sortable="true" data-formatter="formatter_num" >总销量</th>
+            <th data-width="80" data-field="{$column_field.field}" data-sortable="true">{$column_field.label}</th>
+            <th data-width="50" data-field="sort" {$sort_access ? 'data-formatter="format_sort"' : ''} data-sortable="true">排序</th>
+            <th data-width="80" data-formatter="formatter_action" data-align="right">操作</th>
+        </tr>
+    </thead>
+</table>
+
+<script type="text/javascript">
+    //格式化数据
+    function format_sort(sort, row, index) {
+        return '<input type="text" class="sort" style="width:40px; margin:0;text-align:center;padding: 0 3px;" value="'+sort+'" />'
+    }
+    
+    function formatter_title(val, row, index){
+        var pic_url = row.pic_url.indexOf("cbu01.alicdn.com") ? row.pic_url : row.pic_url;
+        var html = '<a href="'+row.pic_url+'" target="_blank" style="float:left;"><img data-original="'+pic_url+'" style="width:64px; height:64px;"></a>';
+        html += '<div style="height:64px;margin-left: 74px;overflow:hidden;"><p class="goods-title"><a href="'+row.url+'" target="_blank">'+row.title+'</a></p>';
+        html += (row.tao_id?'<span style="float:right;color:#888;">'+row.tao_id+'</span>':'')+'<span class="goods-price">¥'+row.price+'</span><span class="goods-id">ID:'+row.id+'</span>';
+        return html+'</div>';
+    }
+    
+    function formatter_pv(val, row, index){
+        return '<div>UV:'+row.uv+'</div><div>PV:'+row.pv+'</div>';
+    }
+    
+    function formatter_action(val, row, index){
+        var id = row.id;
+        var html = '<p>' +
+                   '    <a href="__MODULE__/goods/edit?id='+id+'">编辑</a>' +
+                   '    <span>-</span>' +
+                   '    <a href="javascript:;" class="js-delete">删除</a>'+
+                   '</p>'+
+                   '<p class="other-action">' +
+                   '    <a href="javascript:;" class="js-copy">复制</a>' + '<span>-</span>' +
+                   //'    <a href="javascript:;" class="js-goods_feedback">反馈</a>' +
+                   '    <a href="javascript:;" class="js-commision">佣金</a>' +
+                   '</p>';
+        return html;
+    }
+        
+    function formatter_agent_price(val, row, index){
+        return row.price+'<br>';
+    }
+    function formatter_num(val,row,index){
+        return row.sold+'<br><span title="三日销量">'+row.threeday+'</span><br><span title="七日销量">'+row.sevenday+'<span>';
+    }
+    $(function(){
+        //商品入库
+        $('#table').on('click','.js-stocks', function(){
+            var id = $(this).parents('tr').attr('data-uniqueid');
+            $.get('__MODULE__/goods/storage?id=' + id, function(html){
+                $('body').append(html);
+            });
+        })
+        .on('takedown', function(){
+            var rows = $('#table').bootstrapTable('getSelections'); // 当前页被选中项(getAllSelections 所有分页被选中项)
+            if(rows.length == 0){ 
+                alertMsg('请勾选要下架的商品', 'warning');
+                return; 
+            }
+            var ids = [];
+            for(i=0;i<rows.length;i++){
+                ids.push(rows[i]['id']);
+            }
+            // 弹出下架提示
+            alertConfirm({
+                title: '提示',
+                content: '确定要下架吗？',
+                ok: function(){
+                        $.ajax({
+                            url:'__URL__/takeDown',
+                            type:'post',
+                            dataType:'json',
+                            waitting: '正在下架中...',
+                            data: {'ids':ids.join(',')},
+                            success:function(data){
+                                alertMsg('下架成功！'); 
+                                $('#table').bootstrapTable('refresh');
+                                return false; 
+                            }
+                        })
+                    },
+                cancel: function(){},
+                backdrop: true
+            });
+        })
+        .on('takeup', function(){
+            var rows = $('#table').bootstrapTable('getSelections'); // 当前页被选中项(getAllSelections 所有分页被选中项)
+            if(rows.length == 0){ 
+                alertMsg('请勾选要上架的商品', 'warning');
+                return; 
+            }
+            var ids = [];
+            for(i=0;i<rows.length;i++){
+                ids.push(rows[i]['id']);
+            }
+            // 弹出上架提示
+            alertConfirm({
+                title: '提示',
+                content: '确定要上架吗？',
+                ok: function(){
+                        $.ajax({
+                            url:'__URL__/takeUp',
+                            type:'post',
+                            dataType:'json',
+                            waitting: '正在上架中...',
+                            data: {'ids':ids.join(',')},
+                            success:function(data){
+                                alertMsg('上架成功！'); 
+                                $('#table').bootstrapTable('refresh');
+                                return false; 
+                            }
+                        })
+                    },
+                cancel: function(){},
+                backdrop: true
+            });
+        })
+        .on('kefu', function(e, gridview, parameters){
+            var rows = $(this).bootstrapTable('getSelections'); 
+            if(rows.length == 0){
+                return alertMsg('请先勾选商品'), false;
+            }
+            
+            var goods = '';
+            for(var i=0; i<rows.length; i++){
+                goods += ','+rows[i].id;
+            }
+            goods = goods.substr(1);
+            parameters.url += '?goods='+goods;
+        })
+         //会员折扣
+        .on('discount', function(){
+            var rows = $("#table").bootstrapTable('getSelections');
+            if(rows.length == 0){ 
+                alertMsg('请勾选要修改会员折扣的商品', 'warning');
+                
+                return false; 
+            }
+            
+            var doSave = function(join){
+                var id = [];
+                for(var i=0; i<rows.length; i++){
+                    id.push(rows[i].id);
+                }
+                
+                $.ajax({
+                    url:'__URL__/discount',
+                    type:'post',
+                    dataType:'json',
+                    waitting: '正在下架中...',
+                    data: {'id': id.join(','), join: join},
+                    success:function(data){
+                        
+                    }
+                })
+            }
+            alertConfirm({
+                title: '会员折扣',
+                content: '<div class="text-left">若参与会员折扣，有可能最终出售价格低于成本价，造成亏损，请参考成本价合理设置折扣.</div>',
+                okValue: '参与',
+                cancelValue: '不参与',
+                ok: function(){doSave(1)},
+                cancel: function(){doSave(0)},
+                backdrop: true
+            });
+            return false;
+        }).on('savetag',function(e, gridview ,params){ //修改分组
+            var row = gridview.currentRow;
+            if(!row){ 
+                alertMsg('请选则商品', 'warning');
+                return false; 
+            }
+            params.url += '?id=' + row.id;
+        })
+        .on('click','.js-copy', function(){
+            var id = $(this).parents('tr').attr('data-uniqueid');
+            // 弹出删除提示
+            alertConfirm({
+                title: '提示',
+                content: '确定要复制吗？',
+                okValue: '确定',
+                cancelValue: '取消',
+                ok: function(){
+                        $.ajax({
+                            url:'__URL__/copy',
+                            type:'post',
+                            dataType:'json',
+                            waitting: '正在复制中...',
+                            data: {id:id},
+                            success:function(data){
+                                alertMsg('复制成功！'); 
+                                $('#table').bootstrapTable('refresh');
+                                return false; 
+                            }
+                        })
+                    },
+                cancel: function(){},
+                backdrop: true
+            });
+            return false;
+        })
+        .on('click', '.js-goods_feedback', function () {
+            var id = $(this).parents('tr').attr('data-uniqueid');
+            $.get('__URL__/feedback?goods_id=' + id, function (html) {
+                var $html = $(html);
+                $html.appendTo('body');
+            });
+            return false;
+        })
+        .on('click', '.js-commision', function () {
+            var id = $(this).parents('tr').attr('data-uniqueid');
+            $.get('__URL__/commision?id=' + id, function (html) {
+                var $html = $(html);
+                $html.appendTo('body');
+            });
+            return false;
+        })
+        .on('change','.sort', function(){
+            var id = $(this).parents('tr').attr('data-uniqueid');
+            var sort = $(this).val();
+            if(sort == '' || isNaN(sort)){
+                return false
+            }
+
+            $.ajax({
+                url : '__URL__/saveSort',
+                data : {id: id, sort: sort},
+                dataType : "json",
+                type : 'post',
+                success:function(data){
+                    alertMsg('已保存排序！'); 
+                    return false; 
+                },
+                error : function() {
+                    alertMsg('排序失败！');
+                }
+            })
+            return false;
+        });
+    })
+</script>
+<style>
+.table td{vertical-align: top}
+.table td.bs-checkbox{vertical-align: middle}
+.goods-title{max-height: 40px;word-break: break-all;overflow: hidden; margin-bottom: 4px}
+.goods-price{color: #f60}
+.table .other-action{display: none}
+.table tr:hover .other-action{display: block}
+.bootstrap-table .fixed-table-body .table td:nth-child(2){vertical-align: middle;}
+.table .goods-id{float:right;display:none;}
+.table tr:hover .goods-id{display: inline}
+</style>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<include file="_layout/mall.head.html" />
+<literal>
+<style type="text/css">
+.tabber{font-weight:bold}
+input[type=number].money{padding:0 36px 0 66px;height:35px;line-height:35px;margin-bottom:10px;color:#f90;vertical-align:middle;border-radius:0;background-color:#fff;border:1px solid #f90;box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);transition:border linear .2s,box-shadow linear .2s;font-size:18px;box-sizing:border-box;width:100%;text-align:center}
+.transfers-notice{padding:20px 15px;background-color:#fff;font-size:14px;line-height:22px;color:#666}
+.transfers-notice ul{list-style-type:disc;padding-left:20px}
+.balance-month{padding:10px 15px;font-size:14px;background-color:#f8f8f8}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button{-webkit-appearance:none !important;margin:0}
+.block.block-list{margin-top:0;}
+</style>
+</literal>
+</head>
+<body class="body-fixed-top">
+    <div class="container">
+        <div class="content">
+            <div class="tabber tabber-red tabber-n2 top-fix clearfix">
+                <a class="active" href="#transfers">余额提现</a>
+                <a href="#balance_list">资金流水</a>
+            </div>
+            <div class="tabber-content">
+                <div id="transfers" class="tabber-item">
+                    <div style="background-color:#e4bc91;color:#fff;padding:20px 15px;line-height: 30px">
+                        <div style="font-size:14px">账户余额</div>
+                        <span style="font-size:24px">¥<span class="js-total-balance">{$user['total_balance']}</span></span>
+                        <span class="font-size-12" class="js-no-balance">(含{$wallet_alias}{$user['wallet']})</span>
+                        <div>
+                        可用余额：¥<span style="margin-right:10px" class="js-balance">{$user['balance']}</span>
+                        今日可提现：¥<span style="margin-right:10px" class="js-can-balance">{$user['can_transfers']}</span>
+                        {$score_alias}：<span class="js-score-balance">{$user['score']}</span>
+                        </div>
+                    </div>
+                    <div style="text-align:center;font-size: 18px;padding: 20px 15px;background-color: #fff;">
+                       <div style="text-align:left;margin-bottom: 3px;position: relative;">
+                            <em style="width:16px;height:16px;line-height:16px;border:1px solid #f90;border-radius:50%;display:inline-block;text-align:center;padding:0 1px;color:#f90;margin-right:5px;position:absolute;left:50%;top:9px;margin-left:-40px;">$</em>
+                            <input type="number" class="js-input-money money" value="{$user['this_times']}" min="1" max="{$user['this_times']}" maxlength="6">
+                       </div>
+                       <hr>
+                       <div class="split-line"></div>
+                       <button class="js-btn-transfers btn btn-green btn-block"{$btn['disabled'] ? 'disabled="disabled"' : ''}>立即提现</button>
+                    </div>
+                    <div class="split-line"></div>
+                    <div class="transfers-notice">
+                        <ul>
+                            <li>每日上午8点至下午18可申请提现</li>
+                            <li>单笔提现金额最少为1元</li>
+                            <li>单笔提现金额最多{$oneMax}元</li>
+                            <li>每次提现间隔不低于{$step_min/60}分钟</li>
+                            <li>单日提现次数最多{$dayTimes}次</li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="balance_list" class="tabber-item hide">
+                    <div class="js-balance-list"></div>
+                </div>
+            </div>
+        </div>
+        <include file="_layout/mall.copyright.html" />
+    </div>
+    <div id="right-icon" class="js-right-icon no-text" style="bottom:100px">
+        <div class="js-right-icon-container right-icon-container clearfix" style="width: 50px;">
+            <a id="global-back" href="javascript:win.back();" class="icon new s1"></a>
+        </div>
+    </div>
+    <script type="text/javascript">
+        require(['buyer/balance']);
+    </script>
+</body>
+</html>

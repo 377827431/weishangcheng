@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<include file="_layout/mall.head.html" title="订单中心" />
+<literal>
+<style>
+.container{padding-bottom: 51px}
+.select-express{position:relative; font-size:12px}
+.select-express select{opacity:0;position:absolute;width:100%;height:100%;left:0;right:0;top:0;bottom:0;}
+.select-express.error{color:red}
+.select-express .express_name{color:#ddd}
+.arrow{line-height:20px;margin-right: 10px}
+.arrow:after{content:'';position:absolute;width:7px;height:7px;border-top:2px solid #cbc9cc;border-right:2px solid #cbc9cc;-webkit-transform:rotate(45deg);-moz-transform:rotate(45deg);-ms-transform:rotate(45deg);transform:rotate(45deg);top:15px;right:12px}
+.order-total-pay{padding:5px 0;}
+.order-total-pay .btn{position:relative;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;margin-left:9px;width:110px;height:40px;border-radius:5px;background-color:#da8f3e;border-color:#da8f3e;color:#fff}
+.ui-page-loading{position:absolute;width:100%;top:77px;bottom:0;background-color:#fff;z-index:9999}
+.ui-page-loading::before{background:url('__CDN__/img/1.png');background-repeat:no-repeat;background-size:100%;border-radius:50%;}
+.ui-page-loading::before,.ui-page-loading::after{z-index:999;position:absolute;content:' ';top:200px;left:50%;width:40px;height:40px;margin-left:-20px;margin-top:-20px;border:2px solid rgba(0,0,0,0.15);border-radius:40px}
+.ui-page-loading::after{border-color:#e50012 transparent transparent transparent;-webkit-animation:loading .6s linear infinite;-moz-animation:loading .6s linear infinite;animation:loading .6s linear infinite}
+@-webkit-keyframes loading{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}
+100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}
+}@keyframes loading{0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);transform:rotate(0deg)}
+100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);transform:rotate(360deg)}
+}
+</style>
+<style type="text/css">
+        div.Payment_popups{
+            display:flex;
+            position:fixed;
+            width:100%;
+            height:100%;
+            background-color:rgba(0,0,0,0.7);
+            top:0px;
+            left:0px;
+            z-index:99999;
+        }
+        div.Payment_popups_box{
+            width:100%;
+            height:100%;
+            justify-content:center;
+            align-items:center;
+            color:white;
+        }
+        .close_dc{
+            display:block;
+            position:relative;
+            top:6%;
+            left:74%;
+            margin-left:10px;
+            width:25px;
+            height:25px;
+
+        }
+        .close_dc img{
+            width:100%;
+            height:100%;
+        }
+        .Payment_popups_box_zf,
+        .Payment_popups_box_bz
+        {
+            width:70%;
+            margin-left:15%;
+        }
+        .Payment_popups_box_zf{
+            width:50%;
+            margin-left:25%;
+        }
+        .Payment_popups p{width:100%;text-align:center;font-size:14px;}
+        .Payment_popups p.yangdonglei{height:30px;display:flex;align-items:center;width:100%;justify-content:center;font-size:14px;}
+
+    </style>
+</literal>
+</head>
+<body>
+    <div id="page_loading" class="ui-page-loading"></div>
+	<div class="container">
+		<div class="content">
+			<div style="background: #da8f3e;background-size: auto 100%;position: static;padding: 20px;color: #fff;">
+				<div>
+					<h3>提示</h3>
+					<p id="trade_message" style="font-size: 12px;margin-top: 5px;line-height:15px;">下单后请于8小时内付款，否则订单将自动关闭</p>
+				</div>
+			</div>
+            <div class="js-order-address express-panel express-panel-edit empty-address">
+				<div class="js-logistics-tips logistics-tips font-size-12 c-orange hide">很抱歉，该地区暂不支持配送。</div>
+                <ul class="express-detail icon-address" style="display:flex;justify-content:space-between;align-items:center;"><li>添加收货地址</li></ul>
+            </div>
+            <!-- 无效商品 -->
+            <div class="js-invalid-list-container"></div>
+			<!-- 商品列表 -->
+			<div class="js-goods-list-container"></div>
+			<div class="js-order-total" style="margin-top:10px"></div>
+			<div class="js-order-total-pay order-total-pay bottom-fix">
+                <div class="pay-container clearfix">
+                    <div class="pull-right pull-margin-up">
+                        <span class="c-gray-darker font-size-16">共<span class="c-orange"> 0 </span>件，</span>
+                        <span class="c-gray-darker font-size-16">合计：</span>
+                        <span class="c-orange">
+                            <span class="js-price font-size-16">¥00.</span>
+                            <span class="js-price-sub font-size-12">00</span>
+                        </span>
+                        <button class="js-confirm btn btn-red-f44 commit-bill-btn">提交订单</button>
+                    </div>
+                </div>
+            </div>
+		</div>
+        <include file="_layout/mall.copyright.html" />
+	</div>
+    <!-- 弹窗 -->
+    <div class="Payment_popups" style="display:none;">
+        <div class="Payment_popups_box" style="position: relative;">
+            <div class="close_dc"><img src="/img/close_dc.png"></div>
+            <p class="yangdonglei" style="margin-bottom: 6px;font-size:16px;color:#ffd800;position:relative;left:-15px;"><img style="width:20px;height:20px;margin-right:10px;" class="Payment_popups_icon" src="/img/zfb_icon.png"/>扫码付款</p>
+            <p style="font-size: 14px; margin-top: 0px; margin-bottom: 6px;color:#ffd800;"><span class="data_value" style="font-size: 24px; font-weight: bold;">180.00</span>元</p>
+            <img id="ydl_payment_popups_img" onerror="reload_img(this.src)" class="Payment_popups_box_zf"  src="/img/wx_qr.png"/>
+            <img class="Payment_popups_box_bz" style="margin-top:20px" src="/img/wx_bz.png"/>
+        </div>
+    </div>
+
+</body>
+<script>
+var ydl_timer = 0;
+function reload_img(dd){
+    if(ydl_timer>=2)
+        return false;
+    else{
+        document.getElementById('ydl_payment_popups_img').setAttribute('src',dd);
+    }
+    ydl_timer++;
+}
+</script>
+<script>
+require(["buyer/payconfirm"], function(payConfirm){
+    payConfirm.init({$book_key});
+});
+require(['jquery'],function(){
+    $(".close_dc").click(function(){
+        $(".Payment_popups").hide();
+    })
+    $("body").on('click','.commit-bill-btn',function(){
+        if($(this).text() == "微信支付"){
+            $(".Payment_popups").show();
+        }else{
+            toast.show("下单成功");
+        }
+    });
+});
+// // 支付宝
+// html += '<div class="Payment_popups" style="display:block;">';
+// html +=    '<div class="Payment_popups_box" style="position: relative;">';
+// html +=        '<div class="close_dc"><img src="/img/close_dc.png"></div>';
+// html +=        '<p class="yangdonglei" style="margin-bottom: 6px;font-size:16px;color:#ffd800;position:relative;left:-15px;"><img style="width:20px;height:20px;margin-right:10px;" class="Payment_popups_icon" src="/img/zfb_icon.png"/>截屏保存扫描付款</p>';
+// html +=        '<p style="font-size: 14px; margin-top: 0px; margin-bottom: 6px;color:#ffd800;"><span class="data_value" style="font-size: 24px; font-weight: bold;">180.00</span>元</p>';
+// html +=        '<img id="ydl_payment_popups_img" onerror="reload_img(this.src)" class="Payment_popups_box_zf"  src="/img/wx_qr.png"/>';
+// html +=        '<img class="Payment_popups_box_bz" style="margin-top:20px" src="/img/zfb_bz.png"/>';
+// html +=    '</div>';
+// html += '</div>';
+</script>
+</html>

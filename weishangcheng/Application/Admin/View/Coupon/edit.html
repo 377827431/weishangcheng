@@ -1,0 +1,193 @@
+<style>
+.app-design{display:inline-block;width: 100%}
+.app-design .app-sidebar{position:relative;float:left;width:484px;font-size:14px}
+.app-design .app-sidebar+.app-sidebar{margin-left:20px}
+.app-design .app-sidebar .app-sidebar-inner{padding:12px 10px;min-height:28px;background:#f8f8f8;border-radius:3px;border:1px solid #d1d1d1}
+.app-design .app-sidebar .app-sidebar-inner+.app-sidebar-inner{margin-top:14px}
+.app-design .app-sidebar .control-group:last-of-type{margin-bottom:0}
+.app-design .control-label{width:90px}
+.app-design .controls{margin-left:100px}
+.app-design .controls input[type="text"]{width:300px}
+.app-design .app-sidebar-content{width: 100%;background-color: #fff;border-radius: 3px;padding: 18px 0;border: 1px solid #ccc;}
+.control-group.error .control-label, .control-group.error .help-block, .control-group.error .help-inline{position:absolute}
+.input-append.date input{text-indent: -37px;}
+#shopModal .checkbox{width:155px}
+#shopModal .checkbox.inline+.checkbox.inline{margin-left:0}
+.app-design .app-sidebar .app-sidebar-inner p .checkbox.inline{padding-top:0}
+</style>
+<form action="__ACTION__" class="form-horizontal" data-validate="true" data-submit="ajax" method="post" data-success="back">
+    <div id="page_loading" class="ui-page-loading"></div>
+    <div class="app-design">
+        <div class="app-sidebar">
+            <div class="app-sidebar-inner">
+                <p>优惠信息<label class="checkbox inline pull-right"><input type="checkbox" name="status" checked="checked" value="1"> 允许领取和使用</label></p>
+                <div class="app-sidebar-content" style="height: 260px">
+                    <div class="control-group">
+                        <label class="control-label must">优惠券名称</label>
+                        <div class="controls">
+                        	<input type="hide" name="id" value="{$data.id}" style="display:none">
+                            <input type="text" name="name" class="required" value="{$data.name}" maxlength="16" placeholder="不超过16个字符">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label must">优惠时间段</label>
+                        <div class="controls">
+                            <div class="input-append date" data-format="yyyy-MM-dd hh:mm:ss">
+                                <input type="text" name="start_time" value="{$data.start_time}" required="required" style="width:105px" placeholder="2017-01-01 00:00:00">
+                                <span class="add-on"><i class="icon-th icon-calendar"></i></span>
+                            </div> 至
+                            <div class="input-append date" data-format="yyyy-MM-dd hh:mm:ss">
+                                <input type="text" name="end_time" value="{$data.end_time}" required="required" style="width:105px" placeholder="2017-01-01 23:59:59">
+                                <span class="add-on"><i class="icon-th icon-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label must">订单商品满</label>
+                        <div class="controls">
+                            <input type="text" name="meet" class="required" value="{$data.meet}" data-rule-range="0,999999" placeholder="满n元可用（不包括邮费），0不做限制">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label must">优惠券面值</label>
+                        <div class="controls">
+                            <input type="text" name="value" class="required" value="{$data.value}" data-rule-range="0.5,999999" placeholder="随机金额请用逗号间隔；如：1,5">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">累计发放量</label>
+                        <div class="controls">
+                            <input type="text" name="total" data-rule-range="1,999999" value="{$data.total}" placeholder="至少1张" style="width: 100px;">
+                            <span class="text-gray">张</span>
+                            <select name="quota" style="width:180px">
+                                <option value="0">不限制领取数量</option>
+                                <option value="1">每人限领1张</option>
+                                <option value="2">每人限领2张</option>
+                                <option value="3">每人限领3张</option>
+                                <option value="4">每人限领4张</option>
+                                <option value="5">每人限领5张</option>
+                                <option value="6">每人限领6张</option>
+                                <option value="7">每人限领7张</option>
+                                <option value="8">每人限领8张</option>
+                                <option value="9">每人限领9张</option>
+                                <option value="10">每人限领10张</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="app-sidebar">
+            <div class="app-sidebar-inner">
+                <p>优惠范围<label class="checkbox inline pull-right"><input type="checkbox" name="visible" value="0"> 手动发放</label></p>
+                <div class="app-sidebar-content" style="height:260px">
+                    <div class="control-group">
+                        <label class="control-label must">适用店铺</label>
+                        <div class="controls">
+                            <select class="js-select2" name="shop_ids" class="required"{$all_shop ? 'multiple="multiple" data-placeholder="全平台通用"' : ''} style="width:315px">
+                                <foreach name="shops" item="item">
+                                <option value="{$item.id}"{:in_array($item['id'], $data['shop_ids']) ? 'selected="selected"' : ''}>{$item.name}</option>
+                                </foreach>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label must">适用会员</label>
+                        <div class="controls">
+                            <select class="js-select2" name="member_level" multiple="multiple" data-placeholder="全部通用" style="width:315px">
+                                <foreach name="card" item="item">
+                                <option value="{$item.id}" {:in_array($item['id'], $data['member_level']) ? 'selected="selected"' : ''}>{$item.title}</option>
+                                </foreach>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label must">优惠范围</label>
+                        <div class="controls">
+                            <select name="range_type" class="required" style="width:315px" id="range_type">
+                                <option value="0">全店通用</option>
+                                <option value="1">指定商品</option>
+                                <option value="2">指定分组</option>
+                                <option value="3">指定类目</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="range_value"></div>
+                    <div class="control-group">
+                        <label class="control-label">排除商品</label>
+                        <div class="controls">
+                            <textarea id="range_exclude" name="range_exclude" maxlength="219" style="width:300px;resize:none" placeholder="英文逗号间隔的商品ID">{$data.range_exclude}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="app-design">
+        <div class="app-sidebar" style="width:inherit">
+            <div class="app-sidebar-inner">
+                <p>使用说明</p>
+                <textarea name="notice" style="width: 952px;max-width:952px;height:100px"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="form-actions">
+      <button type="button" class="btn btn-back">返回</button>
+      <button type="submit" class="btn btn-primary">保存</button>
+    </div>
+</form>
+<notempty name="shops">
+<div id="shopModal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>适用的店铺</h3>
+    </div>
+    <div class="modal-body">
+        <label class="checkbox inline" style="font-weight:bold"><input class="js-all" type="checkbox" value="0">平台通用</label>
+        <foreach name="shops" item="shop">
+        <label class="checkbox inline"><input class="js-shop" type="checkbox" value="{$shop.id}" {$shop['id']==$myShop['id']?'checked="checked"':''}>{$shop.name}</label>
+        </foreach>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
+<script>
+$(function(){
+	var rage_type = {$data.range_type};
+	$('#range_type').on('change', function(){
+		var value = parseInt(this.value), html = '', label= '', height = 50, $range_value = $('#range_value');
+		
+		if(value > 0){
+			height = 68;
+			$range_value.attr('class', 'control-group');
+			switch(value){
+        		case 1:
+        			label = '商品ID';
+        			break;
+        		case 2:
+        			label = '分组ID';
+        			break;
+        		case 3:
+        			label = '类目ID';
+        			break;
+        	}
+			
+			html = '<label class="control-label must">'+label+'</label>'+
+        	       '<div class="controls">'+
+        	           '<input type="text" name="range_value" value="'+(rage_type == value ? '{$data.range_value}' : '')+'" maxlength="1000" required="required" placeholder="英文逗号间隔">'+
+        	       '</div>';
+        	       
+		}else{
+			$range_value.removeAttr('class');
+		}
+	    $('#range_exclude').css('height', 20+'px');
+        $range_value.html(html);
+	}).val(rage_type).trigger('change');
+	
+	setTimeout(function(){
+		$('#page_loading').fadeOut();
+	}, 300);
+});
+</script>
+</notempty>

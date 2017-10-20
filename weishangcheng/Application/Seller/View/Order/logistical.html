@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="订单管理" />
+	<link rel="stylesheet" href="__CDN__/css/seller/logistical.css?modify=20170905">
+</head>
+<body>
+	<div class="yundan">
+		<div>
+			<div class="yundan_title font16 flex_row">
+				<div class="title bg_qing">运单1</div>
+				<div class="right_angle"></div>
+			</div>
+			<div class="yundan_overview font14">
+				<div class="flex_row"><span class="grey">发货方式:</span><span class="black">物流公司</span></div>
+				<div class="flex_row"><span class="grey">物流公司:</span><span class="black">{$logistics.companyName}</span></div>
+				<div class="flex_row"><span class="grey">运单号码:</span><span class="black">{$logistics.logisticsBillNo}</span></div>
+				<if condition="$logistics.consign_time neq 0">
+				<div class="flex_row"><span class="grey">发货时间:</span><span class="black">{$logistics.consign_date}</span></div>
+				</if>
+			</div>
+			<div class="logistical_trace">
+				<p class="trace_title black font14">物流跟踪</p>
+				<div class="trace_item trace_item_focus flex_column_left">
+					<p class="trace_time grey font12">{$nowStep.acceptTime}</p>
+					<div class="flex_row wuliu_single_row trace_item_header_top">
+						<div class="trace_item_point flex_center"><span class="round_pt"></span></div>
+						<span class="single_row_time"></span>
+						<div>{$nowStep.remark}</div>
+					</div>
+				</div>
+				<foreach name="beforeSteps" item="v">
+				<div class="trace_item">
+					<p class="trace_time grey font12">{$v.acceptTime}</p>
+					<div class="flex_row_top wuliu_single_row">
+						<div class="trace_item_point flex_center_top"><span class="round_pt"></span></div>
+						<span class="single_row_time"></span>
+						<div>{$v.remark}</div>
+					</div>
+				</div>
+				</foreach>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

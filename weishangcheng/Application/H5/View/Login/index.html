@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<include file="_layout/mall.head.html" title="我的小店" />
+</head>
+<body></body>
+<script>
+require(['buyer/login_modal'], function(modal){
+    modal.init({appid: '{$appid}', mobile: '{$mobile}', redirect: '{$redirect}', apply: '{$apply}', share_mid: '{$share_mid}'});
+});
+</script>
+</html>

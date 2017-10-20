@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <include file="_layout/mall.head.html" title="我逛过的店" />
+</head>
+<style>
+    .stroll_box{
+        width: 100%;
+        overflow: hidden;
+    }
+    .stroll_box ul li{
+        width:100%;
+        margin-bottom: 20px;
+        background: #ffffff;
+    }
+    .stroll_box ul li div.stroll_box_padding{
+        display: flex;
+        padding: 15px;
+        position: relative;
+    }
+    .stroll_title{
+       width:100%;
+    }
+    .stroll_title_logo{
+        margin-right: .8em;
+        width: 66px;
+        height: 66px;
+        line-height: 60px;
+        text-align: center;
+        margin-top: 0rem;
+        overflow: hidden;
+    }
+    .stroll_title_logo img{
+        width: 100%;
+        max-height: 100%;
+        vertical-align: top;
+        border-radius: 50%;
+    }
+    .stroll_title_title{
+        -webkit-box-flex: 1;
+        -webkit-flex: 1;
+        flex: 1;
+        min-width: 0;
+    }
+    .stroll_title_title h4 {
+        font-weight: 400;
+        font-size: 17px;
+        width: auto;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        word-wrap: normal;
+        word-wrap: break-word;
+        word-break: break-all;
+        margin: 12px 0px;
+    }
+    .stroll_title_title p{
+        color: #999999;
+        font-size: 13px;
+        line-height: 1.2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+    .stroll_list{
+        padding-top: 0px !important;
+    }
+    .stroll_list ul li{
+        /* -webkit-box-flex: 1;
+        -webkit-flex: 1;
+        flex: 1; */
+        width: 33.333333333333336%;
+        height: 130px;
+        /* padding: 0px 3px; */
+        overflow: hidden;
+        position: relative;
+        margin-bottom: 10px;
+        float: left;
+    }
+    .stroll_list ul li img{
+        width: 100%;
+        height: 130px;
+    }
+    .stroll_list ul li .img_s p{
+        position: absolute;
+        width: 100%;
+        background:rgba(225,225,225,.7);
+        bottom:0px;
+        right: 0px;
+        padding: 7px 0px;
+        text-align: right;
+    }
+    .stroll_list ul li .img_s p span{
+        margin-right: 6px;
+        font-size: 14px;
+    }
+    .auto_margins{
+        margin: 0px 5px;
+    }
+    .img_s{
+        position: relative;
+        overflow: hidden;
+        width: 95%;
+        margin: 0 auto;
+    }
+    .stroll_list_btn{
+        padding:15px;
+        position: relative;
+        padding-top: 0px;
+    }
+    .stroll_list_btn p{
+        text-align: right;
+    }
+    .btn_style{
+        cursor: pointer;
+        margin-top: 0px !important;
+        float: right;
+        border: 1px solid #da8f3e;
+        padding: 5px 15px;
+        color: #da8f3e;
+        text-align: center;
+        border-radius: 20px;
+        position: relative;
+        z-index: 100;
+        margin: 0px 5px;
+    }
+    #share_code_body {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
+        z-index: 99999;
+        display: none;
+    }
+    @media(max-width:320px){
+        .stroll_list ul li {
+            height: 110px !important;
+        }
+        .stroll_list ul li img{
+            height: 110px !important;
+        }
+    }
+</style>
+<body>
+    <!-- 分享弹窗 -->
+    <div id="share_code_body" style="display: none;">
+        <div class="share_code_body" style="width:100%;background-color:transparent;margin-top:50px; position: relative;">
+            <span class="close_icon" style="position: absolute; background:none;color:white;top:-40px;right:5%;font-size:25px;width:40px;height:40px;font-family:'宋体';text-align:center;line-height:40px;">×</span>
+                <img class="share_logo" src="" alt="" style="display:block;margin:0 auto; width:80%;border-radius:8px;">
+                <img class="share_logo" src="" alt="" style="display:block;width:80%;border-radius:8px;position:absolute;top:0px;left:10%;opacity:0;">
+                <div style="width:80%;margin:0 auto;height:40px;margin-top:10px;line-height:40px;text-align:center;color:white;background-color:#e4bc91;font-size:15px;border-radius:8px;">长按保存图片</div>
+            <!-- <img class="share_logo" src="https://seller.xingyebao.com/img/mall/qr_code_icon.jpg"> -->
+        </div>
+    </div>
+    <!-- 分享弹窗 end -->
+    <!-- 我逛过的店 -->
+    <div class="stroll_box">
+        <ul>
+            <div class="container">
+                <div class="content">
+                    <div class="content-body">
+                        <!--商品列表-->
+                        <section class="js-goods-container">
+                            <ul id="goods-list" class="sc-goods-list pic clearfix size-2" style="padding:0px;">
+                                <li style="background: none;position: relative;top: 10rem;"><div class="empty-list list-finished"><p class="font-size-12">正在加载中...</p></div></li>
+                            </ul>
+                            <div class="x-pullfresh-more"></div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+            <foreach name="data" item="item">
+                <li>
+                    <div class="stroll_box_padding">
+                        <div class="stroll_title_logo">
+                            <img src="//gw2.alicdn.com/bao/uploaded/i3/2146742267/TB1avmYcTZRMeJjSspoXXcCOFXa_!!0-item_pic.jpg_250x250.jpg" alt="">
+                        </div>
+                        <div class="stroll_title_title">
+                            <h4>梦梦家女装店</h4>
+                            <p>最新上新数量<span class="auto_margins">188876</span>共<span>361</span>件宝贝</p>
+                        </div>
+                    </div>
+                    <div class="stroll_box_padding stroll_list">
+                        <ul>
+                            <li>
+                                <div class="img_s">
+                                <img src="https://cbu01.alicdn.com/img/ibank/2017/541/700/4614007145_225263684.jpg" alt="">
+                                <p><span>¥150</span></p>
+                                </div>
+                            </li>
+                            <li>
+                            <div class="img_s">
+                                <img src="https://cbu01.alicdn.com/img/ibank/2017/541/700/4614007145_225263684.jpg" alt="">
+                                <p><span>¥150</span></p>
+                            </div>
+                            </li>
+                            <li>
+                            <div class="img_s">
+                                <img src="https://cbu01.alicdn.com/img/ibank/2017/541/700/4614007145_225263684.jpg" alt="">
+                                <p><span>¥150</span></p>
+                            </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="stroll_list_btn">
+                        <p>
+                            <a class="btn_style store_btn" href="javascript:void(0)" >进店</a>
+                            <a class="btn_style share_btn" href="javacsript:void(0)" >分享</a>
+                            <a class="btn_style delete_btn" href="javascript:void(0)" >删除</a>
+                            <div style="clear:both"></div>
+                        </p>
+                    </div>
+                </li>
+            </foreach>
+        </ul>
+    </div>
+    <!-- 我逛过的店 end -->
+</body>
+<script>
+    require(["buyer/goods/list3", "buyer/search"], function(glv, searchbar){
+        var $sortList = $(".js-sort"),
+            $container = $("#goods-list"),
+            size = 6;
+        searchbar.data.size = size;
+        console.log(searchbar);
+        glv.doRefresh({
+             url: "__MODULE__/trace",
+            data: searchbar.data,
+            cache:false,
+            container: $container
+        });
+
+        // 固定顶部排序
+        var fixedTop = $sortList.offset().top - $sortList.height() * 2;
+        var fixed = false;
+        window.addEventListener("scroll", function(){
+            if(document.body.scrollTop >= fixedTop){
+                if(!fixed){
+                    fixed = true;
+                    $sortList.css({position: "fixed", top: "44px"});
+                }
+            }else if(fixed){
+                fixed = false;
+                $sortList.css({position: ""});
+            }
+        }, false);
+    });
+    require(['jquery','h5/pullrefresh'], function($,pullfresh){
+         //删除
+         $("body").on("click",".delete_btn",function(){
+             if(confirm('确认删除吗？')){
+                 var shop_id =  $(this).attr("shop-id");
+                 $.ajax({
+                     url: '__MODULE__/trace/delete_shop',
+                     type: 'post',
+                     data: {id: shop_id},
+                     dataType: 'json',
+                     success: function(){
+                         toast.show('删除成功');
+                         pullfresh.doRefresh();
+                     }
+                 });
+             }
+             return false;
+         })
+         //分享
+         $("body").on("click",".share_btn",function(){
+            var shop_id =  $(this).attr("shop-id");
+            $.ajax({
+                url: 'https://seller.xingyebao.com/login/shop_qr',
+                type: 'post',
+                data: {shop_id:shop_id},
+                dataType: 'json',
+                success: function(data){
+                    $('.share_logo').attr('src', data);
+                    $('#share_code_body').show();
+                }
+            });
+            return false;
+         })
+        //关闭弹窗
+        $(".close_icon").click(function(){
+            $("#share_code_body").hide();
+            $(".share_logo").removeAttr("src");
+        })
+     })
+</script>
+</html>

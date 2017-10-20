@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="商品详情" />
+    <link rel="stylesheet" href="__CDN__/css/goods.css">
+    <link rel="stylesheet" href="__CDN__/css/shop.homepage.css?20170901">
+    <style>
+        div.shop-name .shop_name_span{font-weight:bold;display:inline-block;width:60%;overflow:hidden;text-overflow:ellipsis;word-wrap:break-word;white-space: nowrap;word-break:break-all;text-align:left;}
+        .goods-header h2.title{padding-right:70px;min-height:46px;}
+        body.body-fixed-bottom .container {
+            padding-bottom: 14px;
+        }
+        /*运费部分*/
+        .post_fee{display:flex;align-items:center;width:100%;height:40px;box-sizing: border-box;padding:0px 10px;background-color:white;margin-top:10px;}
+        .post_fee label:nth-child(1){color:#999;font-size:12px;}
+        .post_fee select{border:1px solid #da8f3e;outline:none;padding:.2em;border-radius:.2em;line-height:1.4em;margin-left: 10px;margin-right: 4px;font-size:12px;}
+        .head_fee::before{content:" 运费：";}
+        .head_fee::after{content:"元";}
+        .body_fee::before{content:"/续重";}
+        .body_fee::after{content:"元";}
+        /*拨打电话弹窗*/
+        .offshelf_dialog{display: none;}
+        .offshelf_dialog .offshelf_dialog_bg{height: 100%; position: fixed; top: 0px; left: 0px; right: 0px; z-index: 1000; transition: none 0.2s ease; opacity: .7; background-color: rgba(0, 0, 0, 0.901961);}
+
+        .offshelf_dialog .offshelf_dialog_box{text-align:center;border-radius:6px;background-color: #fff;width: 80%;position: fixed;left:50%;top:50%;margin-left:-40%;margin-top:-100px;z-index: 1001;}
+        .offshelf_dialog .offshelf_dialog_box .offshelf_dialog_content{text-align:center;padding: 36px 12px;padding-bottom:14px;padding-top: 14px;}
+        .offshelf_dialog .offshelf_dialog_box .offshelf_dialog_content>img{width: 40%;}
+        .offshelf_dialog .offshelf_dialog_box .offshelf_dialog_content p.dialog_text_main{font-size: 14px;margin-top: 10px;line-height: 24px;text-align: center;}
+
+        .offshelf_dialog .close_icon_btn{cursor: pointer;width: 24px;height: 24px;font-size: 18px;line-height: 24px;text-align: center;border-radius: 50%;color: #fff;position: absolute;right: 8px;top: 8px;background-color: #e4bc91;}
+        /*拨打电话*/
+        .goto_phone{font-size:14px;width:70%;margin:10px auto 0px;cursor:pointer;height:36px;border-radius:6px;line-height:36px;text-align:center;color:white;background-color:#da8f3e;}
+        .cyb_fx_box{
+            width: 100%;
+            background: #fff;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 600;
+            display:none;
+            height: 100%;
+        }
+        .share_text_box{
+            width: 95%;
+            margin: 20px auto;
+            font-size: 14px;
+            color: #2C2C2C !important;
+            /*position: absolute;*/
+            /*top: 0px;
+            left: 0px;*/
+            /*  z-index: 1000;*/
+
+        }
+        .textarea_border{
+            border: 1px solid #BABABA;
+        }
+        .share_text_box p{
+            font-size: 14px !important;
+            margin-bottom: 15px;
+        }
+        .textarea_border textarea{
+            width: 95%;
+            outline: none;
+            margin: 0 auto;
+            border: none;
+            display: block;
+            resize:none;
+            margin: 10px auto;
+            color: #2c2c2c !important;
+            overflow-y: auto;
+        }
+        .item_photo_container {
+            /*padding-left: 4%;
+            padding-right: 4%;*/
+            margin: 0 auto;
+            background-color: white;
+            overflow-y: auto;
+            /*  padding-bottom: 200px;*/
+        }
+        .item_photo_container ul {
+            width: 100%;
+            padding-top: 14px;
+            padding-bottom: 14px;
+        }
+        .item_photo_container ul li {
+            width: 25%;
+            height: 80px;
+            float: left;
+            display: table-row;
+            margin-bottom: 14px;
+            position: relative;
+        }
+        .item_photo_container ul li img {
+            display: block;
+            display: table-cell;
+            max-width: 90%;
+            max-height: 80px;
+            margin: 0 auto;
+        }
+        .item_photo_container ul li i {
+            cursor: pointer;
+            display: block;
+            position: absolute;
+            right: 8px;
+            top: 2px;
+            width: 20px;
+            height: 20px;
+            background-size: 100% 100%;
+            background: rgba(0,0,0,.6);
+            border-radius: 50%;
+            border: 1px solid #fff;
+        }
+        #share_submit{
+            width: 96%;
+            margin: 0 auto;
+            background: #e4bc91;
+            padding: 15px 0px;
+            text-align: center;
+            color: #fff;
+            font-size: 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .sub_fix{
+            width: 100%;
+            position: fixed;
+            bottom: 1rem;
+            right: 0px;
+        }
+        .dh_icon{
+            max-width: 70% !important;
+            position: relative;
+            top: .1rem;
+        }
+        .dh_on{
+            background: rgba(255,115,0,1) !important;
+            border: none !important;
+        }
+        /*.por{
+            position: relative !important;
+            background: #fff !important;
+        }*/
+        @media(max-width:320px ) {
+            .item_photo_container{
+                height: 200px !important;
+            }
+        }
+        .preview_box{
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: rgba(0,0,0,1);
+            z-index: 1001;
+            display: none;
+            cursor: pointer;
+        }
+        .preview_img{
+            display:flex;
+            align-items:center;/*垂直居中*/
+            justify-content: center;/*水平居中*/
+            width:100%;
+            height:100%;
+            background: rgba(0,0,0,1);
+        }
+        .preview_box img{
+            max-width: 100%;
+            max-height: 100%;
+            vertical-align: middle;
+
+        }
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale3d(.3, .3, .3);
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+        .zoomIn {
+            animation-name: zoomIn;
+            animation-duration: .5s;
+            animation-direction:alternate;
+        }
+
+    </style>
+    <if condition="$data['countdown']['end'] gt 0">
+        <script>
+            var start_time = {$data['countdown']['start']}000;
+            var end_time = {$data['countdown']['end']}000;
+            var timer{:time()} = window.setInterval(function(){
+                start_time += 1000;
+
+                var leftTime=end_time - start_time;
+                var leftsecond = parseInt(leftTime/1000);
+                var day=Math.floor(leftsecond/(60*60*24));
+                var hour=Math.floor((leftsecond-day*24*60*60)/3600);
+                var minute=Math.floor((leftsecond-day*24*60*60-hour*3600)/60);
+                var second=Math.floor(leftsecond-day*24*60*60-hour*3600-minute*60);
+
+                if(leftTime == 0){
+                    window.location.href = '__ACTION__?id={$data['id']}&modify='+start_time;
+                    window.clearInterval(timer{:time()});
+                }
+                var html =
+                    '<span class="num">'+(day < 10 ? '0' + day : day)+'</span>'+
+                    '<span class="dot">:</span>'+
+                    '<span class="num">'+(hour < 10 ? '0' + hour : hour)+'</span>'+
+                    '<span class="dot">:</span>'+
+                    '<span class="num">'+(minute < 10 ? '0' + minute : minute)+'</span>'+
+                    '<span class="dot">:</span>'+
+                    '<span class="num">'+(second < 10 ? '0' + second : second)+'</span>';
+                document.getElementById('J_CountDownTxt').innerHTML = html;
+            }, 1000);
+        </script>
+    </if>
+</head>
+<body class="body-fixed-bottom">
+<if condition="$isfirst eq 1">
+    <script>
+        require(['jquery'],function(){
+            $("#youhuiquan_dailog").click(function(){
+                $(this).hide();
+            })
+            $("img.youhuiquan_get").click(function(){
+                // $.ajax({
+                //     url:"__MODULE__/shop/coupon_add",
+                //     type:"post",
+                //     success:function(){
+                toast.show("恭喜您领取优惠券成功");
+                //     }
+                // });
+            })
+        })
+    </script>
+    <div id="youhuiquan_dailog" style="position:fixed;display:flex;flex-direction:column;align-items:center;width: 100%;height: 100%;background-color:rgba(0,0,0,0.7);top:0px;left:0px;z-index:10000">
+        <div style="display:flex;position:relative;width:100%;justify-content:center;align-items:center;height:70px;margin-top:100px;">
+            <span style="color:#fff100;font-size:24px;font-family:'微软雅黑';">恭喜您获得</span>
+            <div class="youhuiquan_close" style="cursor:pointer;position:absolute;right:10px;top:0px;width:50px;height:50px;line-height:70px;font-size:24px;font-family:'宋体';text-align:center;color:white;">×</div>
+        </div>
+        <img class="youhuiquan_get" src="__CDN__/img/mall/youhuiquan.png" alt="" style="display:block;width:80%;">
+    </div>
+</if>
+<div class="container wap-goods internal-purchase">
+    <div class="content ">
+        <div class="content-body">
+            <!-- 拨打电话弹窗 -->
+            <div class="offshelf_dialog" style="display: none;">
+                <div class="offshelf_dialog_bg"></div>
+                <div class="offshelf_dialog_box">
+                    <a href="javascript:;" class="close_icon_btn">×</a>
+                    <div class="offshelf_dialog_content">
+                        <p class="dialog_text_main">
+                            <br>客服电话：<a class="tel_phone phone_num" href="javascript:void(0);" style="color:#da8f3e;">17190304140</a>
+                        </p>
+                        <div class="goto_phone tel_phone">立即拨打</div>
+                    </div>
+                </div>
+            </div>
+            <!-- 商品详情页 二维码弹窗 -->
+            <div id="share_code_body" style="display: none;" >
+                <div class="share_code_body" style="width:100%;background-color:transparent;margin-top:50px;">
+                    <span class="close_icon" style="background:none;color:white;top:-40px;right:5%;font-size:25px;width:40px;height:40px;font-family:'宋体';text-align:center;line-height:40px;">×</span>
+                    <?php if($iswx!=1){?><?php }?>
+                    <!-- <img class="share_logo" src="__CDN__/img/temp/seller_recommend/100001-101000/100001.jpg?modify=1495695398" style="display:block;opacity:0;"> -->
+                    <img class="share_logo" src="" alt="" style="display:block;margin:0 auto; width:80%;border-radius:8px;">
+                    <img class="share_logo" src="" alt="" style="display:block;margin:0 auto; width:80%;border-radius:8px;position:absolute;top:0px;left:10%;opacity:0;">
+                    <div class="share_code_btn_text" style="width:80%;margin:0 auto;height:40px;margin-top:10px;line-height:40px;text-align:center;color:white;background-color:#e4bc91;font-size:15px;border-radius:8px;">截图保存图片</div>
+                    <?php if($iswx!=1){?><?php }?>
+                </div>
+            </div>
+            <!-- 商品轮播图 -->
+            <div class="scale_wh scale_100" style="border-bottom: 1px solid #e5e5e5;">
+                <div class="scale_content">
+                    <div class="js-banner swiper-container">
+                        <div class="swiper-wrapper">
+                            <foreach name="data['images']" item="url">
+                                <div class="swiper-slide"><img src="{$url}" /></div>
+                            </foreach>
+                        </div>
+                        <div class="swiper-tip">温馨提示：长按图片保存到手机</div>
+                        <div class="pagination"></div>
+                    </div>
+                </div>
+            </div>
+            <notempty name="data['activity']">
+                <div id="J_MlhPriceBar">
+                    <div class="active-tag">{$data['activity']['main_tag']}</div>
+                    <div class="price_time">
+                        <div class="subleft avil">
+                            <div class="price">{$data['view_price'][0]['prefix']}<strong>{$data['view_price'][0]['price']}{$data['view_price'][0]['suffix']}</strong></div>
+                            <div class="information">
+                                <div class="oprice">{$data['view_price'][1]['prefix']}<del>{$data['view_price'][1]['price']}{$data['view_price'][1]['suffix']}</del></div>
+                                <div class="soldcount">
+                                    <span>{$data['activity']['description']}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="countdown">
+                            <div class="txt">距离{$data['countdown']['type'] == 'start' ? '开始' : '结束'}还剩</div>
+                            <div class="clockrun" id="J_CountDownTxt">
+                                <span class="num">00</span>
+                                <span class="dot">:</span>
+                                <span class="num">00</span>
+                                <span class="dot">:</span>
+                                <span class="num">00</span>
+                                <span class="dot">:</span>
+                                <span class="num">00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="goods-header">
+                    <h2 class="title">{$data.title}</h2>
+                    <notempty name="data['redirect_link']">
+                        <a href="{$data['redirect_link']['url']}" class="see-active">{$data['redirect_link']['text']}<i class="arrow"><em></em><span></span></i></a>
+                    </notempty>
+                </div>
+                <div class="activity-intro block block-list border-0 top-0 bottom-0">
+                    <notempty name="data['activity']['rule_url']">
+                        <a class="clearfix block-item arrow-right" href="{$data['activity']['rule_url']}">
+                            <img class="tag-img" src="{$data['activity']['icon']}">
+                            <span class="title">活动规则</span>
+                            <span class="pull-right c-gray-dark">查看详情</span>
+                        </a>
+                    </notempty>
+                </div>
+                <else />
+                <!-- 杨东垒 -->
+                <style>
+                    i.price-suffix{font-size:10px;}
+                </style>
+                <div class="goods-header" style="overflow:initial;">
+                    <a href="javascript:;" class="share_qr_container" style="top:50px;z-index:100;" data-id="{$data.goods_id}"><img style="width:35px;height:35px;" src="__CDN__/img/mall/share_qrcode.png?20170830"></a>
+                    <div class="goods-price">
+                        <div class="clearfix">
+                            <div class="current-price">
+                                <if condition="$data['max'] eq $data['min']">
+                                    <span style="font-size: 12px;font-weight:bold;">{$data['min_show']['title']}¥</span>
+                                    <i class="price" style="font-weight:bold;">{$data['min_show']['price']}</i><i class="price" style="font-weight:bold;" >{$data['min_show']['suffix']}</i>
+                                    <else/>
+                                    <span style="font-size: 12px;font-weight:bold;">{$data['min_show']['title']}¥</span>
+                                    <i class="price" style="font-weight:bold;">{$data['min_show']['price']}</i><i class="price" style="font-weight:bold;">{$data['min_show']['suffix']}</i>
+                                    <i class="price">~</i>
+                                    <span style="font-size: 12px;font-weight:bold;">{$data['max_show']['title']}¥</span>
+                                    <i class="price"  style="font-weight:bold;">{$data['max_show']['price']}</i><i class="price" style="font-weight:bold;">{$data['max_show']['suffix']}</i>
+                                </if>
+                            </div>
+                            <div class="goods-tag">
+                                <!--<if condition="$data['activity_id'] gt 0"><span class="tag tag-orange">聚划算</span></if>-->
+                                <if condition="$data['baoyou'] eq 1"><span class="tag tag-orange">包邮</span></if>
+                                <!--<span class="tag tag-orange">积分抵2%</span>-->
+                            </div>
+                        </div>
+                        <notempty name="data['view_price'][1]">
+                            <div class="original-price"><!-- {$data['view_price'][1]['prefix']}{$data['view_price'][1]['price']}{$data['view_price'][1]['suffix']} -->&nbsp;</div>
+                        </notempty>
+                    </div>
+                    <h2 class="title" style="font-weight:bold;">{$data.title}</h2>
+                    <notempty name="data['redirect_link']">
+                        <a href="{$data['redirect_link']['url']}" class="see-active">{$data['redirect_link']['text']}<i class="arrow"><em></em><span></span></i></a>
+                    </notempty>
+                </div>
+            </notempty>
+            <div class="other-info" style="font-size:10px;">
+                <if condition="$isLB neq 1">
+                    <p style="width:37%;font-size:12px;">运费: {$data['freight_fee']}</p>
+                </if>
+                <!-- <p>浏览量{$data['month_sold']}</p> -->
+                <p style="font-size:12px;">库存：{$data['stock']}</p>
+                <p style="width:29%;font-size:12px;">{$data.send_place}</p>
+            </div>
+            <if condition="$isALGoods eq 1">
+                <if condition="$isLB eq 1">
+                    <div class="post_fee">
+                        <label>送至(地区):</label>
+                        <select>
+                            <option value ="0" selected>请选择</option>
+                            <foreach name="province" item="v">
+                                <option value ="{$v.id}">{$v.name}</option>
+                            </foreach>
+                        </select>
+                        <label class="head_fee">0</label>
+                        <!-- <label class="body_fee">0</label> -->
+                    </div>
+                </if>
+            </if>
+            <div class="goods-digest" style="white-space: pre-wrap;word-break: break-all;line-height:1.5em;border-top:none;color:#101010;font-size:12px;padding-top:10px;padding-bottom:10px;border-top: 1px solid #e5e5e5;">{$data.digest}</div>
+            <notempty name="range_price">
+                <div class="block-item range_price range_price_{:count($range_price)}">
+                    <foreach name="range_price" key="quantity" item="price">
+                        <dl style="width:{:bcdiv(100, count($range_price),2)}%">
+                            <dd>¥{$price}</dd>
+                            <dt>≥{$quantity}<span>件：</span></dt>
+                        </dl>
+                    </foreach>
+                </div>
+            </notempty>
+            <div class="shop-info" style="margin-bottom:10px;">
+                <div class="shop-header">
+                    <div class="shop-logo" style="display:flex;justify-content:center;align-items:center;height:70px;width:59px;"><img style="border-radius:50% !important;width:50px;height:50px;" src="{$data.shop_logo}"></div>
+                    <div class="shop-name" style="display:flex;align-items:center;justify-content:space-between;height:70px;margin-left:70px;">
+                        <div style="display:flex;flex-direction:column;padding-top:4px;">
+                            <span class="shop_name_span" style="line-height:40px;font-size:16px;width:100%;">{$data.shop_name}</span>
+                            <div class="shop-tag-list clearfix" style="padding:0px;height:30px;">
+                                <if condition="$transfers_auth eq 1">
+                                    <span class="shop-tag gerenrenzheng active" style="width:auto;">该店铺已通过实名认证</span>
+                                    <else/>
+                                    <span class="shop-tag gerenrenzheng" style="width:auto;">该店铺未通过实名认证</span>
+                                </if>
+                            </div>
+                        </div>
+                        <a href="__MODULE__/shop?id={$data['shop_id']}" class="go-shop-main" style="display:flex;align-items:center;flex-direction:column;justify-content:center;padding:0px;border:none;width:60px;height:70px;">
+                            <div style="width:30px;height:30px;background:url('/img/mall/go_to_shop.png') no-repeat;background-size:100% 100%;"></div>
+                            <p style="line-height:20px;height:20px;">进店逛逛</p>
+                        </a>
+                    </div>
+                </div>
+                <!-- <div>
+                    <a href="__MODULE__/goods/cshop" style="display:flex;align-items:center;justify-content:center;border-top:1px solid #e5e5e5;border-bottom:1px solid #e5e5e5;padding:2px;box-sizing:border-box;width:92%;margin-left:4%;">
+                        <i style="block;width:25px;height:25px;background:url(/img/logo_108.png) no-repeat;background-size:100% 100%;border-radius:4px;"></i>
+                        <p style="width:auto;line-height:36px;text-align:center;margin-left:1em;color:#252525;font-size:14px;">我要开小店</p>
+                    </a>
+                    <p style="color:#a3a3a3;font-size:10px;width:90%;margin:0 auto;text-align:center;line-height:2.5em;">开店只提供交易工具的功能，不承担交易担保，请谨慎交易。</p>
+                </div> -->
+            </div>
+
+            <!-- 图文、成交记录 -->
+            <div class="js-tabber-container goods-detail" style="margin-top:0px;">
+                <notempty name="data['remote_area']">
+                    <div class="custom-notice text-center">此商品{$data['remote_area']}不发货</div>
+                </notempty>
+                <div class="js-tabber tabber clearfix">
+                    <button data-type="goods" class="active" style="width:100%;text-align:left;width:96%;margin-left:2%;margin-bottom:10px;">商品图片</button>
+                    <!-- <button data-type="rate" style="width:50%;color:black;"><?php echo $data['rate_times'] > 0 ? '评价'.$data['rate_times'] : '商品评价'; ?></button> -->
+                    <!-- <button data-type="rate" style="width:50%;color:black;">商品评价</button> -->
+                </div>
+                <div class="js-tabber-content">
+                    <div class="js-part js-goods-detail goods-tabber-c" data-type="goods">
+                        <div class="block block-list" style="margin:0; border:none;">
+                            <if condition="($data['parameters']!='') and ($data['sku_json']!='')">
+                                <foreach name="data['sku_json']" key="spec_pid" item="item">
+                                    <div class="block-item">
+                                        <label>{$item.text}:</label>
+                                        <span><foreach name="item['items']" item="val">{$val.text}&nbsp;</foreach></span>
+                                    </div>
+                                </foreach>
+                                <if condition="($data['parameters']!='')">
+                                    <foreach name="data['parameters']" item="item">
+                                        <div class="block-item">
+                                            <label>{$item[0]}:</label>
+                                            <span>{$item[1]}</span>
+                                        </div>
+                                    </foreach>
+                                </if>
+                            </if>
+                        </div>
+                        <div class="js-components-container components-container">
+                            <div id="detail_container" class="custom-richtext">{$data['detail']}</div>
+                        </div>
+                    </div>
+                    <!-- <div class="js-part hide goods-rate" data-type="rate" style="margin-bottom:20px">
+                        <div class="js-rate-tabber review-rate-tabber tabber tabber-n4 clearfix {$show_rate_num}">
+                            <button class="item active" data-type="all">全部</button>
+                            <button class="item" data-type="good">好评({$data.rate_good})</button>
+                            <button class="item" data-type="middle">中评({$data.rate_middle})</button>
+                            <button class="item" data-type="bad">差评({$data.rate_bad})</button>
+                        </div>
+                        <ul class="list js-rate-list"></ul>
+                        <div class="x-pullfresh-more"></div> -->
+                </div>
+            </div>
+        </div>
+        <style>
+            .actions.actions-2{display:flex;justify-content:space-between;align-items:center;height: 60px;box-sizing: border-box;flex-direction: row-reverse;padding-right:8px;}
+            .content-foot .actions.actions-2 .btn{width:46%;height:40px;line-height:40px;border-radius: 5px;}
+            .tab_ydl{margin-top:6px;}
+            .content-foot>a{margin-top:6px;}
+            .js-tabber.tabber.clearfix{border-top:none;}
+            .content-foot>a.chat{background:url(/img/mall/cart_ydl_2.png) center no-repeat !important;}
+        </style>
+        <div class="js-bottom-opts js-footer-auto-ele bottom-fix">
+            <div class="sku-layout" style="height:60px;">
+                <div class="content-foot clearfix">
+                    <foreach name="data['action']['left']" item="action">
+                        <a href="{$action['link']}" class="tab_ydl {$action['class']}" data-id="{$action['data-id']}"></a>
+                    </foreach>
+                    <div class="actions actions-{:count($data['action']['right'])} clearfix" style="margin-left: 150px;margin-left:{:count($data['action']['left'])*50}px">
+                        <foreach name="data['action']['right']" item="btn">
+                            <a id="btn_{$btn['id']}" type="button" class="{$btn['class']}" href="{$btn['link']}">{$btn['text']}</a>
+                            </empty>
+                        </foreach>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<include file="_layout/mall.copyright.html" />
+</div>
+<include file="_layout/mall.right_icon.html" />
+<!--分享弹窗-->
+<div class="cyb_fx_box">
+    <div class="share_text_box">
+        <p class="color_#2C2C2C">分享文字</p>
+        <div class="textarea_border">
+            <textarea name="" rows="8" cols=""></textarea>
+        </div>
+        <div class="item_photo_container">
+            <ul>
+
+            </ul>
+            <div style="clear: both;"></div>
+        </div>
+        <!--#e4bc91-->
+        <div class="sub_fix">
+            <div id="share_submit" onclick="share_method()">确认分享</div>
+        </div>
+    </div>
+</div>
+<!--/分享弹窗-->
+<!--判断是不是1688端-->
+<input type="hidden" id="cyb" value="" />
+<input type="hidden" id="share_mid" value="{$buyer['id']}"/>
+<!--图片预览布局-->
+<div class="preview_box">
+    <div class="preview_img">
+        <img src=""/>
+    </div>
+</div>
+<!--/图片预览布局-->
+</body>
+
+<script type="text/javascript">
+    var bt_title;
+    <if condition="IS_WEIXIN">
+        //分享
+        require(["h5/jsweixin"], function(jweixin){
+            jweixin.init({$sign}, function(){
+                jweixin.share({$share_data}, function(){
+                    toast.show('分享成功');
+                });
+            });
+        });
+    </if>
+    //  var is_ali = "false";
+    requirejs(["jquery"], function(){
+
+        require(['alipan'],function(ali){
+            if(ali.isAvaliable){
+                $("#cyb").val(ali.isAvaliable);
+                $("#share_code_body .share_code_btn_text").text("点击分享");
+                $("#share_code_body").click(function(){
+                    $(this).hide();
+                    ali.aliShare("",[''+$('#share_code_body img.share_logo').eq(0).attr('src')]);
+                })
+            }else{
+                $("#cyb").val(ali.isAvaliable);
+            }
+        })
+        //拨打电话关闭
+        $(".close_icon_btn").click(function(){
+            $(".offshelf_dialog").hide();
+        })
+        // 拨打电话
+        $(".tel_phone").click(function(){
+            //取电话
+            var phone_num = $(".offshelf_dialog a.phone_num").text();
+            window.location.href='tel:'+phone_num;
+        })
+        //新加二维码
+        $(".goods-header img.qr_code").css("marginTop",parseInt($(".goods-header").height() - 50)/2);
+
+        var $qr = $('.share_qr_container');
+        $qr.on("click",function(){
+//          if(is_ali == false){
+//              $(".share_code_btn_text").text("截图保存图片");
+//          }
+            var id = $qr.attr('data-id');
+            var max = {$data['max']};
+            var min = {$data['min']};
+            var min_show_price = "{$data['min_show']['price']}";
+            var min_show_suffix = "{$data['min_show']['suffix']}";
+            var shop_id = "{$data['shop_id']}";
+            var cybType = $("#cyb").val();
+            var price = '';
+            if(max == min){
+                price = min_show_price.toString()+min_show_suffix.toString();
+            }else{
+                var max_show_price = "{$data['max_show']['price']}";
+                var max_show_suffix = "{$data['max_show']['suffix']}";
+                price = min_show_price.toString()+min_show_suffix.toString()+'~'+max_show_price.toString()+max_show_suffix.toString();
+            }
+//          https://seller.xingyebao.com/login/goods_qr
+            var share_mid = $('#share_mid').val();
+            $.ajax({
+                url: 'https://seller.xingyebao.com/login/goods_qr?admin=1',
+                type: 'post',
+                dataType: 'json',
+                data:{id:id,price:price,shop_id:shop_id,isCYB:cybType,share_mid:share_mid},
+                success: function(data){
+                    console.log(data);
+                    html = '';
+                    if(data.isCYB == "true"){
+                        bt_title = data.title;
+                        $(".textarea_border textarea").val(data.detail);
+                        for(var i = 0; i < data.images.length; i++){
+                            if(i == 0){
+                                html += "<li>";
+                                html += "<img src="+data.images[i]+"><i class='delete_icon dh_on'><img class='dh_icon' src='/img/seller/dh.png'/></i>";
+                                html += "</li>";
+                            }else{
+                                html += "<li>";
+                                html += "<img src="+data.images[i]+"><i class='delete_icon'><img class='dh_icon' src='/img/seller/dh.png'/></i>";
+                                html += "</li>";
+                            }
+
+                        }
+                        $(".item_photo_container ul").append(html);
+//              		$("body").addClass("por");
+                        $(".cyb_fx_box").show();
+                        return false;
+                    }else{
+                        $(".share_code_btn_text").text("截图保存图片");
+                        $('.share_logo').attr('src', data);
+                        var a = data.split('?');
+                        $('#share_img').attr('href', a[0]);
+                        $("#share_code_body").show();
+                        return false;
+                    }
+
+                }
+            });
+
+        })
+        $("div.post_fee select").on("change",function(){
+            var province_code = $(this).val();
+            if(province_code == 0){
+                $("label.head_fee").text('0');
+            }else{
+                var tao_id = {$data['tao_id']};
+                var aliid = {$data['aliid']};
+                $.ajax({
+                    url:'__MODULE__/Goods/countExpress',
+                    type:'post',
+                    data:{provinceCode:province_code,taoId:tao_id,aliId:aliid},
+                    dataType:'json',
+                    success:function(data){
+                        $("label.head_fee").text(data);
+                    }
+                });
+            }
+        })
+
+        $("span.close_icon").click(function(){
+            $("#share_code_body").hide();
+        })
+
+        // 切换商品详情/成交记录
+        var $tabberContainer = $(".js-tabber-container"),
+            fixedTop = $tabberContainer.offset().top,
+            $tabber = $tabberContainer.children(".js-tabber");
+        $(".js-tabber>button").on("click", function(){
+            var $this = $(this),
+                type = $this.data("type");
+            $this.addClass("active").siblings().removeClass("active");
+            $(".js-tabber-container>.js-tabber-content>.js-part[data-type=\""+$this.attr("data-type")+"\"]").removeClass("hide").siblings().addClass("hide");
+
+            document.body.scrollTop = fixedTop;
+
+            // 同类商品
+            if(type == "rate"){
+                if($this.data("loading")){
+                    return false;
+                }
+                $this.data("loading", 1);
+                require(["buyer/goods/rate"], function(view){
+                    view.init('{$data.goods_id}', '.js-rate-list');
+                });
+            }
+            return false;
+        });
+
+        $(window).on('scroll', function(){
+            if(document.body.scrollTop > fixedTop){
+                $tabber.addClass("top-fix");
+            }else{
+                $tabber.removeClass("top-fix");
+            }
+            return false;
+        }).trigger('scroll');
+    });
+
+    // 购买/兑换
+    require(["buyer/skumodal"], function(skumodal){
+        var data = {:json_encode($data)};
+        $("#btn_buyNow").on("click",function(){
+            if ($('.js-cart-num').hasClass('has-cart')){
+                skumodal.show(data);
+                $('#sku_addCart').hide();
+                // window.location.href = '__MODULE__/cart';
+            }else{
+                skumodal.show(data);
+                $('#sku_addCart').hide();
+            }
+            return false;
+        });
+
+        $("#btn_addCart").on("click",function(){
+            skumodal.show(data);
+            $('#sku_buyNow').hide();
+            return false;
+        });
+    });
+    //点击分享选中
+    require(["jquery"],function(){
+        $("body").on("click",".item_photo_container ul li",function(){
+            var len = $(".dh_on").length;
+            console.log($(this).index())
+            if($(this).index() == "0"){
+                $(this).find("i").addClass("dh_on");
+                return false;
+            }else if($(this).find("i").is(".dh_on")){
+                $(this).find("i").removeClass("dh_on");
+                return false;
+            }else{
+                if(len > 8){
+                    toast.show("只能选中9张图");
+                    return false;
+                }else{
+                    $(this).find("i").addClass("dh_on");
+                }
+            }
+
+        })
+        //点击购物车图片预览
+        $("body").on("click",".dc_pc_click",function(){
+            var img = $(this).find("img").attr('src');
+            $(".preview_box img").attr("src",img);
+            $(".preview_box img").addClass("zoomIn");
+            $(".preview_box").fadeIn(300);
+        })
+        //点击图片隐藏
+        $("body").on("click",".preview_box",function(){
+            $(this).fadeOut(300);
+        })
+    })
+    require(["swiper"], function(){
+        var mySwiper = new Swiper(".js-banner",{
+            autoplay : 5000,
+            loop : true,
+            autoplayDisableOnInteraction : true,
+            pagination : ".js-banner .pagination"
+        });
+
+        var $banner = $(".js-banner"),
+            $wrapper = $banner.children(".swiper-wrapper");
+        $banner.on("click", function() {
+            $banner.toggleClass("full-screen");
+            if($banner.hasClass("full-screen")){
+                $wrapper.css("line-height", document.documentElement.clientHeight+"px");
+            }else{
+                $wrapper.css("line-height", "");
+            }
+            return false;
+        });
+    });
+</script>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="团队业绩" />
+    <style type="text/css">
+    .my-team{margin-top:10px;font-size:14px}
+    .my-team .team_count{background-color:#fff;padding:17px 0 17px 45px;position:relative;display:block;}
+    .my-team .arrow-right::after{right:16px}
+    .my-team .team_count span{vertical-align:middle}
+    .my-team .team_count:before{content:' ';background:url('__CDN__/img/mall/team_icon.jpg') center no-repeat;width:20px;height:20px;display:inline-block;background-size:100%;position:absolute;top:50%;margin-top:-10px;left:16px}
+    .my-team .team_num{font-size:14px;margin-top:2px;background-color:#fff}
+    .my-team .team_num a{position:relative;display:block;float:left;width:25%;text-align:center;padding:11px 0}
+    .my-team .agent_title{margin-top:5px;color:#949494;font-size:10px}
+    .choose-month{position:relative;float:right;color:#f0623c;border-radius:6px;border:1px solid #e5e5e5;line-height:10px;padding:1px 6px;background-color:#fff;font-size:10px}
+    .select-month{opacity:0;position:absolute;top:-15px;left:-15px;right:-15px;bottom:-15px}
+    .sales-list{background-color:#fff;text-align:center;position:relative}
+    .sales-list .sales-item{float:left;width:33.33%;padding:14px 0}
+    .sales-list .sales-item a{color:#f0623c;display:block;border-right:1px solid #f8f8f8}
+    .sales-list .sales-amount{font-size:14px;margin-top:7px;color:#333}
+    .sales-total{text-align:center;font-size:14px;position:absolute;top:0;right:0;bottom:44px;left:0;padding-top:25%;background:-moz-linear-gradient(top,#f67426 0%,#f05c29 100%);background:-webkit-gradient(linear,left top,left bottom,color-stop(0%,#f67426),color-stop(100%,#f05c29));background:-webkit-linear-gradient(top,#f67426 0%,#f05c29 100%);background:-o-linear-gradient(top,#f67426 0%,#f05c29 100%);background:-ms-linear-gradient(top,#f67426 0%,#f05c29 100%);background:linear-gradient(to bottom,#f67426 0%,#f05c29 100%);color:#fff}
+    .sales-total .month-txt{margin-top:-50px}
+    .sales-total .month-amount{font-size:36px;margin:15px}
+    .sales-bottom{position:absolute;left:0;right:0;bottom:0;background-color:#f0623c;padding:15px;font-size:10px;color:#fff}
+    .sales-bottom .next-txt{vertical-align:middle;color:#f8bbb0}
+    .sales-bottom .next-val{vertical-align:middle;font-size:14px}
+    </style>
+</head>
+<body class="body-fixed-bottom">
+    <div class="container">
+        <div class="content">
+            <div class="scale_wh" style="padding-bottom:51.56%">
+                <div class="scale_content">
+                    <div class="sales-total">
+                        <div class="month-txt js-month-str">本月业绩(元)</div>
+                        <div class="js-sales-total month-amount">0</div>
+                    </div>
+                    <div class="sales-bottom">
+                        <span class="next-txt js-next-txt">距离xx级还差(元)</span>
+                        <span class="next-val js-next-val">0</span>
+                        <a href="javascript:;" class="choose-month">查看往月
+                            <select class="js-month select-month">
+                                <foreach name="monthList" key="month" item="monthStr">
+                                <option value="{$month}">{$monthStr}</option>
+                                </foreach>
+                            </select>
+                       </a>
+                    </div>
+                </div>
+            </div>
+            <div class="sales-list clearfix">
+                <div class="sales-item">
+                    <a href="javascript:;">招商业绩(元)
+                        <div class="sales-amount js-sales-agent">0</div>
+                    </a>
+                </div>
+                <div class="sales-item">
+                    <a href="javascript:;">订单业绩(元)
+                        <div class="sales-amount js-sales-trade">0</div>
+                    </a>
+                </div>
+                <div class="sales-item">
+                    <a href="javascript:;">订单退款(元)
+                        <div class="sales-amount js-sales-refund">0</div>
+                    </a>
+                </div>
+            </div>
+            <div class="my-team">
+                <a href="/wtlm/team/friends" class="team_count arrow-right">
+                    <span>团队总人数</span><span style="font-size: 16px;margin-left:15px">{$agent.5}</span>
+                </a>
+                <div class="team_num clearfix">
+                    <a href="/{$shop}/team/friends?card_id=100012">{$agent.100012}<div class="agent_title">银牌会员</div></a>
+                    <a href="/{$shop}/team/friends?card_id=100013">{$agent.100013}<div class="agent_title">金牌会员</div></a>
+                    <a href="/{$shop}/team/friends?card_id=100014">{$agent.100014}<div class="agent_title">钻石会员</div></a>
+                    <a href="/{$shop}/team/friends?card_id=100015">{$agent.100015}<div class="agent_title">铜牌代理</div></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <include file="_layout/mall.footer.html" />
+</body>
+<script>
+require(['jquery'], function(){
+	var $monthTxt = $('.js-month-str'),
+	$salesTotal = $('.js-sales-total'),
+	$salesAgent = $('.js-sales-agent'),
+	$salesTrade = $('.js-sales-trade'),
+	$nextTxt = $('.js-next-txt'),
+	$nextVal = $('.js-next-val'),
+	$salesRefund = $('.js-sales-refund');
+	
+	var requestData = function(month){
+		$.ajax({
+			url: '__URL__/sales?month='+month,
+			dataType: 'json',
+			success: function(data){
+				$monthTxt.html(data.month+'业绩(元)');
+				$salesTotal.html(data.total);
+				$salesAgent.html(data.agent);
+				$salesTrade.html(data.trade);
+				$salesRefund.html(data.refund);
+				$nextTxt.html(data.next_txt);
+				$nextVal.html(data.next_distance);
+			},
+			error: function(){
+				$monthTxt.html('查询失败');
+			}
+		});
+	}
+	
+	$('.js-month').on('change', function(){
+		var $this = $(this),
+			month = $(this).val();
+		$monthTxt.html('正在查询');
+		requestData(month);
+		return false;
+	}).trigger('change');
+});
+</script>
+</html>

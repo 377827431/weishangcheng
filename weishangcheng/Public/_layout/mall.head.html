@@ -1,0 +1,63 @@
+<meta charset="UTF-8">
+<title>{:('[title]' == '['.'title'.']' ? ( !empty(SHOP) ? SHOP['name'] : PROJECT['name']) : '[title]')}</title>
+<meta name="viewport" content="initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="red" name="apple-mobile-web-app-status-bar-style">
+<meta name="format-detection" content="telphone=no">
+<!-- <script src="__CDN__/js/flexible.js"></script> -->
+<link rel="stylesheet" href="__CDN__/css/mall.css?modify=1346">
+<link rel="stylesheet" href="__CDN__/css/trade.css?modify=1346">
+<script type="text/javascript">
+var __<?php echo 'PAY' ?>__ = '__PAY__', __H5__ = '__MODULE__',
+require = {
+	baseUrl: '__CDN__/js',
+	map: {
+	  '*': {
+		'css': '//cdn.bootcss.com/require-css/0.1.8/css.min.js',
+		'text': '//cdn.bootcss.com/require-text/2.0.12/text.min.js',
+	  },
+	},
+	deps: ['jquery'],
+	callback: function() {win.start()},
+	shim: {
+		swiper: ['jquery', 'css!//cdn.bootcss.com/Swiper/3.3.1/css/swiper.min.css'],
+		lazyload: ['jquery'],
+		editor:  ['jquery'],
+		fdev:['jquery'],
+		alipan:['es6','fdev'],
+		cookie:['jquery'],
+		sortable:['jquery']
+
+	},
+	paths: {
+		'validate': '//cdn.bootcss.com/jquery-validate/1.15.0/jquery.validate.min',
+        'jquery': '//cdn.bootcss.com/jquery/3.2.1/jquery.min',
+		'h5': 'h5.js?modify=1346#',
+		'buyer': 'buyer.js?modify=1346#',
+		'seller': 'seller.js?modify=1346#',
+        'lrz': 'util/lrz.all.bundle',
+		'lazyload': '//cdn.bootcss.com/jquery.lazyload/1.9.1/jquery.lazyload.min',
+		'swiper': '//cdn.bootcss.com/Swiper/3.3.1/js/swiper.min',
+		'md5': '//cdn.bootcss.com/blueimp-md5/2.6.0/js/md5.min',
+		'cookie': '//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min',
+		'editor': 'mobile.editor.js?modify=1346#',
+		'image_cut': 'util/image_cut.js?modify=1346#',
+		// 'es6-shim': 'es6-shim.min',
+		'es6':'es6-promise.min',
+		'alipan':'pan.min.js?modify=1346#',
+		'fdev':'fdev-min',
+		'cookie':'jquery.cookie',
+		'sortable':'Sortable'
+	}
+}
+function get_url(url){return '__MODULE__'+url}
+</script>
+<if condition="IS_APP">
+<script type="text/javascript" src="__CDN__/js/appcan.min.js"></script>
+</if>
+<script data-main="h5" src="__CDN__/js/require.min.js"></script>
+<php>
+if(!APP_DEBUG){
+    require_once 'cs.php';echo '<img src="'._cnzzTrackPageView(1259294058).'" width="0" height="0" style="display:none;"/>';
+}
+</php>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="订单详情" />
+    <link rel="stylesheet" href="__CDN__/css/seller/order_detail.css?2017090102">
+</head>
+
+<body>
+<div class="container">
+    <div class="content ">
+        <div class="content-body">
+            <div class="order_stat_container">
+                <div class="water_spire">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <ul>
+                    <li><span>订单状态：</span><span class="order_stat">{$data.status_str}</span></li>
+                    <!--<li>买家于<span class="book_time">{$data.pay_time}</span>付款</li>-->
+                    <!--<li>您还未发货，<span class="remain_time">{$data.d-h-m}</span>后订单将自动退款给买家</li>-->
+                </ul>
+            </div>
+            <div class="order_info">
+                <ul>
+                    <li><span>订单编号：</span><span class="order_num">{$data.tid}</span></li>
+                    <li><span>创建时间：</span><span class="create_time">{$data.created}</span></li>
+                    <li><span>付款时间：</span><span class="pay_time">{$data.pay_time}</span></li>
+                </ul>
+            </div>
+            <div class="div_span"></div>
+            <div class="order_detail">
+                <div class="colorful_line"></div>
+                <ul class="order_detail_list">
+                    <li style="display:flex;justify-content:space-between;"><span>收货人:</span><div style="width:75%;display:flex;justify-content:space-between;"><input class="name" onfocus=this.blur() type="text" value="{$data.receiver_name}"/><span>{$data.receiver_mobile}</span></div></li>
+                    <li style="min-height:34px;"><span style="vertical-align:top;margin-top: 8px;">收货地址：</span><div class="get_address_detail detail" onfocus=this.blur() spellcheck="false" >{$data.receiver_province} {$data.receiver_city} {$data.receiver_county} {$data.receiver_detail}</div></li>
+                    <li style=""><span>配送方式：</span><input class="express" onfocus=this.blur() type="text" value="{$data.express_name}" /></li>
+                    <li style="min-height:34px;"><span style="vertical-align:top;margin-top: 11px;">买家留言：</span><div class="remark get_remark_detail" >{$data.buyer_remark}</div></li>
+                    <input class="mobile" type="hidden" value="{$data.receiver_mobile}" />
+                </ul>
+                <div class="colorful_line"></div>
+            </div>
+            <div class="div_span"></div>
+            <foreach name="data['orders']" item="item">
+                <div class="good_info">
+                    <div class="left_part"><img src="{$item.pic_url}" /></div>
+                    <div class="middle_part">
+                        <p class="good_title">{$item.title}</p>
+                        <!--<p>商品：<span>东北大兴安岭野生树莓果酱覆盆子果粒果酱  早餐面包酱天然无添加</span>；货号：<span class="good_id">sm1</span></p>-->
+                        <!--<p>会员拿货价：<span class="vip_price">18</span></p>-->
+                        <p><span class="vip_price">{$item.sku}</span></p>
+                    </div>
+                    <div class="right_part">
+                        <p class="good_price">{$item.price}</p>
+                        <if condition="$item.is_original gt 0">
+                            <p class="before_price">{$item.original_price}</p>
+                        </if>
+                        <p class="good_num">{$item.quantity}</p>
+                    </div>
+                    <div class="bottom_part">
+                        <!-- <if condition="$data['status'] eq 3 OR $data['status'] eq 4 OR $data['status'] eq 5 OR $data['status'] eq 6">
+                            <div class="little_btn_grey refund_btn" data-id="{$item.oid}">{$item['refund']['status_str']}</div>
+                        </if> -->
+                    </div>
+                </div>
+            </foreach>
+            <div class="price_overview">
+                <ul>
+                    <li><span>商品总金额</span><span class="total_price">{$data.total_fee}</span></li>
+                    <li><span>邮费</span><span class="post_price">{$data.total_postage}</span></li>
+                    <li><span>优惠券</span><span class="discut_price">{$data.discount_fee}</span></li>
+                    <li><span>实付金额</span><span class="true_price">{$data.paid_fee}</span></li>
+                </ul>
+            </div>
+            <div class="div_span div_span_big"></div>
+            <div class="btn_group_container clearfix">
+                <div class="order_note_box">
+                    订单备注：<span class="order_note_pp">{$data.seller_remark}</span>
+                </div>
+                <if condition="($data['status'] eq 25 OR $data['status'] eq 3) AND $data['is_sys'] eq 1">
+                    <if condition="$data['isLB'] neq 1">
+                        <div class="little_btn_blue send_now_btn">立即发货</div>
+                    </if>
+                    <if condition="$data['isLB'] eq 1 AND $data['is_suyuan'] eq 0">
+                        <div class="little_btn_blue send_now_btn">立即发货</div>
+                    </if>
+                </if>
+
+                <div class="little_btn_grey add_order_ps_btn">订单备注</div>
+            </div>
+            <div class="order_ps_dailog">
+                <div class="dailog_mask"></div>
+                <div class="order_ps_body">
+                    <div>订单备注</div>
+                    <div class="ps_comment_container">
+                        <textarea class="ps_comment">{$data.seller_remark}</textarea>
+                        <p>0</p>
+                    </div>
+                    <div>
+                        <div class="order_ps_save_btn">保存</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="__CDN__/js/seller/order_detail.js?2017090100"></script>
+</body>
+</html>

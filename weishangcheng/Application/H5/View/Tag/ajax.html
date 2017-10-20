@@ -1,0 +1,137 @@
+<style>
+.mui-nav-tab{position:fixed;left:0;right:0;top:0;bottom:0;background-color:#fff;z-index:1000}
+.mui-nav-tab .tab-header{position:relative;overflow:hidden;height:43px;background:#EEE;border-bottom:1px solid #E1E1E1}
+.mui-nav-tab .tab-header h1{margin:0;font-weight:400;float:left;width:23%;text-align:center;line-height:44px;color:#333;font-size:14px;}
+.mui-nav-tab .tab-content{width:100%;overflow:hidden;position:absolute;top:44px;bottom:0;background-color:#fff}
+.mui-nav-tab .tab-clone,.mui-nav-tab .tab-nav li{border-right: 1px solid #E1E1E1;cursor:pointer;line-height:59px;border-bottom:1px solid #E1E1E1}
+.mui-nav-tab .tab-clone{border-right-color: #fff;display:none;z-index:9999;font-size:14px;background:#fff;color:#333;position:absolute;text-align:center;width:23%;left:0}
+.mui-nav-tab .tab-clone.show{top:0;display:block}
+.mui-nav-tab .tab-nav{background:#EEE;color:#9B9B9B;font-size:14px;text-align:center;float:left;width:23%;height:100%;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+.mui-nav-tab a{color:#9B9B9B}
+.mui-nav-tab .tab-channel{padding:10px 0}
+.mui-nav-tab .tab-channel a{display:block;text-align:center;line-height:35px;font-size:12px;color:#fff;background-color:#DD2727}
+.mui-nav-tab .tab-menu{float:left;width:77%;height:100%;background:#fff;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+.mui-nav-tab .tab-menu .tab-li{display:none;padding:10px 4%}
+.mui-nav-tab .tab-menu .tab-li.active{display:block;overflow:hidden}
+.mui-nav-tab .tab-list h2{font-size:14px;line-height:14px;color:#9B9B9B;padding:15px 0}
+.mui-nav-tab .tab-list ul{overflow:hidden}
+.mui-nav-tab .tab-list li{float:left;width:33.33333%;margin:5px 0}
+.mui-nav-tab a{position:relative;display:block;text-decoration:none}
+.mui-nav-tab .tab-banner,.mui-nav-tab .tab-img{position:relative;overflow:hidden;background:#fff url() no-repeat center center;background-size:50%}
+.mui-nav-tab .tab-img{padding:76% 0 0;width:76%;margin:0 auto;background: url(http://admin.xingyebao.com/img/logo_rgb.jpg) center no-repeat;background-size: 100% 100%;}
+.mui-nav-tab .tab-img img{position:absolute;top:0;left:0;width:100%}
+.mui-nav-tab .tab-desc{line-height:23px;height:23px;padding:4px 0;font-size:14px;color:#5D5D5D;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mui-nav-tab .tab-nav li.active{background:#fff;color:#333;margin-right: -1px;}
+.mui-nav-tab div::-webkit-scrollbar{display:none}
+</style>
+<div class="mui-nav-tab">
+    <div class="tab-header" id="J_tabHeader">
+        <h1>全部分组</h1>
+        <if condition="IS_AJAX">
+        <div class="cancel-img" style="width:40px"></div>
+        </if>
+    </div>
+    <div class="tab-content">
+        <div class="tab-clone show" id="J_tabCloneTop"></div>
+        <div class="tab-nav" id="J_tabNav">
+            <ul>
+                <foreach name="list[0]" key="index" item="item">
+                <li{$index == 0 ? ' class=" active"' : ''} data-id="{$item.id}">
+                <empty name="list[$item['id']]">
+                <a href="__MODULE__/mall?cat_id={$item['id']}">{$item.name}</a>
+                <else />
+                <a href="javascript:;">{$item.name}</a>
+                </empty>
+                </li>
+                </foreach>
+            </ul>
+        </div>
+        <div class="tab-menu" id="J_tabMenu">
+            <ul class="tab-ul">
+                <li class="tab-li active">
+                    <div class="tab-channel hide">
+                        <a href="javascript:;"></a>
+                    </div>
+                    <div class="tab-list">
+                        <h2>二级标题</h2>
+                        <ul>
+                            <li>
+                                <a href="__MODULE__/mall?cat_id=">
+                                    <div class="tab-img">
+                                        <img src="">
+                                    </div>
+                                    <p class="tab-desc">三级标题</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </foreach>
+            </ul>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+(function(){
+	var categoryList = {:json_encode($list, JSON_UNESCAPED_UNICODE)};
+    var offsetTop = 0;
+    J_tabNav.addEventListener('scroll', function(){
+        if(this.scrollTop >= offsetTop){
+            J_tabCloneTop.classList.add('show');
+        }else{
+            J_tabCloneTop.classList.remove('show');
+        }
+    });
+    
+    var setFocus = function(element){
+        offsetTop = element.offsetTop;
+        J_tabCloneTop.innerHTML = element.innerHTML;
+        
+        var prev = element.parentElement.querySelector('.active');
+        if(!!prev){
+        	prev.classList.remove('active');
+        }
+        
+        element.classList.add('active');
+        
+        var sub = element.offsetTop - J_tabNav.scrollTop;
+        if(sub > 0){
+            J_tabCloneTop.classList.remove('show');
+        }
+        
+        // 填充数据
+        var channel = '<div class="tab-channel hide"><a href="javascript:;"></a></div>',
+        level2 = level3 = '', pid = element.dataset.id;
+        
+        var list = categoryList[pid];
+
+        for(var i=0; i<list.length; i++){
+        	var _list = categoryList[list[i].id];
+        	if(!_list){ // 只有二级，没有三级
+        		level2 += '<li><a href="__MODULE__/mall?cat_id='+list[i].id+'&from={$from}"><div class="tab-img"><img src="'+list[i].icon+'"></div><p class="tab-desc">'+list[i].name+'</p></a></li>';
+        		continue;
+        	}
+
+        	level3 += '<div class="tab-list"><h2>'+list[i].name+'</h2><ul>';
+        	for(var j=0; j<_list.length; j++){
+        		level3 += '<li><a href="__MODULE__/mall?cat_id='+_list[j].id+'&from={$from}"><div class="tab-img"><img src="'+_list[j].icon+'"></div><p class="tab-desc">'+_list[j].name+'</p></a></li>';
+        	}
+        	level3 += '</ul></div>';
+        }
+        
+        if(level2 != ''){
+            level2 = '<div class="tab-list"><h2>'+element.innerText+'</h2><ul>'+level2+'</ul></div>';
+        }
+        
+        J_tabMenu.querySelector('.active').innerHTML = channel + level2 + level3;
+    }
+    setFocus(J_tabNav.querySelector('li'));
+    
+    J_tabNav.addEventListener('click', function(e){
+        var element = !!e.srcElement ? e.srcElement.parentElement : e.target.parentElement;
+        setFocus(element);                  
+        e.stopPropagation();
+        event.preventDefault();
+    }, false);
+})();
+</script>

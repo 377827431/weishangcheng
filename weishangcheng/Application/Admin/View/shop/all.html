@@ -1,0 +1,82 @@
+<toolbar id="toolbar">
+    <form class="search-box">
+        <input type="text" name="name" placeholder="店铺名称" style="width:150px">
+        <button type="button" data-name="search" class="btn btn-default" data-event-type="default">
+            <i class="icon-search"></i>
+        </button>
+    </form>
+</toolbar>
+
+<!-- 表格 -->
+<table id="table" data-toggle="gridview" class="table table-hover" data-url="__ACTION__" data-toolbar="#toolbar" data-side-pagination="client">
+    <thead>
+		<tr>
+			<th data-width="30" data-checkbox="true"></th>
+			<th data-field="name">店铺名称</th>
+			<th data-width="95" data-field="service_hotline">客服热线</th>
+			<th data-width="83" data-field="logistics_score" data-align="center">物流评分</th>
+            <th data-width="83" data-field="service_score" data-align="center">服务评分</th>
+            <th data-width="85" data-field="created">创建时间</th>
+            <th data-width="85" data-field="expire_date" data-align="center" data-visible="false">过期时间</th>
+            <th data-width="150" data-field="goods_rate">好评/中评/差评</th>
+            <th data-width="30" data-field="nickname">付款通知</th>
+			<th data-width="100" data-align="right" data-formatter="formatter_action">操作</th>
+		</tr>
+	</thead>
+</table>
+
+<script src="/js/address.js"></script>
+<script>
+function formatter_address(val, row){
+	return Address.get(row.city_id) + ' ' + Address.get(row.county_id)
+}
+
+var access = [];
+var $access = $('#toolbar>.btn-list').find('button[data-name="edit"],button[data-name="delete"]');
+for(var i=0; i<$access.length; i++){
+	access.push($access.eq(i).attr('data-name'));
+}
+
+function formatter_action(val, row, index){
+	var action = [];
+	if(index > 0){
+		action.push('<a href="javascript:;" class="js-disabled'+(row.state == 0 ? ' color-red' : '')+'" data-id="'+row.id+'" title="当前'+(row.state == 1 ? '启用中' : '已被禁用')+'">'+(row.state == 1 ? '禁用' : '启用')+'</a>');
+	}else{
+		action.push('<a href="__MODULE__/shop/edit?id='+row.id+'">编辑</a>');
+	}
+	action.push('<a href="__MODULE__/goods?shop_id='+row.id+'">商品</a>');
+	return action.join(' - ');
+}
+(function(){
+	var $table = $('#table');
+	$table.on('click', '.js-delete',function(){
+		if(!confirm('操作不可恢复，确定删除吗？')){
+			return false;
+		}
+
+		var id = $(this).data('id');
+		$.ajax({
+			url: '__URL__/delete',
+			type: 'post',
+			datatType: 'json',
+			data: {id: id},
+			success: function(){
+				$table.gridView('refresh');
+			}
+		});
+		return false;
+	}).on('click', '.js-disabled', function(){
+		var id = $(this).data('id');
+		$.ajax({
+			url: '__URL__/edit',
+			data: {id: id, disabled: 'toggle'},
+			type: 'post',
+			dataType: 'json',
+			success: function(){
+				$table.gridView('refresh');
+			}
+		});
+		return false;
+	});
+})();
+</script>

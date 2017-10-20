@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<include file="_layout/mall.head.html" title="订单详情" />
+</head>
+<body style="padding-bottom:41px">
+	<div class="container js-page-content wap-page-order">
+		<div class="content confirm-container">
+			<div style="background: #da8f3e;background-size: auto 100%;position: static;padding: 20px;color: #fff;">
+				<div>
+					<h3>订单状态</h3>
+					<p style="font-size: 12px;margin-top: 5px;line-height:15px;">{$trade.status_str}</p>
+				</div>
+			</div>
+			<div class="block express" id="js-logistics-container" style="margin-top: -1px;">
+				<div class="js-logistics-content logistics-content js-express">
+					<div class="block form border-top-0 border-bottom-0">
+						<empty name="trade['receiver_name']">
+						<div class="js-edit-address js-order-address express-panel express-panel-edit{:empty($address) ? ' empty-address' : ''}" style="padding-left: 0;">
+							<ul class="express-detail">
+								<empty name="address">
+								<li>添加收货地址</li>
+								<else/>
+								<li class="clearfix">
+									<span class="name"> 收货人： {$address.user_name}</span>
+									<span class="tel">{$address.mobile}</span>
+								</li>
+								<li class="address-detail">收货地址：{$address.province_name}{$address.city_name}{$address.county_name}{$address.detail}</li>
+								</empty>
+							</ul>
+							<input type="hidden" name="receiver_id" value="{$address.id}">
+							<input type="hidden" name="receiver_name" value="{$address.user_name}">
+							<input type="hidden" name="receiver_mobile" value="{$address.mobile}">
+							<input type="hidden" name="receiver_province" value="{$address.province_name}">
+							<input type="hidden" name="receiver_city" value="{$address.city_name}">
+							<input type="hidden" name="receiver_county" value="{$address.county_name}">
+							<input type="hidden" name="receiver_detail" value="{$address.detail}" required="required" data-msg-required="收货地址不能为空">
+							<input type="hidden" name="receiver_zip" value="{$address.zip}">
+						</div>
+						<else/>
+						<div class="js-edit-address js-order-address express-panel" style="padding-left: 0;">
+							<ul class="express-detail">
+								<li class="clearfix">
+									<span class="name"> 收货人： {$trade.receiver_name}</span>
+									<span class="tel">{$trade.receiver_mobile}</span>
+								</li>
+								<li class="address-detail">收货地址：{$trade.receiver_province}{$trade.receiver_city}{$trade.receiver_county}{$trade.receiver_detail}</li>
+							</ul>
+						</div>
+						</empty>
+					</div>
+					<!-- <div class="js-logistics-tips logistics-tips font-size-12 c-orange">很抱歉，该地区暂不支持配送。</div> -->
+				</div>
+				<!-- <div class="js-logistics-content logistics-content js-self-fetch"></div> -->
+			</div>
+				
+			<!-- 商品列表 -->
+			<div class="js-goods-list-container block block-list block-order ">
+				<div class="header" style="padding-left: 0px;">
+					<span>店铺：{$trade.seller_nick}</span>
+				</div>
+				<div class="js-goods-list">
+					<foreach name="trade['orders']" item="product" key="i">
+					<a href="/h5/goods?id={$product.goods_id}" class="js-goods-item block-item name-card name-card-3col name-card-goods clearfix">
+						<div class="thumb"><img src="{$product.pic_url}"></div>
+						<div class="detail">
+							<h3 class="l2-ellipsis">{$product.title}</h3>
+							<p class="c-gray ellipsis">{$product.spec}</p>
+							<p class="js-error c-orange ellipsis">{$product.error_msg}</p>
+						</div>
+						<div class="right-col">
+							<div class="price">¥<span>{$product.price}</span></div>
+							<div class="num">×<span class="num-txt">{$product.num}</span></div>
+						</div>
+						<div class="goods-action"></div>
+					</a>
+					</foreach>
+					<div class="block-item font-size-12" style="padding-left: 0px;">
+						<p style="line-height:20px">
+							配送方式<span class="pull-right"><span style="color:#999">{$trade.express_name}</span>¥{$trade.post_fee}</span>
+						</p>
+					</div>
+				</div>
+				<neq name="trade['buyer_remark']" value="">
+				<div class="block-item order-message">
+					<span class="font-size-12">买家留言：</span><p class="message-content font-size-12">{$trade['buyer_remark']}</p>
+				</div>
+				</neq>
+				<div class="block-item" style="line-height: 1.2;">
+					合计
+					<div class="pull-right"><span class="c-orange">¥{:sprintf('%.2f', $trade['total_fee']+$trade['post_fee'])}</span></div>
+				</div>
+			</div>
+
+			<div class="js-order-total block border-top-0">
+				<div class="block-item order-total">
+					<p>
+						<span>商品总价</span><span class="pull-right">¥{$trade['total_fee']}</span>
+					</p>
+					<p>
+						<span>运费(快递)</span><span class="pull-right">+ ¥{$trade['post_fee']}</span>
+					</p>
+					<p>
+						<span>店铺优惠</span><span class="pull-right">- ¥{$trade['discount_fee']}</span>
+					</p>
+					<p>
+						<span>积分抵用</span><span class="pull-right">- ¥{:bcadd($trade['paid_balance'], $trade['paid_no_balance'], 2)}</span>
+					</p>
+				</div>
+				<div class="block-item">
+					<p>
+						<span>应付金额</span><span class="pull-right c-orange">¥{$trade['payment']}</span>
+					</p>
+				</div>
+			</div>
+
+			<empty name="has_error">
+			<!-- 支付 -->
+			<div class="action-container" id="confirm-pay-way-opts">
+				<div style="margin-bottom: 10px;">
+					<php>if($trade['payment'] >0 ){</php>
+					<p class="center c-gray-dark font-size-12" style="line-height:30px;">使用微信支付请确保已安装微信6.0.2以上版本</p>
+					<button type="button" class="js-btn-pay btn-pay btn btn-block btn-large btn-wxwappay btn-green">
+						微信支付
+					</button>
+					<php>}else{</php>
+					<button type="button" class="js-btn-pay btn-pay btn btn-block btn-large btn-wxwappay btn-green">领取赠品</button>
+					<php>}</php>
+					</button>
+				</div>
+			</div>
+			</empty>
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+	var tid = '{$trade.tid}';
+	var payment = {$trade.payment};
+	require(['pay', 'jquery'], function(pay){
+		var $btn_wxpay = $('.js-btn-pay');
+		var $ddress = $('#js-logistics-container .js-order-address');
+		if($ddress.hasClass('empty-address')){
+			require(['order/address', 'jquery']);
+		}
+		
+		$btn_wxpay.on('click', function(){
+			if($ddress.hasClass('empty-address')){
+				toast.show('请选择收货地址');
+				return false;
+			}
+			
+			if(!confirm('亲，您拍的订单将于2月4号以后发货，是否确认付款？')){
+				return false
+			}
+			
+			var address = {};
+			$ddress.find('input[type="hidden"]').each(function(i, element){
+				address[element.name] = element.value;
+			});
+			
+			$btn_wxpay.attr('disabled', 'disabled');
+			$.ajax({
+				url: '/h5/pay/' + tid,
+				type: 'post',
+				dataType: 'json',
+				data: {address: address},
+				success: function(data){
+					if(payment == 0){
+						successed(data);
+						return;
+					}
+					pay.callpay(data, function(res){
+						if(res.errcode == 0){
+							successed(data);
+						}
+					});
+					$btn_wxpay.removeAttr('disabled');
+				},
+				error: function(){
+					window.location.reload();
+				}
+			});
+		})
+	});
+	
+	function successed(data){
+		$('#confirm-pay-way-opts').remove();
+		
+		//支付成功后发送提醒消息
+		$.ajax({
+			url: '/h5/pay/order_notify',
+			data: {trades: data.trades.join(',')},
+			type: 'post',
+			complete: function(){
+				var msg = '支付成功';
+				if(payment == 0){
+					msg = '赠品领取成功';
+				}
+				if(confirm(msg + '，点击确定查看订单详情')){
+					window.location.href = "/h5/order/detail?tid=" + tid;
+				}else{
+					window.history.back();
+				}
+			}
+		});
+	}
+	</script>
+</body>
+</html>

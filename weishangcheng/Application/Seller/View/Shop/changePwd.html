@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="修改密码"/>
+	<style>
+    div.btn{width:100% !important;box-sizing: border-box;}
+		ul>li{line-height:46px;font-size:14px;box-sizing:border-box;width:92%;margin-left:4%;color:black;border-bottom:1px solid #ccc;position:relative;}
+		ul>li span:nth-child(1){display:block;}
+		ul>li span:nth-child(2){display:block;position:absolute;top:0px;right:0px;}
+		ul>li span.triangle:nth-child(2){display:block;width:7px;height:7px;border-top:2px solid #ccc;border-right:2px solid #ccc;transform: rotate(45deg);margin-top:19px;}
+		ul>li input{border:none;display:block;outline:none;width:75%;position:absolute;right:0px;top:14px;text-align:left;background-color:rgba(0,0,0,0);}
+		div.btn{width:92%;line-height:36px;background-color:#da8f3e;color:white;text-align:center;font-size:16px;margin-top:50px;}
+		div.btn:hover{color:white;}
+	</style>
+</head>
+<body>
+	<ul>
+		<li class="yuan_password"><span>原密码</span><input type="password" placeholder="请输入原密码"></li>
+		<li class="new_password"><span>新密码</span><input type="password" placeholder="请输入新密码"></li>
+		<li class="new_sure_password"><span>确认密码</span><input type="password" placeholder="确认密码"></li>
+	</ul>
+	<div class="btn sure_modify">确认修改</div>
+	<script>
+		require(['jquery'],function(){
+			$("div.sure_modify").on('click',function(){
+                //确认修改
+                var yuan_password = $("li.yuan_password input").val();
+                var new_password = $("li.new_password input").val();
+                var sure_password = $("li.new_sure_password input").val();
+                if(new_password !== sure_password){
+                    toast.show("两次输入的密码不一样");
+                    return false;
+                }
+                var valid_password = new_password.split('');
+                if(valid_password.length < 6 || valid_password.length > 20){
+                    return toast.show('请输入6-20位密码'), false
+                }
+
+                var pwdArray = [];
+                for(var i=0; i<valid_password.length; i++){
+                    if(pwdArray.indexOf(valid_password[i]) == -1){
+                        pwdArray.push(valid_password[i]);
+                    }
+                }
+                if(pwdArray.length < 5){
+                    return toast.show('密码过于简单'), false
+                }
+                $.ajax({
+                    url : "/seller/shop/changepwd",
+                    type : 'post',
+                    data : {yuan_pwd:yuan_password,new_pwd:new_password,sure_pwd:sure_password},
+                    dataType : 'json',
+                    success : function(data){
+                    	console.log(data);
+                    	if(data == 'success'){
+                    		toast.show("修改成功");
+                    		setTimeout(function(){window.location.href="/seller/login/out?set=1";},1500);
+                    	}else if(data == 'pwdDiff'){
+                    		toast.show("两次输入的密码不一样");
+                    		return false;
+                    	}else if(data == 'errorYuan'){
+                    		toast.show("原密码错误");
+                    		return false;
+                    	}else if(data == 'emptyYuan'){
+                    		toast.show("原密码不能为空");
+                    		return false;
+                    	}else if(data == 'emptyNew'){
+                    		toast.show("新密码不能为空");
+                    		return false;
+                    	}else if(data == 'emptySure'){
+                    		toast.show("确认密码不能为空");
+                    		return false;
+                    	}
+                    }
+                })
+			})
+		})
+	</script>
+</body>
+</html>

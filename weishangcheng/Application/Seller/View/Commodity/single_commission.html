@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <include file="_layout/mall.head.html" title="推广员设置" />
+    <link rel="stylesheet" href="/css/seller/mui-switch.css">
+    <style>
+		ul li{position:relative;height:50px;line-height:50px;border-bottom:1px solid #bbb;box-sizing:border-box;width:100%;padding-left:4%;padding-right:4%;font-size:14px;}
+		ul li>span:nth-child(1){float:left;}
+		ul li>:nth-child(2){float:right;}
+		ul li>input[type='checkbox']{margin-top:10px;}
+		ul li>select{margin-top:14px;font-size:14px;padding-right:12px;}
+		ul li input{border:none;outline:none;text-align:right;}
+		ul li>input[type="text"]{}
+		ul {border-bottom:10px solid rgba(187,187,187,0.3);}
+		p.ptitle{line-height:50px;font-size:14px;font-weight:bold;padding-left:4%;border-bottom:1px solid #bbb;}
+		ul li.arrow_li::after{content:"";position:absolute;right:0px;top:20px;margin-right:4%;display:inline-block;width:7px;height:7px;border-top:2px solid #ccc;border-right:2px solid #ccc;transform:rotate(45deg);}
+		ul li.percet_li::after{content:"%";position:absolute;right:0px;padding-right:4%;}
+		div.save_btn{width:92%;height:40px;margin:0 auto;text-align:center;line-height:40px;font-size:18px;background-color:#fc4f0d;color:white;margin-top: 20px;border-radius:6px;margin-bottom:20px;}
+		li.comission_con{display:flex;font-size:0;}
+		li.comission_con>div{width:50%;display:flex;font-size:14px;justify-content: space-between;padding-right:1em;position:relative;box-sizing:border-box;}
+		li.comission_con>div input{width:3em;border:none;outline:none;background-color:rgba(0,0,0,0);text-align:right;}
+		li.comission_con>div:nth-child(1)::after{content:"%";position:absolute;right:0px;}
+		li.comission_con>div:nth-child(2)::after{content:"元";position:absolute;right:0px;}
+		li.comission_con>div:nth-child(2){padding-left:4em;}
+		div.unit_yuan::after{content:"元";padding-left:.3em;}
+		ul[show-flag="1"] li[show-flag="2"] {display:none;}
+		ul[show-flag="1"] li[show-flag="1"] {display:flex;}
+		ul[show-flag="2"] li[show-flag="1"] {display:none;}
+		ul[show-flag="2"] li[show-flag="2"] {display:flex;}
+		li.show_ct2{display:flex;justify-content:space-between;align-items:center;}
+		li.show_ct1{display:flex;justify-content:space-between;align-items:center;}
+    </style>
+</head>
+<body>
+	<!-- 佣金提成方式 1固定金额 2.百分比 -->
+	<input type="hidden" value="{$agent_goods['min_price']}" id="src_val">
+	<ul show-flag="<?php if($agent_goods['reward_type']==1){echo 2;}else{echo 1;}?>">
+		<li><span style="font-weight:bold;">单品佣金推广</span><input id="single_commission_switch" class="mui-switch mui-switch-animbg" type="checkbox" <?php if($agent_goods['reward_open']==1){echo 'checked';}?>></li>
+		<li class="arrow_li">
+			<span>佣金提成方式</span>
+			<select name="" id="comission_way">
+				<option value="0" {$agent_goods['reward_type']==0 ? 'selected' : ''}>按成交额百分比</option>
+				<option value="1" {$agent_goods['reward_type']==1 ? 'selected' : ''}>每成交1件提n元</option>
+				<option value="-1" {$agent_goods['reward_type']==-1 ? 'selected' : ''}>按会员卡百分比</option>
+			</select>
+		</li>
+		<li class="comission_con yongjin_rate" show-flag="1">
+			<div><span>佣金比例</span><input class="comission_rate" type="text" name="" value="<?php if($agent_goods['reward_type']==0 || $agent_goods['reward_type']==-1){echo $agent_goods['agent_rate'];}else{echo 0;}?>" placeholder="请输入"></div>
+			<div><span>预计</span><input class="except_comission" value="<?php if($agent_goods['reward_type']==0 || $agent_goods['reward_type']==-1){echo $agent_goods['agent_rate']*$agent_goods['min_price']/100;}else{echo 0;}?>" type="text" placeholder="请输入"></div>
+		</li>
+		<li class="comission_con show_level_two yongjin_lv_two_rate"  show-flag="1" <?php if($agent_goods['agent_rate2']==0){echo "style='display:none'";} ?>>
+			<div><span>二级奖励比例</span><input class="lv_two_comission_rate" type="text" name="" value="<?php if($agent_goods['reward_type']==0 || $agent_goods['reward_type']==-1){echo $agent_goods['agent_rate2'];}else{echo 0;}?>" placeholder="请输入"></div>
+			<div><span>预计</span><input class="except_lv_two_comission" value="<?php if($agent_goods['reward_type']==0 || $agent_goods['reward_type']==-1){echo $agent_goods['agent_rate2']*$agent_goods['min_price']/100;}else{echo 0;}?>" type="text" placeholder="请输入"></div>
+		</li>
+		<li class="show_ct1" show-flag="2">
+			<span>佣金金额</span><div class="unit_yuan"><input class="comission_rate_yuan" value="<?php if($agent_goods['reward_type']==1){echo $agent_goods['agent_rate'];}else{echo 0;}?>" type="text" style="background-color:rgba(0,0,0,0);"></div>
+		</li>
+		<li class="show_level_two show_ct2" show-flag="2" <?php if($agent_goods['agent_rate2']==0){echo "style='display:none'";} ?>>
+			<span>二级奖励金额</span><div class="unit_yuan"><input class="lv_two_comission_rate_yuan" value="<?php if($agent_goods['reward_type']==1){echo $agent_goods['agent_rate2'];}else{echo 0;}?>" type="text" style="background-color:rgba(0,0,0,0);"></div>
+		</li>
+		<li><span>二级奖励</span><input id="lv_two" class="mui-switch mui-switch-animbg" type="checkbox" <?php if($agent_goods['agent_rate2']!=0){echo 'checked';} ?>></li>
+	</ul>
+	<input type="hidden" id="id" value="{$agent_goods['id']}">
+	<input type="hidden" id="settlement_type" value="{$agent_goods['settlement_type']}">
+	<div class="save_btn">保存</div>
+	<div style="display: flex;width: 92%;margin-left: 4%;justify-content: space-between;">
+		<div style="display: inline-block;width: 24px;height: 24px;">
+			<svg class="icon" style="width: 24px; height: 24px;vertical-align: middle;fill: #C6C6C6;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="844"><path d="M526.3 30.2C262.6 30.2 48.8 244 48.8 507.7s213.8 477.5 477.5 477.5 477.5-213.8 477.5-477.5S790 30.2 526.3 30.2zM558.8 182.1c36 0 65.1 29.2 65.1 65.1 0 36-29.2 65.1-65.1 65.1-36 0-65.1-29.2-65.1-65.1C493.7 211.3 522.9 182.1 558.8 182.1zM680.9 654.9 535.7 795.2c-46.7 43.1-96.9 7.5-83.7-63.8l36.8-272.2-49.3-38.4c-21.3-17.6-31.4-43.4 8-43.4l161.5 0-48.6 294.6 104.4-40.6C689.8 619.7 705.8 630.8 680.9 654.9z" p-id="845"></path></svg>
+		</div>
+		<div style="width: calc(100% - 30px);font-size: 14px;color:#C6C6C6;">
+			<p style="line-height:18px">● 初次开启佣金奖励，所有商品默认使用全店铺佣金设置，单商品需要自行调整。单品佣金设置规则优先级高于店铺佣金规则。</p>
+			<p style="line-height:18px">● 佣金比例为订单的实际成交金额（剔除运费和退款部分）－成本× 佣金比例 = 获得的佣金。</p>   
+		</div>
+	</div>
+	<script>
+		require(['jquery'],function(){
+			$("div.save_btn").click(function(){
+				var single_commission_switch = $("#single_commission_switch").is(":checked");
+				var lv_two = $("#lv_two").is(":checked");
+				var comission_way = $("#comission_way").val();
+				var comission_rate = $("input.comission_rate").val();
+				var except_comission = $("input.except_comission").val();
+				var lv_two_comission_rate = $("input.lv_two_comission_rate").val();
+				var except_lv_two_comission = $("input.except_lv_two_comission").val();
+				var comission_rate_yuan = $("input.comission_rate_yuan").val();
+				var lv_two_comission_rate_yuan = $("input.lv_two_comission_rate_yuan").val();
+				var id = $('#id').val();
+				var settlement_type = $("#settlement_type").val();
+				// var switch_zhaomu = $("#zhaomu").is(":checked");
+				// var switch_shenhe = $("#shenhe").is(":checked");
+				// var switch_lv_two = $("#lv_two").is(":checked");
+				// // 佣金提成方式
+				// var comission_way = $("#comission_way").val();
+				// // 佣金比例
+				// var comission_rate = $("#comission_rate").val();
+				// if(!comission_rate_reg.test(comission_rate)){
+				// 	toast.show("佣金比例为两位小数");
+				// 	return false;
+				// }
+				// if(parseFloat(comission_rate) > parseFloat(100) || parseFloat(comission_rate) < parseFloat(0)){
+				// 	toast.show("佣金比率为0-100");
+				// 	return false;
+				// }
+				console.log({
+					single_commission_switch:single_commission_switch,
+					lv_two:lv_two,
+					comission_way:comission_way,
+					comission_rate:comission_rate,
+					except_comission:except_comission,
+					lv_two_comission_rate:lv_two_comission_rate,
+					except_lv_two_comission:except_lv_two_comission
+				});
+				$.ajax({
+					url : '/seller/commodity/goods_commision',
+					type : 'post',
+					data : {commission_switch:single_commission_switch,lv_two:lv_two,reward_type:comission_way,agent_rate:comission_rate,agent_rate2:lv_two_comission_rate,id:id,settlement_type:settlement_type,agent_rate_yuan:comission_rate_yuan,agent_rate2_yuan:lv_two_comission_rate_yuan},
+					dataType : 'json',
+					success : function(data){
+						if(data == 1){
+							toast.show('保存成功');
+							history.go(-1);
+						}else if(data == 0){
+							toast.show('未开启单品佣金推广');
+							history.go(-1);
+						}
+					}
+				});
+			});
+			$("#comission_way").on("change",function(){
+				var chg = $(this).val();
+				if(chg == 0){
+					$("ul").attr("show-flag",1);
+				}else if(chg == 1){
+					$("ul").attr("show-flag",2);
+				}else if(chg == -1){
+					$("ul").attr("show-flag",1);
+				}
+				$("#lv_two").trigger('change');
+			})
+			$("#lv_two").on("change",function(){
+				var val = $(this).is(":checked");
+				var ul_val = $("ul").attr("show-flag");
+				if(val){
+					$("li.show_level_two").css({"display":"none"});
+					$("li.show_level_two[show-flag="+ul_val+"]").css({"display":"flex"});
+				}else{
+					$("li.show_level_two").css({"display":"none"});
+					$("li.show_level_two[show-flag="+ul_val+"]").css({"display":"none"});
+				}
+			})
+			var base_val = $("#src_val").val();
+			$("li.yongjin_rate input.comission_rate").on("blur",function(){
+				var rate = $(this).val();
+				if(parseFloat(rate)>0 && parseFloat(rate)<100){
+					$("li.yongjin_rate input.except_comission").val((base_val*rate/100).toFixed(2));
+				}else{
+					var yuan = $("li.yongjin_rate input.except_comission").val();
+					$(this).val(100*yuan/base_val.toFixed(2));
+				}
+				console.log(rate);
+			})
+			$("li.yongjin_rate input.except_comission").on("blur",function(){
+				var yuan = $(this).val();
+				if(parseFloat(yuan)<base_val && parseFloat(yuan)>0){
+					var rate = 100 * yuan / base_val.toFixed(2);
+					if(rate >= 100){
+						rate = 100;
+						yuan = base_val;
+						$(this).val(yuan);
+					}
+					$("li.yongjin_rate input.comission_rate").val(rate);
+				}else{
+					var rate = $("li.yongjin_rate input.comission_rate").val();
+					$(this).val((base_val * rate / 100).toFixed(2));
+				}
+				console.log(yuan);
+			})
+			$("li.yongjin_lv_two_rate input.lv_two_comission_rate").on("blur",function(){
+				var rate = $(this).val();
+				if(parseFloat(rate)>0 && parseFloat(rate)<100){
+					$("li.yongjin_lv_two_rate input.except_lv_two_comission").val((base_val*rate/100).toFixed(2));
+				}else{
+					var yuan = $("li.yongjin_lv_two_rate input.except_lv_two_comission").val();
+					$(this).val(100*yuan/base_val.toFixed(2));
+				}
+				console.log(rate);
+			})
+			$("li.yongjin_lv_two_rate input.except_lv_two_comission").on("blur",function(){
+				var yuan = $(this).val();
+				if(parseFloat(yuan)<base_val && parseFloat(yuan)>0){
+					var rate = 100 * yuan / base_val.toFixed(2);
+					if(rate >= 100){
+						rate = 100;
+						yuan = base_val;
+						$(this).val(yuan);
+					}
+					$("li.yongjin_lv_two_rate input.lv_two_comission_rate").val(rate);
+				}else{
+					var rate = $("li.yongjin_lv_two_rate input.except_lv_two_comission").val();
+					$(this).val((base_val * rate / 100).toFixed(2));
+				}
+				console.log(yuan);
+			})
+
+		})
+	</script>
+</body>
+</html>

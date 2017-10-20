@@ -1,0 +1,154 @@
+<div id="news-page-{$page}" style="display: inline-block;width: 100%;">
+<div class="media_preview_area" style="margin-right: 20px;">
+	<eq name="page" value="1">
+	<a class="js-item appmsg" href="__MODULE__/advanced_news/add">
+		<div class="appmsg_content">
+			<h4 class="js-item appmsg_title js_title"></h4>
+			<div class="appmsg_info"><em class="appmsg_date"></em></div>
+			<div class="appmsg_thumb_wrp" style="border: 2px dotted #d9dadc;text-align: center;font-size: 72px;line-height: 160px;color: #edeff3;">	+</div>
+			<p class="appmsg_desc"></p>
+		</div>
+	</a>
+	</eq>
+	<volist name="list1" id="r">
+		<if condition="count($r['items']) eq 0">
+			<div class="js-item appmsg" data-media_id="">
+				<div class="appmsg_content">
+					<h4 class="js-item appmsg_title js_title">
+						<a href="{$r['link']}" target="_blank">{$r['title']}</a>
+					</h4>
+					<div class="appmsg_info">	
+						<em class="appmsg_date">{$r['created']}</em>
+					</div>
+					<div class="appmsg_thumb_wrp">	
+						<img src="{$r['cover_url']}" data-src="{$r['cover_url']}" alt="封面" class="appmsg_thumb">
+					</div>
+					<p class="appmsg_desc">{$r['digest']}</p>
+					<div style="margin-bottom:10px;">
+						<a href="__URL__/edit/id/{$r['id']}">编辑</a>
+						<a href="javascript:if(confirm('确认删除吗?'))window.location='__URL__/delete/id/{$r['id']}'" style="float:right;">删除</a>
+					</div>
+				</div>
+			</div>
+		<else/>
+			<div class="js-item appmsg" data-media_id="">
+				<div class="appmsg_content">
+					<div class="appmsg_item js_appmsg_item has_thumb">
+						<img class="js_appmsg_thumb appmsg_thumb" src="{$r['cover_url']}" data-src="{$r['cover_url']}">
+						<h4 class="appmsg_title">
+							<a href="{$r['link']}" target="_blank">{$r['title']}</a>
+						</h4>
+					</div>
+					<volist name="r['items']" id="v">
+						<div class="appmsg_item js_appmsg_item has_thumb">
+							<img class="js_appmsg_thumb appmsg_thumb" src="{$v['cover_url']}" data-src="{$v['cover_url']}">
+							<h4 class="appmsg_title">
+								<a href="{$v['link']}" target="_blank">{$v['title']}</a>
+							</h4>
+						</div>
+					</volist>
+					<div style="margin-bottom:10px;">
+						<a href="__URL__/edit/id/{$r['id']}">编辑</a>
+						<a href="javascript:if(confirm('确认删除吗?'))window.location='__URL__/delete/id/{$r['id']}'" style="float:right;">删除</a>
+					</div>
+				</div>
+			</div>
+		</if>
+	</volist>
+</div>
+<div class="media_preview_area" style="margin-right: 20px;">
+	<volist name="list2" id="r">
+		<if condition="count($r['items']) eq 0">
+			<div class="js-item appmsg" data-media_id="">
+				<div class="appmsg_content">
+					<h4 class="js-item appmsg_title js_title">
+						<a href="{$r['link']}" target="_blank">{$r['title']}</a>
+					</h4>
+					<div class="appmsg_info">	
+						<em class="appmsg_date">{$r['created']}</em>
+					</div>
+					<div class="appmsg_thumb_wrp">	
+						<img src="{$r['cover_url']}" data-src="{$r['cover_url']}" alt="封面" class="appmsg_thumb">
+					</div>
+					<p class="appmsg_desc">{$r['digest']}</p>
+					<div style="margin-bottom:10px;">
+						<a href="__URL__/edit/id/{$r['id']}">编辑</a>
+						<a href="javascript:if(confirm('确认删除吗?'))window.location='__URL__/delete/id/{$r['id']}'" style="float:right;">删除</a>
+					</div>
+				</div>
+			</div>
+		<else/>
+			<div class="js-item appmsg" data-media_id="">
+				<div class="appmsg_content">
+					<div class="appmsg_item js_appmsg_item has_thumb">
+						<img class="js_appmsg_thumb appmsg_thumb" src="{$r['cover_url']}" data-src="{$r['cover_url']}">
+						<h4 class="appmsg_title">
+							<a href="{$r['link']}" target="_blank">{$r['title']}</a>
+						</h4>
+					</div>
+					<volist name="r['items']" id="v">
+						<div class="appmsg_item js_appmsg_item has_thumb">
+							<img class="js_appmsg_thumb appmsg_thumb" src="{$v['cover_url']}" data-src="{$v['cover_url']}">
+							<h4 class="appmsg_title">
+								<a href="{$v['link']}" target="_blank">{$v['title']}</a>
+							</h4>
+						</div>
+					</volist>
+					<div style="margin-bottom:10px;">
+						<a href="__URL__/edit/id/{$r['id']}">编辑</a>
+						<a href="javascript:if(confirm('确认删除吗?'))window.location='__URL__/delete/id/{$r['id']}'" style="float:right;">删除</a>
+					</div>
+				</div>
+			</div>
+		</if>
+	</volist>
+</div>
+<div class="media_preview_area" style="margin-right: 20px;">
+	<volist name="list3" id="r">
+		<if condition="count($r['items']) eq 0">
+			<div class="js-item appmsg" data-media_id="">
+				<div class="appmsg_content">
+					<h4 class="js-item appmsg_title js_title">
+						<a href="{$r['link']}" target="_blank">{$r['title']}</a>
+					</h4>
+					<div class="appmsg_info">	
+						<em class="appmsg_date">{$r['created']}</em>
+					</div>
+					<div class="appmsg_thumb_wrp">	
+						<img src="{$r['cover_url']}" data-src="{$r['cover_url']}" alt="封面" class="appmsg_thumb">
+					</div>
+					<p class="appmsg_desc">{$r['digest']}</p>
+					<div style="margin-bottom:10px;">
+						<a href="__URL__/edit/id/{$r['id']}">编辑</a>
+						<a href="javascript:if(confirm('确认删除吗?'))window.location='__URL__/delete/id/{$r['id']}'" style="float:right;">删除</a>
+					</div>
+				</div>
+			</div>
+		<else/>
+			<div class="js-item appmsg" data-media_id="">
+				<div class="appmsg_content">
+					<div class="appmsg_item js_appmsg_item has_thumb">
+						<img class="js_appmsg_thumb appmsg_thumb" src="{$r['cover_url']}" data-src="{$r['cover_url']}">
+						<h4 class="appmsg_title">
+							<a href="{$r['link']}" target="_blank">{$r['title']}</a>
+						</h4>
+					</div>
+					<volist name="r['items']" id="v">
+						<div class="appmsg_item js_appmsg_item has_thumb">
+							<img class="js_appmsg_thumb appmsg_thumb" src="{$v['cover_url']}" data-src="{$v['cover_url']}">
+							<h4 class="appmsg_title">
+								<a href="{$v['link']}" target="_blank">{$v['title']}</a>
+							</h4>
+						</div>
+					</volist>
+					<div style="margin-bottom:10px;">
+						<a href="__URL__/edit/id/{$r['id']}">编辑</a>
+						<a href="javascript:if(confirm('确认删除吗?'))window.location='__URL__/delete/id/{$r['id']}'" style="float:right;">删除</a>
+					</div>
+				</div>
+			</div>
+		</if>
+	</volist>
+</div>
+</div>
+<div id="pagination" style="text-align: right;" data-page="{$page}" data-total="{$total}"></div>

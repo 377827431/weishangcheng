@@ -1,0 +1,203 @@
+<div id="refund_modal">
+	<style>
+	.modal h4{text-align: center;padding: 15px 0;font-size: 16px;line-height: 20px;}
+	.form .block-item>label{width: 50%;}
+	.form .block-item>label.label-right{text-align:right;padding-right: 10px;}
+	.form .label-right input{text-align:right;padding: 0;}
+	.block.form{padding-right:0}
+	.form .block-item select{position:absolute;left:0;right:0;bottom:0;top:0;opacity:0;}
+	.form input[type="file"]{position:absolute;left:0;right:0;bottom:0;top:0;opacity:0;}
+	.form .refund-imgs{width:90%;padding: 10px 10px 5px 0;color:#888}
+	.form .refund-imgs img{width:24px;height:24px;margin-right:10px;}
+	</style>
+	<div class="js-cancel modal-backdrop"></div>
+	<div class="modal">
+		<h4>退货退款</h4>
+		<div class="js-cancel cancel-img"></div>
+		<div class="block form">
+			<div class="js-is_received block-item no-top-border">
+				<label>{$data['is_received']['text']}</label>
+				<label class="label-right"><i class="icon-select selected"></i></label>
+			</div>
+			<div class="block-item">
+				<label>{$data['refund_type']['text']}</label>
+				<select class="js-refund_type">
+					<option value="0" data-label="我要退货退款"{$data['refund_type']['value'] == 0 ? 'selected="selected"' : ''}>退货退款</option>
+					<option value="1" data-label="我希望仅退款"{$data['refund_type']['value'] == 1 ? 'selected="selected"' : ''}>仅退款(无需退货)</option>
+					<!-- <option value="2" data-label="我要换货"{$data['refund_type']['value'] == 2 ? 'selected="selected"' : ''}>换货</option> -->
+					<!-- <option value="3" data-label="我希望能维修">维修(您可能承担部分维修费)</option> -->
+				</select>
+				<label class="label-right"><i class="icon-select selected"></i></label>
+			</div>
+			<div class="block-item">
+				<label>需退给我<i style="color:#888;font-size:10px;">(运费卖家定)</i></label>
+				<label class="label-right"><input class="js-refund_fee" type="text" value="{$data['refund_fee']}" placeholder="最多{$data['max']}元" min="0" max="{$data['max']}"></label>
+			</div>
+			<div class="block-item">
+				<label style="width:30%">我的理由是</label>
+				<label style="width:70%" class="label-right">
+					<div>{$data.reason}</div>
+					<select class="js-reason"></select>
+				</label>
+			</div>
+			<div class="block-item">
+				<textarea class="js-remark" placeholder="在此输入退款说明，有助于卖家加速退款哦！" maxlength="200">{$data.refund_remark}</textarea>
+			</div>
+			<div class="block-item">
+				<label class="refund-imgs" id="refund_image_list">
+				<empty name="data['refund_images']">上传凭证，最多5张
+				<else/>
+				<foreach name="data['refund_images']" item="src">
+				<img src="{$src}" data-src="{$src}">
+				</foreach>
+				</empty>
+
+				</label>
+				<label class="label-right" style="width:32px;padding: 10px 10px 5px 10px;position: relative;">
+					<img src="__CDN__/img/mall/camera.png" style="width:24px;height:24px;">
+					<input type="file" id="refund_img_file" name="upfile" accept="image/jpg,image/jpeg,image/png">
+				</label>
+			</div>
+		</div>
+		<div class="action-container clearfix">
+			<empty name="data['refund_id']">
+			<button type="button" id="save_refund" class="btn btn-block btn-red">提交申请</button>
+			<else/>
+			<div class="half-button">
+			<button type="button" id="cancel_refund" class="btn btn-block">取消申请</button>
+			</div>
+			<div class="half-button">
+			<button type="button" id="save_refund" class="btn btn-block btn-red">修改申请</button>
+			</div>
+			</empty>
+			
+		</div>
+	</div>
+	<script>
+	(function(){
+		var $modal = $('#refund_modal'),
+		$is_received = $modal.find('.js-is_received'),
+		$refund_type = $modal.find('.js-refund_type'),
+		$refund_fee = $modal.find('.js-refund_fee'),
+		$reason = $modal.find('.js-reason'),
+		$remark = $modal.find('.js-remark');
+
+		$modal.find('.js-cancel').on('click', function(){
+			$modal.remove();
+			return false;
+		});
+		
+		var post = {$post};
+
+		$is_received.on('click', function(){
+			post.is_received = post.is_received ? 0 : 1;
+			$is_received.children(':eq(0)').html(post.is_received ? '我已收到货物' : '我还没有收到货物');
+			$is_received.trigger('change');
+			return false;
+		}).on('change', function(){
+			var list = post.is_received ? {$wsdwp} : {$ysdwp}, html = '';
+
+			html += '<option value="0">请选择</option>'
+			for(var id in list){
+				html += '<option value="'+id+'"'+(id==post.refund_reason ? ' selected="selected"' : '')+'>'+list[id].title+'</option>';
+			}
+
+			$reason.html(html).trigger('change');
+			return false;
+		}).trigger('change');
+
+		// 原因改变
+		$reason.on('change', function(){
+			$reason.prev().html($reason.find(':selected').text());
+			post.refund_reason = $reason.val();
+			return false;
+		});
+
+		// 希望卖价怎么做
+		$refund_type.on('change', function(){
+			post.refund_type = this.value;
+			var html = $refund_type.find(':selected').data('label');
+			$refund_type.prev().html(html);
+			return false;
+		})
+
+		// 多图上传
+		require(['h5/lrzImage'], function(){
+			var $container = $('#refund_image_list');
+			$('#refund_img_file').lrzImage({
+				url: '__CDN__/ueditor?action=uploadscrawl',
+				preview: function(rst, vid){
+					var html = '<img id="lrz_img_'+vid+'" src="'+rst.base64+'" data-src="">', $exists = $container.children('img');
+		        	if($exists.length == 0){
+		        		$container.html(html);
+		        	}else{
+		        		$container.append(html);
+		        	}
+
+		        	if($exists.length == 5){
+		        		$exists.eq(0).remove();
+		        	}
+				},
+				success: function(data, vid){
+					$('#lrz_img_'+vid).attr('data-src', data.url);
+				},
+				error: function(vid){
+					$('#lrz_img_'+vid).remove();
+				}
+			});
+		});
+
+		// 删除图片
+		$('#refund_image_list').on('click', 'img', function(){
+			$(this).remove();
+		});
+
+		// 保存
+		$('#save_refund').on('click', function(){
+			post.refund_remark = $remark.val();
+			post.refund_fee = $refund_fee.val();
+
+			if(post.refund_reason == 0){
+				return toast.show('请选择退款原因'), false;
+			}
+			post.refund_images = [];
+			var $img = $('#refund_image_list').children('img');
+			$img.each(function(i){
+				var src = $img.eq(i).data('src');
+				if(src){
+					post.refund_images.push(src);
+				}
+			});
+
+			$.ajax({
+				url: '__CONTROLLER__/add',
+				type: 'post',
+				data: post,
+				dataType: 'json',
+				success: function(){
+					window.location.reload();
+				}
+			});
+			return false;
+		});
+
+	    // 取消退款
+		$('#cancel_refund').on('click', function () {
+		    if(!confirm('取消后系统不再支持您退款，确定取消吗？')){
+                return false
+		    }
+
+		    $.ajax({
+		        url: '__CONTROLLER__/cancel',
+		        type: 'post',
+		        data: { refund_id: '{$data.refund_id}' },
+		        dataType: 'json',
+		        success: function () {
+		            window.location.reload();
+		        }
+		    });
+		    return false;
+		});
+	})();
+	</script>
+</div>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>抢优惠券</title>
+    <meta name="viewport" content="initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="red" name="apple-mobile-web-app-status-bar-style">
+    <meta name="format-detection" content="telphone=no">
+<literal>
+<style>
+body{width:100%;overflow-x:hidden;padding:0;margin:0;font-size:12px;color:#dcbb85;background-color:#de5447}
+.hide{display:none;}
+@-webkit-keyframes adv_4{from{transform:translate3d(0,0,0)}
+20%{transform:translate3d(10px, -10px,0)}
+40%{transform:translate3d(6px, 5px,0)}
+60%{transform:translate3d(0,-5px,0)}
+80%{transform:translate3d(-5px,6px,0)}
+to{transform:translate3d(0,0,0)}
+}
+
+body.show-result{background-color:#fff}
+.rand-result{display:none;}
+body.show-result .rand-result{display:block;}
+body.show-result .rand-opening{display:none;}
+</style>
+</literal>
+</head>
+<body class="{$rand['value'] > 0 ? 'show-result' : ''}">
+    <div class="container">
+        <div class="content">
+            <div class="rand-opening">
+                <div style="padding-top:55%;position: relative;">
+                    <div style="position: absolute;top:0;left:0;right:0;bottom:0;padding-top: 10%;">
+                        <div style="width: 20%;padding-top: 20%;margin:0 auto;background-repeat: no-repeat;background-size: 100% 100%;border-radius: 50%;background-color:#fff;background-image:url(__CDN__/img/logo_rgb.png);">
+                        </div>
+                        <p style="text-align:center">{$rand.signature}</p>
+                        <p style="text-align:center">给你发了一个随机金额优惠券</p>
+                    </div>
+                    <h1 style="font-size: 25px;text-align: center;">{$rand.title}</h1>
+                </div>
+                <div style="top: 60%;background-color:#d65142;position: absolute;bottom: 0;right: 0;left: 0;">
+                    <img style="width:100%" src="__CDN__/img/rand_coupon/middle_line.png">
+                    <a id="open_coupon" style="position: absolute;top: -15%;left: 50%;width: 45%;padding-top: 45%;margin-left: -22.5%;display: inline-block;background-image: url(__CDN__/img/rand_coupon/open.png);background-size: 100% 100%;">
+                    </a>
+                    <img src="__CDN__/img/rand_coupon/bottom_line.jpg" style="width:100%;position: absolute;bottom:10px;">
+                </div>
+            </div>
+            <div class="rand-result">
+                <div style="padding-top: 25%;position: relative;text-align:center">
+                    <div style="position: absolute;top:0;left: 0;right: 0;bottom:0;padding-top: 15%; background-color: #de5447;border-radius: 0 0 50% 50%;">
+                        <div style="width: 20%;padding-top: 20%;margin:0 auto;background-repeat: no-repeat;background-size: 100% 100%;border-radius: 50%;background-color:#fff;background-image:url({$member.headimgurl});">
+                        </div>
+                        <p style="text-align:center;color: #333;">{$rand.signature}的优惠券</p>
+                        <p style="text-align:center;color: #aaa;">{$rand.title}</p>
+                        <h1 style="color: #333;font-size: 40px;"><span id="rand_value">{$rand.value}</span><span style="font-size: 20px;">元</span></h1>
+                        <a style="color:#08c;" href="{$rand.link}">优惠券已到账，立即使用</a>
+                        <div style="padding:20px;text-align:left">
+                        <p>
+                                                                使用有效期：<br>{:date('m月d日 H:i:s', $coupon['start_time'])} 至 {:date('m月d日 H:i:s', $coupon['end_time'])}
+                        </p>
+                        <p>
+                                                                使用条件：<br>{$coupon.condition}
+                        </p>
+                        <p>
+                                                                其他说明：{$coupon.notice}
+                        </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="//cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script>
+    $(function(){
+    	var $open = $('#open_coupon'), loading = false;
+    	$open.on('click', function(){
+    		if(loading){return false}
+    		
+    		var z = 0, stop = false;
+    		loading = true;
+    		
+        	var timer = setInterval(function(){
+        		if(stop){return}
+        		z += 6;
+        		$open.css('transform', 'rotateY('+z+'deg)');
+        		if(z == 360){
+        			z = 0;
+        			stop = true;
+        			setTimeout(function(){stop = false}, 300);
+        		}
+        	}, 30);
+        	
+        	$.ajax({
+        		url: '__ACTION__',
+				type: 'post',
+				waitting: false,
+				dataType: 'json',
+				success: function(data){
+					$open.unbind('click');
+					$('body').addClass('show-result');
+					if(data.status == 1){
+						$('#rand_value').html(data.info);
+					}else{
+						$('#rand_value').html('0.00');
+						alert(data.info);
+					}
+				},
+				complete: function(){
+					setTimeout(function(){
+						window.clearInterval(timer);
+						$open.css('transform', '');
+						loading = false;
+					}, 1000);
+				}
+        	});
+    	});
+    });
+    </script>
+    <if condition="IS_WEIXIN">
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.0.0"></script>
+    <script>
+    var jweixin = {
+		init: function(config, ready){
+			wx.config({
+				debug: false,
+				appId: config.appId,
+				timestamp: config.timestamp,
+				nonceStr: config.nonceStr,
+				signature: config.signature,
+				jsApiList: ['onMenuShareTimeline','onMenuShareAppMessage','onMenuShareQQ','onMenuShareWeibo','onMenuShareQZone']
+			});
+			
+			wx.ready(ready);
+		},
+		share: function(shareData, shareResult){
+			// 分享到朋友圈
+			wx.onMenuShareTimeline({
+				title: shareData.title,
+				link: shareData.link,
+				imgUrl: shareData.imgUrl,
+				success: function () { 
+					shareData.to = 'timeline';
+					shareResult.call(shareData);
+				}
+			});
+			
+			// 分享给朋友
+			wx.onMenuShareAppMessage({
+				title: shareData.title, // 分享标题
+				desc: shareData.desc, // 分享描述
+				link:  shareData.link, // 分享链接
+				imgUrl: shareData.imgUrl, // 分享图标
+				type: shareData.type, // 分享类型,music、video或link，不填默认为link
+				dataUrl: shareData.dataUrl, // 如果type是music或video，则要提供数据链接，默认为空
+				success: function () { 
+					shareData.to = 'appmessage';
+					shareResult.call(shareData);
+				}
+			});
+			
+			// 分享到QQ
+			wx.onMenuShareQQ({
+				title: shareData.title,
+				desc: shareData.desc,
+				link: shareData.link,
+				imgUrl: shareData.imgUrl,
+				success: function () { 
+					shareData.to = 'qq';
+					shareResult.call(shareData);
+				}
+			});
+			
+			// 分享到腾讯微博
+			wx.onMenuShareWeibo({
+				title: shareData.title,
+				desc: shareData.desc,
+				link: shareData.link,
+				imgUrl: shareData.imgUrl,
+				success: function () { 
+					shareData.to = 'weibo';
+					shareResult.call(shareData);
+				}
+			});
+			
+			//分享到QQ空间
+			wx.onMenuShareQZone({
+				title: shareData.title,
+				desc: shareData.desc,
+				link: shareData.link,
+				imgUrl: shareData.imgUrl,
+				success: function () { 
+					shareData.to = 'qzone';
+					shareResult.call(shareData);
+				}
+			});
+		}
+	}
+    
+    jweixin.init({$sign}, function(){
+    	jweixin.share({$share_data});
+    });
+    </script>
+    </if>
+</body>
+</html>

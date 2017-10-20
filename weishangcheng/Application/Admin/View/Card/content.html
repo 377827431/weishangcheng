@@ -1,0 +1,368 @@
+<link rel="stylesheet" type="text/css" href="/css/weixin.css">
+<style>
+.menu_form_area .editor_inner{padding-bottom:0}
+ul{margin:0}
+.size1of2{width:50%}
+.global_mod .global_extra{text-align:right}
+.global_mod.float_layout .global_info{float:left;margin:0;font-size:inherit}
+.form-horizontal .control-label{float:left;width:90px;padding-top:5px;text-align:left}
+.form-horizontal .controls{margin-left:90px}
+.form-horizontal .control-group{margin-bottom:10px}
+.control-margin{text-align:center;width:100%;height:300px;margin:15px 0}
+.control-margin-small{height:130px;width:300px;margin:10px  auto}
+.margin-top,.margin-right,.margin-left,.margin-bottom,.middle-image{cursor:pointer}
+.middle-image{}
+.margin-top{}
+.margin-right{}
+.margin-left{}
+.margin-bottom{}
+.control-margin input{text-align:center;width:50px}
+.card-image{line-height:0;position:relative}
+.card-image img{width:100%}
+.card-image .js-buy-card{position:absolute;right:14px;bottom:14px;display:inline-block;color:red;overflow:hidden;text-align:center;width:100px;height:30px;line-height:30px;background-image:url();background-repeat:no-repeat;background-position:center center;background-size:100% 100%}
+.select-levelup{width:auto}
+.middle-image{width:300px;height:170px;line-height:170px;margin:0 auto;background-image:url();background-repeat:no-repeat;background-position:center center;background-size:100% 100%}
+.edui-image p{}
+.mobile_bd p{margin: 0 0 1px 0;}
+.mobile_bd .edui-image{margin:0;padding:0;line-height:0;position:relative;user-modify:read-only;-webkit-user-modify: read-only;}
+.mobile_bd .edui-draggable{display:none}
+.mobile_bd .btn[data-id="0"]{display:none}
+</style>
+<div class="menu_setting_area js_editBox" style="display: block;">
+    <div class="menu_preview_area">
+        <div class="mobile_menu_preview">
+            <div class="mobile_hd tc">会员权益</div>
+            <div id="controls" class="mobile_bd">{$html}</div>
+        </div>
+    </div>
+    <div class="menu_form_area">
+        <div id="js_rightBox" class="portable_editor to_left" style="display: block;">
+            <div class="editor_inner">
+                <div class="global_mod float_layout menu_form_hd js_second_title_bar">
+                    <a id="js-del-control" class="global_info" href="javascript:;">删除控件</a>
+                    <div class="global_extra">
+                        <a href="javascript:;" id="js-add-control">添加控件</a>
+                    </div>
+                </div>
+                <div class="menu_form_bd form-horizontal">
+                     <div class="control-group" style="border-bottom: 1px solid #ddd;">
+                        <table id="big-img" class="control-margin">
+                            <tr>
+                                <td></td>
+                                <td><input type="text" class="js-top" placeholder="上边距" data-field="margin-top"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" class="js-left" data-field="margin-left" placeholder="左边距"></td>
+                                <td><div class="js-img img-polaroid middle-image">点击上传图片</div></td>
+                                <td><input type="text" class="js-right" placeholder="右边距" data-field="margin-right"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td><input type="text" class="js-bottom" data-field="margin-bottom" placeholder="下边距"></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                     </div>
+                    <div class="control-group text-center" style="border-bottom: 1px solid #ddd;">
+                        <table id="levelup-img" class="control-margin control-margin-small">
+                            <tr>
+                                <td></td>
+                                <td><input type="text" class="js-top" placeholder="宽度" data-field="width"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" class="js-left" data-field="height" placeholder="高度"></td>
+                                <td>
+                                    <select id="btn-add-leveup" class="select-levelup">
+                                        <option value="">插入按钮</option>
+                                        <foreach name="cards" item="item">
+                                        <option value="{$item.id}">{$item.title}</option>
+                                        </foreach>
+                                    </select>
+                                <td><input type="text" class="js-right" placeholder="右边距" data-field="right"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td><input type="text" class="js-bottom" data-field="bottom" placeholder="下边距"></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="control-group text-center">
+                        <button type="button" class="btn btn-back">返回</button>
+                        <button id="btn-save" class="btn btn-primary" type="button">保存</button>
+                    </div>
+                </div>
+            </div>
+            <span class="editor_arrow_wrp">
+                <i class="editor_arrow editor_arrow_out"></i>
+                <i class="editor_arrow editor_arrow_in"></i>
+            </span>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="/ueditor/ueditor.all.min.js"></script>
+<script id="image_text_container" type="text/plain">{$data.detail}</script>
+<script>
+$(function(){
+    var $bigImg = $('#big-img'),
+        $levelupImg = $('#levelup-img'),
+        $controls = $('#controls'),
+        $img = $bigImg.find('.js-img'),
+        $btnlevelup = $('#btn-add-leveup'),
+        editor = UE.getEditor('image_text_container',{isShow: false});
+    
+    var v = {
+        $ctl: null,
+        append: function(list, $ctl){
+            var src = '', html = '';
+            for(var i=0; i<list.length; i++){
+                src = list[i].img;
+                html = '<p class="edui-image" tabindex="-1"><img src="'+src+'" style="width:100%"><span class="edui-draggable">移动</span><button type="button" class="btn btn-red btn-xxsmall js-buy-card" style="position: absolute;right: 15px;bottom: 15px;opacity:.3" data-id="0">立即充值</button></p>';
+                if(!$ctl){
+                    $controls.append(html);
+                    var $last = $controls.children(':last-child');
+                    if(i == 0){
+                        v.$ctl = $last
+                    }
+                }else if(i == 0){
+                    $ctl.children('img').attr('src', src);
+                }else{
+                    $ctl.after(html);
+                }
+                
+                if(list[i].btn){
+                    v.appendBtn(list[i].btn);
+                }
+            }
+        },
+        appendBtn: function(data){
+            var $ctl = v.$ctl;
+            if(!$ctl){
+                return false;
+            }
+            
+            var $btn = $ctl.find('.js-buy-card'), $first = $btnlevelup.children(':first-child');
+            if($btn.length > 0){
+            	$btn.attr('data-id', data.id);
+            }else{
+                $ctl.append('<button type="button" class="btn btn-red btn-xxsmall js-buy-card" style="position: absolute; right: 15px; bottom: 15px;" data-id="'+data.id+'">立即充值</button>');
+                $btn = $ctl.find('.js-buy-card');
+            }
+            $first.html('删除按钮');
+            
+            if(data.img){
+                $btn.css('background-image', 'url('+data.img+')');
+                $btn.css(data.style);
+                $btn.html('');
+            }
+        },
+        setBtnImg: function(src){
+            var $ctl = v.$ctl;
+            if(!$ctl){return false}
+            var $btn = $ctl.find('.js-buy-card');
+            $btn.css('background-image', 'url('+src+')');
+            $btn.html('');
+        },
+        setValue($ctl, key, value){
+            switch(key){
+                case 'margin-left':
+                case 'margin-right':
+                case 'margin-top':
+                case 'margin-bottom':
+                    $ctl.css(key, value);
+                    break;
+                case 'left':
+                case 'right':
+                case 'top':
+                case 'bottom':
+                case 'width':
+                case 'height':
+                    $ctl.css(key, value);
+                break;
+            }
+        },
+        onFocus: function($ctl){
+            delete v.$ctl;
+            v.$ctl = $ctl;
+            
+            $bigImg.find('.js-left').val($ctl.css('margin-left'));
+            $bigImg.find('.js-top').val($ctl.css('margin-top'));
+            $bigImg.find('.js-right').val($ctl.css('margin-right'));
+            $bigImg.find('.js-bottom').val($ctl.css('margin-bottom'));
+            $img.css('background-image', 'url('+$ctl.children('img').attr('src')+')');
+            
+            // 调整右侧编辑框位置
+            var top = $ctl.offset().top + $ctl.height() - 135;
+            var $right = $('#js_rightBox'), height = $right.height();
+            top -= height;
+            if(top < 0){
+                top = 0;
+            }
+            $right.css('margin-top', top+'px');
+            
+            var $btn = $ctl.find('.js-buy-card');
+            if($btn.length == 0 || $btn.attr('data-id') == "0"){
+                $levelupImg.find('input').val('');
+                $btnlevelup.val('').children(':first-child').html('插入按钮');
+                return;
+            }
+
+            $levelupImg.find('.js-left').val($btn.height());
+            $levelupImg.find('.js-top').val($btn.width());
+            $levelupImg.find('.js-right').val($btn.css('right'));
+            $levelupImg.find('.js-bottom').val($btn.css('bottom'));
+            $btnlevelup.val($btn.attr('data-id'));
+        },
+        delCtl: function(){
+            if(!v.$ctl){
+                return
+            }
+            
+            var $next = v.$ctl.next(), $prev = v.$ctl.prev();
+            v.$ctl.remove();
+            v.$ctl = null;
+            if($next.length > 0){
+                $next.trigger('click');
+            }else if($prev.length > 0){
+                $prev.trigger('click');
+            }else{
+                $bigImg.find('input').val('');
+                $img.attr('src', '');
+            }
+        }
+    };
+    
+    $controls.on('click', '.edui-image', function(){
+        var $ctl = $(this);
+        v.onFocus($ctl);
+        return false;
+    }).children(':eq(0)').trigger('click');
+    
+    $bigImg.find('.js-bottom, .js-top, .js-left, .js-right').on('change', function(){
+        var $ctl = v.$ctl;
+        if(!$ctl){
+            return false;
+        }
+        
+        var key = $(this).data('field'), value = this.value.toString();
+        if(value != '' && value != '0'){
+            if(value.indexOf('%') > -1){
+                value = parseFloat(value) + '%';
+            }else{
+                value = parseFloat(value) + 'px';
+            }
+            this.value = value;
+        }
+        
+        v.setValue($ctl, key, value);
+        return false;
+    });
+    
+    // 上传大图
+    $img.on('click', function(){
+        editor.add_ctl = 0;
+        editor.getDialog("insertimage").open();
+        return false;
+    });
+    
+    editor.addListener('beforeInsertImage', function(t, list){
+        if(editor.add_ctl < 2){
+            for(var i=0; i<list.length; i++){
+                list[i] = {img: list[i].src, style:{'maring-top':'', 'margin-left': '', 'margin-right': '', 'maring-bottom':''}}
+            }
+        }
+        
+        if(editor.add_ctl == 0){
+            v.append(list, v.$ctl);
+            v.$ctl.trigger('click');
+        }else if(editor.add_ctl == 1){
+            v.append(list, null);
+            v.$ctl.trigger('click');
+        }else{
+            v.setBtnImg(list[0].src);
+        }
+    });
+    
+    // 删除选中的控件
+    $('#js-del-control').on('click', function(){
+        v.delCtl();
+        return false;
+    });
+    
+    // 添加控件
+    $('#js-add-control').on('click', function(){
+        editor.add_ctl = 1;
+        editor.getDialog("insertimage").open();
+        return false;
+    });
+
+    // 插入升级按钮
+    $btnlevelup.on('change', function(){
+        v.appendBtn({id: this.value, img: '', style: {width: '', height: '', right: '', bottom:''}});
+        return false;
+    });
+    
+    $levelupImg.find('.js-bottom, .js-top, .js-left, .js-right').on('change', function(){
+        var $ctl = v.$ctl;
+        if(!$ctl){
+            return false;
+        }
+        var $btn = $ctl.find('.js-buy-card');
+        if($btn.length == 0){
+            return false;
+        }
+        
+        var key = $(this).data('field'), value = this.value.toString();
+        if(value != '' && value != '0'){
+            if(value.indexOf('%') > -1){
+                value = parseFloat(value) + '%';
+            }else{
+                value = parseFloat(value) + 'px';
+            }
+            this.value = value;
+        }
+        
+        v.setValue($btn, key, value);
+        return false;
+    });
+    
+    // 上传按钮图片
+    /*
+    $controls.on('click', '.js-buy-card', function(){
+        editor.add_ctl = 2;
+        editor.getDialog("insertimage").open();
+        return false;
+    });
+    */
+    
+    // 排序
+    var container = document.getElementById("controls");
+    var sort = Sortable.create(container, {
+      animation: 150,
+      handle: ".edui-image",
+      draggable: ".edui-image",
+      onUpdate: function (evt){
+          $(evt.item).trigger('click');
+      }
+    });
+    
+    // 保存
+    $('#btn-save').on('click', function(){
+        var html = $('#controls').html();
+        $.ajax({
+            url: '__MODULE__/card/content',
+            type: 'post',
+            dataType: 'json',
+            data: {html: html},
+            success: function(){
+                
+            }
+        });
+        return false;
+    });
+});
+</script>
+<script src="https://cdn.bootcss.com/Sortable/1.5.1/Sortable.min.js"></script>
