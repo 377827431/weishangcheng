@@ -28,7 +28,7 @@ $re = "{
         'mobile': '15004678169',
         'name': '纪阳',
         'product_code': 'w1010100000000002859',
-        'transaction_id': '150001',
+        'transaction_id': '567',
         'cert_type': 'IDENTITY_CARD',
         'cert_no': '230107198501271810',
         }";
