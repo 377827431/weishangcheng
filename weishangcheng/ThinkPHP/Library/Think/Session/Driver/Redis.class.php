@@ -35,6 +35,7 @@ class Redis {
 	private $get_result;
 
 	public function __construct(){
+	    return;
 		if ( !extension_loaded('redis') ) {
             E(L('_NOT_SUPPERT_').':redis');
         }
