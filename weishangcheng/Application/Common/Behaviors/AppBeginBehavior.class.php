@@ -25,6 +25,7 @@ class AppBeginBehavior{
             define('PROJECT_ID', 0);
             return;
         }
+        die(MODULE_NAME);
         // H5页面的身份认证
         if(MODULE_NAME == 'H5'){
             if (APP_NAME == ''){
