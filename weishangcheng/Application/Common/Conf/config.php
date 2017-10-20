@@ -19,7 +19,7 @@ return array(
         'type'             => 'Redis',
         'name'             => 'PHPSESSID'
     ),
-    'SESSION_REDIS_HOST'   => '127.0.0.1',
-    'SESSION_REDIS_AUTH'   => ''
+    'SESSION_REDIS_HOST'   => 'r-2ze95be0d4d1d5d4.redis.rds.aliyuncs.com',
+    'SESSION_REDIS_AUTH'   => 'Jy5040309884'
 );
 ?>
