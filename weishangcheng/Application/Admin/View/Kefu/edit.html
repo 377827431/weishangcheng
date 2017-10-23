@@ -1,0 +1,155 @@
+<form id="editCustomerServiceForm" action="__ACTION__" class="form-horizontal edit-form" data-validate="true" data-submit="ajax" method="post" data-success="back">
+  <div class="form-group">
+	<input type="text" class="hidden" name="id" value="{$data['id']}">
+	<div class="form-item">
+		<div class="control-group">
+			<label class="control-label must">用途</label>
+			<div class="controls">
+				<select name="type" class="required">
+					<foreach name="types" key="id" item="item">
+						<option value="{$id}" {$id==$data['type'] ? 'selected="selected"' : ''}>{$item}</option>
+					</foreach>
+				</select>
+			</div>
+		</div>
+        <div class="control-group">
+            <label class="control-label must">微信客服账号</label>
+            <div class="controls">
+                <div id="wxno_container" class="input-append">
+                    <input type="text" value="{$data.weixin}" name="weixin" class="js-weixin" placeholder="个人微信号" maxlength="20" required="required" style="width:180px" readonly="readonly">
+                    <span class="add-on js-change-wx"><i class="icon-pencil"></i></span>
+                </div>
+            </div>
+        </div>
+		<div class="control-group">
+			<label class="control-label must">客服昵称</label>
+			<div class="controls">
+				<input type="text" name="nickname" value="{$data.nickname}" class="js-nickname" maxlength="16" class="required" readonly="readonly">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">上班时间</label>
+			<div class="controls">
+				<div class="input-append date" data-format="hh:mm" data-pick-date="false">
+					<input type="text" name="work_start" value="{$data.work_start}" style="width:60px" readonly="readonly">
+					<span class="add-on"><i class="icon-th icon-time"></i></span>
+				</div>
+				至
+				<div class="input-append date" data-format="hh:mm" data-pick-date="false">
+					<input type="text" name="work_end" value="{$data.work_end}" style="width:60px" readonly="readonly">
+					<span class="add-on"><i class="icon-th icon-time"></i></span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="form-item">
+		<div class="control-group">
+		  	<label class="control-label">微信号二维码</label>
+		  	<div class="controls">
+				<input class="hide" type="text" name="qrcode" value="{$data.qrcode}" readonly="readonly" data-msg-required="请上传封面">
+				<img id="wx_code" src="{$data.qrcode}" class="img-polaroid btn-up" alt="个人微信二维码" style="width: 120px; height: 120px;cursor:pointer">
+			</div>
+	  	</div>
+		<div class="control-group">
+			<label class="control-label">QQ号</label>
+			<div class="controls">
+				<input type="text" name="qq" value="{$data.qq}" maxlength="15" data-rule-digits="digits">
+			</div>
+		</div>
+	</div>
+  </div>
+  <div class="form-title">指定店铺客服：系统随机接入店铺指定的客服，未指定店铺的客服将不接收消息</div>
+  <div class="form-group">
+    <ul class="clearfix">
+    <foreach name="shopList" item="shop">
+        <li style="width:190px;float:left;{$shop['state'] != 1 ? 'color:red' : ''}"><label class="checkbox"><input type="checkbox" name="shop_id[]" value="{$shop['id']}" {:in_array($shop['id'], $data['shop_id']) ? 'checked="checked"' : ''}> {$shop['name']}</label></li>
+    </foreach>
+    </ul>
+  </div>
+  <div class="form-actions">
+      <button type="submit" class="btn btn-danger" value="0" name="enabled">禁用</button>
+      <button type="button" class="btn btn-back">返回</button>
+	  <button type="submit" class="btn btn-success" value="1" name="enabled">启用</button>
+  </div>
+</form>
+<script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="/ueditor/ueditor.all.min.js"></script>
+<div style="display: none;" id="editor" class="edui-default"></div>
+<script id="wxkfno_select" type="text/html">
+<select name="kf_account" class="js-account" required="required" style="width:194px">
+   <option value="">请选择</option>
+   <foreach name="wxKFList" item="kf">
+   <option value="{$kf['kf_account']}">{$kf['kf_nick']}</option>
+   </foreach> 
+</select>
+<input type="hidden" name="weixin" class="js-weixin">
+<span class="add-on js-change-wx"><i class="icon-list"></i></span>
+</script>
+<script id="wxkfno_input" type="text/html">
+<input type="text" name="weixin" class="js-weixin" placeholder="个人微信号" maxlength="20" required="required" style="width:180px">
+<span class="add-on js-change-wx"><i class="icon-pencil"></i></span>
+</script>
+<script>
+var wxKFList = {:json_encode($wxKFList)};
+$(function(){
+	var editor = UE.getEditor('editor',{isShow: false});
+	var $img = $('#wx_code');
+	editor.addListener('beforeInsertImage', function (t, list) {
+		$img.prev().val(list[0]['src']);
+		$img.attr('src', list[0]['src']);
+    });
+	$img.on('click', function(){
+		editor.getDialog("insertimage").open();
+	});
+	
+	var $form = $('#editCustomerServiceForm'),
+	$access = $form.find('.js-account'),
+	$nickname = $form.find('.js-nickname'),
+	$wexinContainer = $form.find('#wxno_container'),
+	prevAccount = "{$data['kf_account']}";
+	
+	$wexinContainer.on('click', '.js-change-wx', function(){
+		var $icon = $(this).children();
+		if($icon.hasClass('icon-pencil')){
+			$icon.removeClass('icon-pencil').addClass('icon-list');
+			$nickname.attr('readonly','readonly');
+			$wexinContainer.html($('#wxkfno_select').html());
+			$wexinContainer.find('.js-account').val(prevAccount).trigger('change');
+		}else{
+			$icon.removeClass('icon-list').addClass('icon-pencil');
+			$nickname.removeAttr('readonly').val('');
+			$wexinContainer.html($('#wxkfno_input').html());
+		}
+		return false;
+	}).on('change', '.js-account',function(){
+		prevAccount = this.value;
+		if(this.value == ''){
+			return false;
+		}
+
+		var data = null;
+		for(var i=0; i<wxKFList.length; i++){
+			if(wxKFList[i].kf_account == this.value){
+				data = wxKFList[i];
+				break;
+			}
+		}
+		
+		$wexinContainer.find('.js-weixin').val(data.kf_wx);
+		$nickname.val(data.kf_nick);
+		return false;
+	});
+	
+	<if condition="empty($data['id']) || !empty($data['kf_account'])">
+	$wexinContainer.html($('#wxkfno_select').html());
+	$wexinContainer.find('.js-account').val(prevAccount).trigger('change');
+	<else />
+	$wexinContainer.find('.js-weixin').removeAttr('readonly');
+	$nickname.removeAttr('readonly');
+	</if>
+});
+</script>
+<style>
+.timepicker-picker .table-condensed tr td:nth-child(4),
+.timepicker-picker .table-condensed tr td:nth-child(5){display:none}
+</style>
