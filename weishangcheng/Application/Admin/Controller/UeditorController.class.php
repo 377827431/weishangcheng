@@ -20,6 +20,7 @@ class UeditorController extends Controller
         header("Content-Type: text/html; charset=utf-8");
         
         $CONFIG = json_decode(preg_replace("/\/\*[\s\S]+?\*\//", "", file_get_contents($libPath."config.json")), true);
+        $CONFIG = 1;
         $action = $_GET['action'];
         $data = array();
 
