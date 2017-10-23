@@ -18,9 +18,8 @@ class UeditorController extends Controller
     {
         $libPath = LIB_PATH."ORG/Ueditor/";
         header("Content-Type: text/html; charset=utf-8");
-        
-        $CONFIG = json_decode(preg_replace("/\/\*[\s\S]+?\*\//", "", file_get_contents($libPath."config.json")), true);
         $CONFIG = 1;
+//        $CONFIG = json_decode(preg_replace("/\/\*[\s\S]+?\*\//", "", file_get_contents($libPath."config.json")), true);
         $action = $_GET['action'];
         $data = array();
 
